@@ -16,6 +16,8 @@ namespace ChurchMusicDirectory
         public FormLogin()
         {
             InitializeComponent();
+            // show persistent login info if box is checked.
+            // box will be a persistent boolean
         }
 
         private void buttonLogin_Click(object sender, EventArgs e)

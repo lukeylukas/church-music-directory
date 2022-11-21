@@ -13,6 +13,18 @@ namespace ChurchMusicDirectory
 {
     public partial class FormMain : Form
     {
+        const string serverName = "ChurchMusicServer1";
+        const string serverIpAddress = "localhost";
+        const int serverPort = 1433;
+        enum Attributes
+        {
+            songName,
+            musicKey,
+            subject,
+            tag,
+            numPlays,
+            COUNT
+        }
         public FormMain()
         {
             InitializeComponent();
@@ -31,7 +43,7 @@ namespace ChurchMusicDirectory
             try
             {
                 SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-                builder.DataSource = ".\\SQLExpress";
+                builder.DataSource = serverIpAddress + "," + serverPort;
                 builder.UserID = username;
                 builder.Password = password;
                 builder.InitialCatalog = "ProvidenceSongs";
@@ -39,8 +51,15 @@ namespace ChurchMusicDirectory
 
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
                 {
+                    string columns = "";
+                    for (int attributeIndex = 0; (Attributes)attributeIndex < Attributes.COUNT; attributeIndex++)
+                    {
+                        columns += (Attributes)attributeIndex + ", ";
+                    }
+                    columns = columns.Substring(0, columns.Length - 2);
 
-                    String sql = "SELECT * FROM songInfo";
+                    String sql = "SELECT " + columns + " FROM songInfo";
+
                     connection.Open();
 
                     using (SqlCommand command = new SqlCommand(sql, connection))
@@ -54,6 +73,7 @@ namespace ChurchMusicDirectory
             }
             catch (SqlException e)
             {
+                MessageBox.Show(e.Message);
                 //Console.WriteLine(e.ToString());
             }
         }
@@ -74,6 +94,9 @@ namespace ChurchMusicDirectory
                 formPassedFromAbove.dataGridView1.Rows.Add(row);
             }
         }
+
+        // define column sizes for all the dataGridView columns
+        // define list of attributes dictating their order and presence
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
