@@ -16,7 +16,7 @@ namespace ChurchMusicDirectory
         const string serverName = "ChurchMusicServer1";
         const string serverIpAddress = "localhost";
         const int serverPort = 1433;
-        enum Attributes
+        enum SONG_ATTRIBUTE
         {
             songName,
             musicKey,
@@ -25,9 +25,25 @@ namespace ChurchMusicDirectory
             numPlays,
             COUNT
         }
+        public struct TABLE_COLUMN
+        {
+            public bool allowFiltering;
+            public List<string> values;
+            public int width;
+        };
+        private TABLE_COLUMN[] songInfoColumns = new TABLE_COLUMN[(int)SONG_ATTRIBUTE.COUNT];
         public FormMain()
         {
             InitializeComponent();
+            SongInfoSizeElements();
+        }
+        private void SongInfoSizeElements()
+        {
+            songInfoColumns[(int)SONG_ATTRIBUTE.songName].width = 100;
+            songInfoColumns[(int)SONG_ATTRIBUTE.musicKey].width = 100;
+            songInfoColumns[(int)SONG_ATTRIBUTE.subject].width = 150;
+            songInfoColumns[(int)SONG_ATTRIBUTE.tag].width = 100;
+            songInfoColumns[(int)SONG_ATTRIBUTE.numPlays].width = 100;
         }
 
         public static void getSongInfo(FormMain formPassedFromAbove, string username, string password)
@@ -52,9 +68,9 @@ namespace ChurchMusicDirectory
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
                 {
                     string columns = "";
-                    for (int attributeIndex = 0; (Attributes)attributeIndex < Attributes.COUNT; attributeIndex++)
+                    for (SONG_ATTRIBUTE attribute = 0; attribute < SONG_ATTRIBUTE.COUNT; attribute++)
                     {
-                        columns += (Attributes)attributeIndex + ", ";
+                        columns += attribute + ", ";
                     }
                     columns = columns.Substring(0, columns.Length - 2);
 
@@ -74,7 +90,6 @@ namespace ChurchMusicDirectory
             catch (SqlException e)
             {
                 MessageBox.Show(e.Message);
-                //Console.WriteLine(e.ToString());
             }
         }
 
@@ -82,10 +97,11 @@ namespace ChurchMusicDirectory
         {
             formPassedFromAbove.dataGridView1.Rows.Clear();
             formPassedFromAbove.dataGridView1.ColumnCount = reader.FieldCount;
-            for (int idx = 0; idx < reader.FieldCount; idx++)
+            for (int columnIndex = 0; columnIndex < reader.FieldCount; columnIndex++)
             {
-                string colName = reader.GetName(idx);
-                formPassedFromAbove.dataGridView1.Columns[idx].Name = colName;
+                string colName = reader.GetName(columnIndex);
+                formPassedFromAbove.dataGridView1.Columns[columnIndex].Width = formPassedFromAbove.songInfoColumns[columnIndex].width;
+                formPassedFromAbove.dataGridView1.Columns[columnIndex].Name = colName;
             }
             while (reader.Read())
             {
@@ -95,17 +111,33 @@ namespace ChurchMusicDirectory
             }
         }
 
-        // define column sizes for all the dataGridView columns
-        // define list of attributes dictating their order and presence
-
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-
         }
 
         private void tabPageSongInfo_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void dataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            MouseEventArgs me = (MouseEventArgs)e;
+            switch (me.Button)
+            {
+                case MouseButtons.Left:  /* Automatically sorts */                             break;
+                case MouseButtons.Right: ShowHeaderContextMenu((SONG_ATTRIBUTE)e.ColumnIndex); break;
+            }
+        }
+        private void ShowHeaderContextMenu(SONG_ATTRIBUTE column)
+        {
+            //if it's a filterable attribute, show all the filterable types
+            //create a struct enumerated by attributes containing lists of filter values for each attribute 
+            ContextMenuFilterList(songInfoColumns[column].valueList);
+        }
+        private void ContextMenuFilterList(List values)
+        {
+            //for each value, create a menu entry with checkbox
         }
     }
 }
