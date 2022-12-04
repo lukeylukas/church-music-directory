@@ -145,9 +145,7 @@ namespace ChurchMusicDirectory
         }
         private void ContextMenuFilterExclude_Click(object? sender, EventArgs e)
         {
-            DataGridView.HitTestInfo menuLocation = MousePositionInTable();
             ToolStripMenuItem senderItem = (ToolStripMenuItem)sender;
-            //ToolStripMenuItem senderItem = (ToolStripMenuItem)dataGridView1.ContextMenuStrip.Items.Find(sender.ToString(), true)[0];
             if (senderItem.Checked)
             {
                 senderItem.Checked = false;
@@ -159,6 +157,8 @@ namespace ChurchMusicDirectory
                 senderItem.Checked = true;
                 senderItem.CheckState = CheckState.Checked;
             }
+
+            DataGridView.HitTestInfo menuLocation = MousePositionInTable();
             FilterHandleExclude(senderItem.Checked, menuLocation.ColumnIndex);
         }
         private void FilterHandleExclude(bool excludeFilterValues, int columnIndex)
@@ -174,14 +174,12 @@ namespace ChurchMusicDirectory
         }
         private void ContextMenuFilterItem_Click(object? sender, EventArgs e)
         {
+            ToolStripMenuItem senderItem = (ToolStripMenuItem)sender;
+            senderItem.Checked = true;
+            senderItem.CheckState = System.Windows.Forms.CheckState.Checked;
+
             DataGridView.HitTestInfo menuLocation = MousePositionInTable();
             AddValueToFilter(sender.ToString(), menuLocation.ColumnIndex);
-            ToolStripItem[] senderItem = dataGridView1.ContextMenuStrip.Items.Find(sender.ToString(), true);
-            foreach (ToolStripMenuItem item in senderItem)
-            {
-                item.Checked = true;
-                item.CheckState = System.Windows.Forms.CheckState.Checked;
-            }
             
         }
         private void AddValueToFilter(string filterValue, int columnIndex)
