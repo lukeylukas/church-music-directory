@@ -154,11 +154,10 @@ namespace ChurchMusicDirectory
                 reader.GetProviderSpecificValues(row);
                 table.Rows.Add(row);
             }
-            for (int columnIndex = 0; columnIndex > reader.FieldCount; columnIndex++)
+            for (int columnIndex = 0; columnIndex < reader.FieldCount; columnIndex++)
             {
-                string colName = reader.GetName(columnIndex);
                 table.Columns[columnIndex].Width = formPassedFromAbove.songInfoColumns[columnIndex].width;
-                table.Columns[columnIndex].Name = colName;
+                table.Columns[columnIndex].Name = reader.GetName(columnIndex);
                 FillFilterList(formPassedFromAbove.songInfoColumns[columnIndex], table, columnIndex);
             }
             table.Sort(table.Columns[0], ListSortDirection.Ascending);
