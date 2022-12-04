@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.Common;
 using Microsoft.Data.SqlClient;
+using System.Linq;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ChurchMusicDirectory
 {
@@ -16,6 +18,7 @@ namespace ChurchMusicDirectory
         const string serverName = "ChurchMusicServer1";
         const string serverIpAddress = "localhost";
         const int serverPort = 1433;
+        private DataGridViewCellEventArgs mouseLocation;
         enum SONG_ATTRIBUTE
         {
             songName,
@@ -28,22 +31,62 @@ namespace ChurchMusicDirectory
         public struct TABLE_COLUMN
         {
             public bool allowFiltering;
-            public List<string> values;
+            public List<string> filterValues;
             public int width;
         };
         private TABLE_COLUMN[] songInfoColumns = new TABLE_COLUMN[(int)SONG_ATTRIBUTE.COUNT];
+
         public FormMain()
         {
             InitializeComponent();
-            SongInfoSizeElements();
+            InitializeSongInfoSettings();
+            mouseLocation = new DataGridViewCellEventArgs(0, 0);
+            dataGridView1.ContextMenuStrip = new ContextMenuStrip();
+            dataGridView1.ContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(DataGridViewContextMenuOpen);
         }
-        private void SongInfoSizeElements()
+        private void InitializeSongInfoSettings()
         {
-            songInfoColumns[(int)SONG_ATTRIBUTE.songName].width = 100;
-            songInfoColumns[(int)SONG_ATTRIBUTE.musicKey].width = 100;
-            songInfoColumns[(int)SONG_ATTRIBUTE.subject].width = 150;
-            songInfoColumns[(int)SONG_ATTRIBUTE.tag].width = 100;
-            songInfoColumns[(int)SONG_ATTRIBUTE.numPlays].width = 100;
+            songInfoColumns[(int)SONG_ATTRIBUTE.songName] = new TABLE_COLUMN
+            {
+                allowFiltering = false,
+                filterValues = new List<string>(),
+                width = 200
+            };
+            songInfoColumns[(int)SONG_ATTRIBUTE.musicKey] = new TABLE_COLUMN
+            {
+                allowFiltering = true,
+                filterValues = new List<string>(),
+                width = 75
+            };
+            songInfoColumns[(int)SONG_ATTRIBUTE.subject] = new TABLE_COLUMN
+            {
+                allowFiltering = true,
+                filterValues = new List<string>(),
+                width = 200
+            };
+            songInfoColumns[(int)SONG_ATTRIBUTE.tag] = new TABLE_COLUMN
+            {
+                allowFiltering = false,
+                filterValues = new List<string>(),
+                width = 100
+            };
+            songInfoColumns[(int)SONG_ATTRIBUTE.numPlays] = new TABLE_COLUMN
+            {
+                allowFiltering = true,
+                filterValues = new List<string>(),
+                width = 75
+            };
+            for (SONG_ATTRIBUTE attributeIndex = 0; attributeIndex < SONG_ATTRIBUTE.COUNT; attributeIndex++)
+            {
+                try
+                {
+                    bool initCheck = (songInfoColumns[(int)attributeIndex].width != 1);
+                }
+                catch
+                {
+                    MessageBox.Show("Settings for " + attributeIndex.ToString() + " not initialized");
+                }
+            }
         }
 
         public static void getSongInfo(FormMain formPassedFromAbove, string username, string password)
@@ -82,7 +125,14 @@ namespace ChurchMusicDirectory
                     {
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
-                            formPassedFromAbove.Invoke(new Action(() => ReadData(formPassedFromAbove, reader)));
+                            if (reader.FieldCount == (int)SONG_ATTRIBUTE.COUNT)
+                            {
+                                formPassedFromAbove.Invoke(new Action(() => ReadData(formPassedFromAbove, reader)));
+                            }
+                            else
+                            {
+                                MessageBox.Show("Server sent incorrect data size.");
+                            }
                         }
                     }
                 }
@@ -95,49 +145,78 @@ namespace ChurchMusicDirectory
 
         private static void ReadData(FormMain formPassedFromAbove, SqlDataReader reader)
         {
-            formPassedFromAbove.dataGridView1.Rows.Clear();
-            formPassedFromAbove.dataGridView1.ColumnCount = reader.FieldCount;
-            for (int columnIndex = 0; columnIndex < reader.FieldCount; columnIndex++)
-            {
-                string colName = reader.GetName(columnIndex);
-                formPassedFromAbove.dataGridView1.Columns[columnIndex].Width = formPassedFromAbove.songInfoColumns[columnIndex].width;
-                formPassedFromAbove.dataGridView1.Columns[columnIndex].Name = colName;
-            }
+            DataGridView table = formPassedFromAbove.dataGridView1;
+            table.Rows.Clear();
+            table.ColumnCount = reader.FieldCount;
             while (reader.Read())
             {
                 object[] row = new object[reader.FieldCount];
                 reader.GetProviderSpecificValues(row);
-                formPassedFromAbove.dataGridView1.Rows.Add(row);
+                table.Rows.Add(row);
             }
-        }
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-        }
-
-        private void tabPageSongInfo_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void dataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            MouseEventArgs me = (MouseEventArgs)e;
-            switch (me.Button)
+            for (int columnIndex = 0; columnIndex > reader.FieldCount; columnIndex++)
             {
-                case MouseButtons.Left:  /* Automatically sorts */                             break;
-                case MouseButtons.Right: ShowHeaderContextMenu((SONG_ATTRIBUTE)e.ColumnIndex); break;
+                string colName = reader.GetName(columnIndex);
+                table.Columns[columnIndex].Width = formPassedFromAbove.songInfoColumns[columnIndex].width;
+                table.Columns[columnIndex].Name = colName;
+                FillFilterList(formPassedFromAbove.songInfoColumns[columnIndex], table, columnIndex);
+            }
+            table.Sort(table.Columns[0], ListSortDirection.Ascending);
+        }
+        static private void FillFilterList(TABLE_COLUMN settings, DataGridView table, int columnIndex)
+        {
+            if (settings.allowFiltering)
+            {
+                object[] columnEntries = new object[table.RowCount];
+                for (int rowIndex = 0; rowIndex < table.RowCount; rowIndex++)
+                {
+                    columnEntries[rowIndex] = table.Rows[rowIndex].Cells[columnIndex].Value;
+                }
+
+                Array.Sort(columnEntries);
+
+                for (int rowIndex = 0; rowIndex < table.RowCount; rowIndex++)
+                {
+                    AddUniqueValueToFilter(columnEntries[rowIndex], settings.filterValues);
+                }
             }
         }
-        private void ShowHeaderContextMenu(SONG_ATTRIBUTE column)
+        static private void AddUniqueValueToFilter(object value, List<string> filterList)
         {
-            //if it's a filterable attribute, show all the filterable types
-            //create a struct enumerated by attributes containing lists of filter values for each attribute 
-            ContextMenuFilterList(songInfoColumns[column].valueList);
+            try
+            {
+                if (value != null)
+                {
+                    string nextValue = value.ToString();
+                    if (filterList.IsNullOrEmpty() || filterList.Last() != nextValue)
+                    {
+                        filterList.Add(nextValue);
+                    }
+                }
+            }
+            catch { /*do nothing*/ }
         }
-        private void ContextMenuFilterList(List values)
+
+        private void ContextMenuFilterList(ContextMenuStrip contextMenu , List<string> filterValues)
         {
-            //for each value, create a menu entry with checkbox
+            for (int filterIndex = 0; filterIndex < filterValues.Count; filterIndex++)
+            {
+                contextMenu.Items.Add(filterValues[filterIndex].ToString());
+            }
+        }
+        void DataGridViewContextMenuOpen(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            SONG_ATTRIBUTE column = (SONG_ATTRIBUTE)mouseLocation.ColumnIndex;
+            dataGridView1.ContextMenuStrip.Items.Clear();
+            if (songInfoColumns[(int)column].allowFiltering)
+            {
+                ContextMenuFilterList(dataGridView1.ContextMenuStrip, songInfoColumns[(int)column].filterValues);
+            }
+            e.Cancel = false;
+        }
+        private void dataGridView_CellMouseEnter(object sender, DataGridViewCellEventArgs location)
+        {
+            mouseLocation = location;
         }
     }
 }
