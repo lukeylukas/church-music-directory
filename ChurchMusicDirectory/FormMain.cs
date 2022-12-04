@@ -76,6 +76,10 @@ namespace ChurchMusicDirectory
                 filterValues = new List<string>(),
                 width = 75
             };
+            CheckColumnSettingsInitialization();
+        }
+        private void CheckColumnSettingsInitialization()
+        {
             for (SONG_ATTRIBUTE attributeIndex = 0; attributeIndex < SONG_ATTRIBUTE.COUNT; attributeIndex++)
             {
                 try
