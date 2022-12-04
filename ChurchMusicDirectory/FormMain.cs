@@ -172,15 +172,35 @@ namespace ChurchMusicDirectory
         {
             if (settings.allowFiltering)
             {
-                object[] columnEntries = new object[table.RowCount];
+                List<string> columnEntries = new List<string>();
+                
                 for (int rowIndex = 0; rowIndex < table.RowCount; rowIndex++)
                 {
-                    columnEntries[rowIndex] = table.Rows[rowIndex].Cells[columnIndex].Value;
+                    try
+                    {
+                        string cellValue = table.Rows[rowIndex].Cells[columnIndex].Value.ToString();
+                        if (columnIndex == (int)SONG_ATTRIBUTE.musicKey)
+                        {
+                            string[] cellValues = cellValue.Split(",", StringSplitOptions.TrimEntries);
+                            if (!cellValues.Contains("Null"))
+                            {
+                                columnEntries.AddRange(cellValues);
+                            }
+                        }
+                        else
+                        {
+                            if (!cellValue.Contains("Null"))
+                            {
+                                columnEntries.Add(cellValue);
+                            }
+                        }
+                    }
+                    catch { /* Do nothing */ }
                 }
 
-                Array.Sort(columnEntries);
+                columnEntries.Sort();
 
-                for (int rowIndex = 0; rowIndex < table.RowCount; rowIndex++)
+                for (int rowIndex = 0; rowIndex < columnEntries.Count; rowIndex++)
                 {
                     AddUniqueValueToFilter(columnEntries[rowIndex], settings.filterValues);
                 }
@@ -188,19 +208,12 @@ namespace ChurchMusicDirectory
         }
         static private void AddUniqueValueToFilter(object value, List<string> filterList)
         {
-            try
+            if (value.ToString() != "Null"
+                && (filterList.IsNullOrEmpty()
+                    || filterList.Last() != value.ToString()))
             {
-                if (value is not null)
-                {
-                    if (value.ToString() != "Null"
-                        && (filterList.IsNullOrEmpty()
-                            || filterList.Last() != value.ToString()))
-                    {
-                        filterList.Add(value.ToString());
-                    }
-                }
+                filterList.Add(value.ToString());
             }
-            catch { /*do nothing*/ }
         }
 
         private void ContextMenuFilterList(ContextMenuStrip contextMenu , List<string> filterValues)
