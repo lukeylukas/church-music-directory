@@ -184,12 +184,13 @@ namespace ChurchMusicDirectory
         {
             try
             {
-                if (value != null)
+                if (value is not null)
                 {
-                    string nextValue = value.ToString();
-                    if (filterList.IsNullOrEmpty() || filterList.Last() != nextValue)
+                    if (value.ToString() != "Null"
+                        && (filterList.IsNullOrEmpty()
+                            || filterList.Last() != value.ToString()))
                     {
-                        filterList.Add(nextValue);
+                        filterList.Add(value.ToString());
                     }
                 }
             }
