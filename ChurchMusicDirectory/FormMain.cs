@@ -18,7 +18,6 @@ namespace ChurchMusicDirectory
         const string serverName = "ChurchMusicServer1";
         const string serverIpAddress = "localhost";
         const int serverPort = 1433;
-        private DataGridViewCellEventArgs mouseLocation;
         enum SONG_ATTRIBUTE
         {
             songName,
@@ -40,9 +39,7 @@ namespace ChurchMusicDirectory
         {
             InitializeComponent();
             InitializeSongInfoSettings();
-            mouseLocation = new DataGridViewCellEventArgs(0, 0);
-            dataGridView1.ContextMenuStrip = new ContextMenuStrip();
-            dataGridView1.ContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(DataGridViewContextMenuOpen);
+            InitializeDataGridView1ContextMenu();
         }
         private void InitializeSongInfoSettings()
         {
@@ -91,6 +88,11 @@ namespace ChurchMusicDirectory
                     MessageBox.Show("Settings for " + attributeIndex.ToString() + " not initialized");
                 }
             }
+        }
+        private void InitializeDataGridView1ContextMenu()
+        {
+            dataGridView1.ContextMenuStrip = new ContextMenuStrip();
+            dataGridView1.ContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(DataGridViewContextMenuOpen);
         }
 
         public static void getSongInfo(FormMain formPassedFromAbove, string username, string password)
@@ -208,19 +210,21 @@ namespace ChurchMusicDirectory
                 contextMenu.Items.Add(filterValues[filterIndex].ToString());
             }
         }
-        void DataGridViewContextMenuOpen(object sender, System.ComponentModel.CancelEventArgs e)
+        void DataGridViewContextMenuOpen(object? sender, System.ComponentModel.CancelEventArgs e)
         {
-            SONG_ATTRIBUTE column = (SONG_ATTRIBUTE)mouseLocation.ColumnIndex;
+            e.Cancel = true;
+            Point clickLocationInTable = dataGridView1.PointToClient(MousePosition);
+            DataGridView.HitTestInfo menuLocation = dataGridView1.HitTest(clickLocationInTable.X, clickLocationInTable.Y);
+            SONG_ATTRIBUTE column = (SONG_ATTRIBUTE)menuLocation.ColumnIndex;
             dataGridView1.ContextMenuStrip.Items.Clear();
-            if (songInfoColumns[(int)column].allowFiltering)
+            if (column >= 0 && column < SONG_ATTRIBUTE.COUNT)
             {
-                ContextMenuFilterList(dataGridView1.ContextMenuStrip, songInfoColumns[(int)column].filterValues);
+                if (songInfoColumns[(int)column].allowFiltering)
+                {
+                    ContextMenuFilterList(dataGridView1.ContextMenuStrip, songInfoColumns[(int)column].filterValues);
+                    e.Cancel = false;
+                }
             }
-            e.Cancel = false;
-        }
-        private void dataGridView_CellMouseEnter(object sender, DataGridViewCellEventArgs location)
-        {
-            mouseLocation = location;
         }
     }
 }
