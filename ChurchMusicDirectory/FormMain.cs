@@ -263,20 +263,10 @@ namespace ChurchMusicDirectory
                     try
                     {
                         string cellValue = table.Rows[rowIndex].Cells[columnIndex].Value.ToString();
-                        if (columnIndex == (int)SONG_ATTRIBUTE.musicKey)
+                        switch (columnIndex)
                         {
-                            string[] cellValues = cellValue.Split(",", StringSplitOptions.TrimEntries);
-                            if (!cellValues.Contains("Null"))
-                            {
-                                columnEntries.AddRange(cellValues);
-                            }
-                        }
-                        else
-                        {
-                            if (!cellValue.Contains("Null"))
-                            {
-                                columnEntries.Add(cellValue);
-                            }
+                            case (int)SONG_ATTRIBUTE.musicKey:  columnEntries.AddRange(cellValue.Split(",", StringSplitOptions.TrimEntries));   break;
+                            default:                            columnEntries.Add(cellValue);                                                   break;
                         }
                     }
                     catch { /* Do nothing */ }
