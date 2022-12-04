@@ -35,11 +35,24 @@ namespace ChurchMusicDirectory
         };
         private TABLE_COLUMN[] songInfoColumns = new TABLE_COLUMN[(int)SONG_ATTRIBUTE.COUNT];
 
+        public enum FILTER_TYPE
+        {
+            INCLUDE,
+            EXCLUDE
+        }
+        public struct FILTER_INFO
+        {
+            public FILTER_TYPE type;
+            public List<string> list;
+        };
+        private FILTER_INFO[] columnFilters = new FILTER_INFO[(int)SONG_ATTRIBUTE.COUNT];
+
         public FormMain()
         {
             InitializeComponent();
             InitializeSongInfoSettings();
             InitializeDataGridView1ContextMenu();
+            InitializeColumnFilters();
         }
         private void InitializeSongInfoSettings()
         {
@@ -93,6 +106,77 @@ namespace ChurchMusicDirectory
         {
             dataGridView1.ContextMenuStrip = new ContextMenuStrip();
             dataGridView1.ContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(DataGridViewContextMenuOpen);
+            dataGridView1.ContextMenuStrip.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(ContextMenuStrip_Closing);
+            dataGridView1.ContextMenuStrip.ShowCheckMargin = true;
+        }
+        void DataGridViewContextMenuOpen(object? sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = true;
+            DataGridView.HitTestInfo menuLocation = MousePositionInTable();
+            SONG_ATTRIBUTE column = (SONG_ATTRIBUTE)menuLocation.ColumnIndex;
+            dataGridView1.ContextMenuStrip.Items.Clear();
+            if (column >= 0 && column < SONG_ATTRIBUTE.COUNT)
+            {
+                if (songInfoColumns[(int)column].allowFiltering)
+                {
+                    SongInfoContextMenuPopulate(dataGridView1.ContextMenuStrip, songInfoColumns[(int)column].filterValues);
+                    e.Cancel = false;
+                }
+            }
+        }
+        private DataGridView.HitTestInfo MousePositionInTable()
+        {
+            Point clickLocationInTable = dataGridView1.PointToClient(MousePosition);
+            DataGridView.HitTestInfo cellInfo = dataGridView1.HitTest(clickLocationInTable.X, clickLocationInTable.Y);
+            return cellInfo;
+        }
+        private void SongInfoContextMenuPopulate(ContextMenuStrip contextMenu, List<string> filterValues)
+        {
+            for (int filterIndex = 0; filterIndex < filterValues.Count; filterIndex++)
+            {
+                contextMenu.Items.Add(filterValues[filterIndex].ToString());
+                contextMenu.Items[contextMenu.Items.Count - 1].Name = filterValues[filterIndex].ToString();
+                contextMenu.Items[contextMenu.Items.Count - 1].Click += new System.EventHandler(ContextMenuFilterItem_Click);
+            }
+        }
+        private void ContextMenuFilterItem_Click(object? sender, EventArgs e)
+        {
+            DataGridView.HitTestInfo menuLocation = MousePositionInTable();
+            AddValueToFilter(sender.ToString(), menuLocation.ColumnIndex);
+            ToolStripItem[] senderItem = dataGridView1.ContextMenuStrip.Items.Find(sender.ToString(), true);
+            foreach (ToolStripMenuItem item in senderItem)
+            {
+                item.Checked = true;
+                item.CheckState = System.Windows.Forms.CheckState.Checked;
+            }
+            
+        }
+        private void AddValueToFilter(string filterValue, int columnIndex)
+        {
+            if (columnFilters[columnIndex].list.Contains(filterValue))
+            {
+                columnFilters[columnIndex].list.Remove(filterValue);
+            }
+            else
+            {
+                columnFilters[columnIndex].list.Add(filterValue);
+            }
+        }
+        private void ContextMenuStrip_Closing(object? sender, ToolStripDropDownClosingEventArgs e)
+        {
+            if (e.CloseReason == ToolStripDropDownCloseReason.ItemClicked)
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void InitializeColumnFilters()
+        {
+            for (SONG_ATTRIBUTE attribute = 0; attribute < SONG_ATTRIBUTE.COUNT; attribute++)
+            {
+                columnFilters[(int)attribute].type = FILTER_TYPE.INCLUDE;
+                columnFilters[(int)attribute].list = new List<string>();
+            }
         }
 
         public static void getSongInfo(FormMain formPassedFromAbove, string username, string password)
@@ -213,30 +297,6 @@ namespace ChurchMusicDirectory
                     || filterList.Last() != value.ToString()))
             {
                 filterList.Add(value.ToString());
-            }
-        }
-
-        private void ContextMenuFilterList(ContextMenuStrip contextMenu , List<string> filterValues)
-        {
-            for (int filterIndex = 0; filterIndex < filterValues.Count; filterIndex++)
-            {
-                contextMenu.Items.Add(filterValues[filterIndex].ToString());
-            }
-        }
-        void DataGridViewContextMenuOpen(object? sender, System.ComponentModel.CancelEventArgs e)
-        {
-            e.Cancel = true;
-            Point clickLocationInTable = dataGridView1.PointToClient(MousePosition);
-            DataGridView.HitTestInfo menuLocation = dataGridView1.HitTest(clickLocationInTable.X, clickLocationInTable.Y);
-            SONG_ATTRIBUTE column = (SONG_ATTRIBUTE)menuLocation.ColumnIndex;
-            dataGridView1.ContextMenuStrip.Items.Clear();
-            if (column >= 0 && column < SONG_ATTRIBUTE.COUNT)
-            {
-                if (songInfoColumns[(int)column].allowFiltering)
-                {
-                    ContextMenuFilterList(dataGridView1.ContextMenuStrip, songInfoColumns[(int)column].filterValues);
-                    e.Cancel = false;
-                }
             }
         }
     }
