@@ -18,6 +18,7 @@ namespace ChurchMusicDirectory
         const string serverName = "ChurchMusicServer1";
         const string serverIpAddress = "localhost";
         const int serverPort = 1433;
+        const string contextMenuExclude = "Exclude";
         enum SONG_ATTRIBUTE
         {
             songName,
@@ -132,11 +133,43 @@ namespace ChurchMusicDirectory
         }
         private void SongInfoContextMenuPopulate(ContextMenuStrip contextMenu, List<string> filterValues)
         {
+            contextMenu.Items.Add(contextMenuExclude);
+            contextMenu.Items[0].Name = contextMenuExclude; 
+            contextMenu.Items[0].Click += new System.EventHandler(ContextMenuFilterExclude_Click);
             for (int filterIndex = 0; filterIndex < filterValues.Count; filterIndex++)
             {
                 contextMenu.Items.Add(filterValues[filterIndex].ToString());
                 contextMenu.Items[contextMenu.Items.Count - 1].Name = filterValues[filterIndex].ToString();
                 contextMenu.Items[contextMenu.Items.Count - 1].Click += new System.EventHandler(ContextMenuFilterItem_Click);
+            }
+        }
+        private void ContextMenuFilterExclude_Click(object? sender, EventArgs e)
+        {
+            DataGridView.HitTestInfo menuLocation = MousePositionInTable();
+            ToolStripMenuItem senderItem = (ToolStripMenuItem)sender;
+            //ToolStripMenuItem senderItem = (ToolStripMenuItem)dataGridView1.ContextMenuStrip.Items.Find(sender.ToString(), true)[0];
+            if (senderItem.Checked)
+            {
+                senderItem.Checked = false;
+                senderItem.CheckState = CheckState.Unchecked;
+
+            }
+            else
+            {
+                senderItem.Checked = true;
+                senderItem.CheckState = CheckState.Checked;
+            }
+            FilterHandleExclude(senderItem.Checked, menuLocation.ColumnIndex);
+        }
+        private void FilterHandleExclude(bool excludeFilterValues, int columnIndex)
+        {
+            if (excludeFilterValues)
+            {
+                columnFilters[columnIndex].type = FILTER_TYPE.EXCLUDE;
+            }
+            else
+            {
+                columnFilters[columnIndex].type = FILTER_TYPE.INCLUDE;
             }
         }
         private void ContextMenuFilterItem_Click(object? sender, EventArgs e)
