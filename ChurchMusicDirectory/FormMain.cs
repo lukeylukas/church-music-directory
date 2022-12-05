@@ -18,6 +18,7 @@ namespace ChurchMusicDirectory
         const string serverName = "ChurchMusicServer1";
         const string serverIpAddress = "localhost";
         const int serverPort = 1433;
+        private int contextMenuColumnIndex;
         const string contextMenuExclude = "Exclude";
         const string contextMenuClear = "Clear";
         private static DataTable songInfoTable;
@@ -58,6 +59,7 @@ namespace ChurchMusicDirectory
             InitializeDataGridView1ContextMenu();
             InitializeColumnFilters();
             songInfoTable = new DataTable();
+            contextMenuColumnIndex = 0;
         }
         private void InitializeSongInfoSettings()
         {
@@ -125,6 +127,7 @@ namespace ChurchMusicDirectory
                 if (songInfoColumns[(int)column].allowFiltering)
                 {
                     SongInfoContextMenuPopulate(dataGridView1.ContextMenuStrip, (int)column);
+                    contextMenuColumnIndex = (int)column;
                     e.Cancel = false;
                 }
             }
@@ -186,8 +189,7 @@ namespace ChurchMusicDirectory
                 senderItem.CheckState = CheckState.Checked;
             }
 
-            DataGridView.HitTestInfo menuLocation = MousePositionInTable();
-            FilterHandleExclude(senderItem.Checked, menuLocation.ColumnIndex);
+            FilterHandleExclude(senderItem.Checked, contextMenuColumnIndex);
         }
         private void FilterHandleExclude(bool excludeFilterValues, int columnIndex)
         {
@@ -209,8 +211,7 @@ namespace ChurchMusicDirectory
         }
         private void ContextMenuFilterClear_Click(object? sender, EventArgs e)
         {
-            DataGridView.HitTestInfo menuLocation = MousePositionInTable();
-            columnFilters[menuLocation.ColumnIndex].list.Clear();
+            columnFilters[contextMenuColumnIndex].list.Clear();
 
             ToolStrip parentMenu = ((ToolStripMenuItem)sender).Owner;
             for (int menuItemIndex = 0; menuItemIndex < parentMenu.Items.Count; menuItemIndex++)
@@ -235,8 +236,7 @@ namespace ChurchMusicDirectory
                 senderItem.CheckState = CheckState.Checked;
             }
 
-            DataGridView.HitTestInfo menuLocation = MousePositionInTable();
-            AddValueToFilter(sender.ToString(), menuLocation.ColumnIndex);
+            AddValueToFilter(sender.ToString(), contextMenuColumnIndex);
             
         }
         private void AddValueToFilter(string filterValue, int columnIndex)
