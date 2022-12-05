@@ -138,6 +138,7 @@ namespace ChurchMusicDirectory
         private void SongInfoContextMenuPopulate(ContextMenuStrip contextMenu, int columnIndex)
         {
             AddExcludeFilter(contextMenu, columnIndex);
+            AddClearFilter(contextMenu);
 
             for (int filterIndex = 0; filterIndex < songInfoColumns[columnIndex].filterValues.Count; filterIndex++)
             {
@@ -198,6 +199,26 @@ namespace ChurchMusicDirectory
             {
                 columnFilters[columnIndex].type = FILTER_TYPE.INCLUDE;
             }
+        }
+        private void AddClearFilter(ContextMenuStrip contextMenu)
+        {
+            contextMenu.Items.Add(contextMenuClear);
+            contextMenu.Items[1].Name = contextMenuClear;
+            contextMenu.Items[1].Click += new System.EventHandler(ContextMenuFilterClear_Click);
+            contextMenu.Items[1].BackColor = Color.LightSteelBlue;
+        }
+        private void ContextMenuFilterClear_Click(object? sender, EventArgs e)
+        {
+            DataGridView.HitTestInfo menuLocation = MousePositionInTable();
+            columnFilters[menuLocation.ColumnIndex].list.Clear();
+
+            ToolStrip parentMenu = ((ToolStripMenuItem)sender).Owner;
+            for (int menuItemIndex = 0; menuItemIndex < parentMenu.Items.Count; menuItemIndex++)
+            {
+                ((ToolStripMenuItem)parentMenu.Items[menuItemIndex]).Checked = false;
+                ((ToolStripMenuItem)parentMenu.Items[menuItemIndex]).CheckState = CheckState.Unchecked;
+            }
+            SongInfoFilter();
         }
         private void ContextMenuFilterItem_Click(object? sender, EventArgs e)
         {
