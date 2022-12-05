@@ -20,6 +20,7 @@ namespace ChurchMusicDirectory
         const int serverPort = 1433;
         const string contextMenuExclude = "Exclude";
         private static DataTable songInfoTable;
+        private const string cellNullString = "";
         enum SONG_ATTRIBUTE
         {
             songName,
@@ -337,7 +338,7 @@ namespace ChurchMusicDirectory
         }
         static private void AddUniqueValueToFilter(object value, List<string> filterList)
         {
-            if (value.ToString() != "Null"
+            if (value.ToString() != cellNullString
                 && (filterList.IsNullOrEmpty()
                     || filterList.Last() != value.ToString()))
             {
