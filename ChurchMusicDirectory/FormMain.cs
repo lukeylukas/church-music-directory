@@ -413,7 +413,7 @@ namespace ChurchMusicDirectory
                 }
             }
 
-            if (!query.Equals(""))
+            if (!query.Equals(songInfoTable.DefaultView.RowFilter))
             {
                 songInfoTable.DefaultView.RowFilter = query;
             }
