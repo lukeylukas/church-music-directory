@@ -227,6 +227,10 @@ namespace ChurchMusicDirectory
             {
                 e.Cancel = true;
             }
+            else
+            {
+                SongInfoFilter();
+            }
         }
 
         private void InitializeColumnFilters()
@@ -343,6 +347,46 @@ namespace ChurchMusicDirectory
                     || filterList.Last() != value.ToString()))
             {
                 filterList.Add(value.ToString());
+            }
+        }
+
+        private void SongInfoFilter()
+        {
+            string query = "";
+            for (int columnIndex = 0; columnIndex < (int)SONG_ATTRIBUTE.COUNT; columnIndex++)
+            {
+
+                if (columnFilters[columnIndex].list.Count > 0)
+                {
+                    string excludeString = "";
+                    string joinString = " OR ";
+                    if (columnFilters[columnIndex].type == FILTER_TYPE.EXCLUDE)
+                    {
+                        excludeString = " NOT";
+                        joinString = " AND ";
+                    }
+                    query += "(";
+
+                    for (int filterIndex = 0; filterIndex <= columnFilters[columnIndex].list.Count - 2; filterIndex++)
+                    {
+                        query += songInfoTable.Columns[columnIndex].ColumnName + excludeString + " LIKE \'%";
+                        query += columnFilters[columnIndex].list[filterIndex] + "%\'" + joinString;
+                    }
+                    query += songInfoTable.Columns[columnIndex].ColumnName + excludeString + " LIKE \'%";
+                    query += columnFilters[columnIndex].list[^1] + "%\'";
+                    query += ")";
+                }
+                if (!query.Equals("")
+                    && columnIndex < (int)SONG_ATTRIBUTE.COUNT - 1 
+                    && columnFilters[columnIndex + 1].list.Count > 0)
+                {
+                    query += " AND ";
+                }
+            }
+
+            if (!query.Equals(""))
+            {
+                songInfoTable.DefaultView.RowFilter = query;
             }
         }
     }
