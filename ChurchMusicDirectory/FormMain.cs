@@ -19,6 +19,7 @@ namespace ChurchMusicDirectory
         const string serverIpAddress = "localhost";
         const int serverPort = 1433;
         const string contextMenuExclude = "Exclude";
+        private static DataTable songInfoTable;
         enum SONG_ATTRIBUTE
         {
             songName,
@@ -54,6 +55,7 @@ namespace ChurchMusicDirectory
             InitializeSongInfoSettings();
             InitializeDataGridView1ContextMenu();
             InitializeColumnFilters();
+            songInfoTable = new DataTable();
         }
         private void InitializeSongInfoSettings()
         {
@@ -287,26 +289,23 @@ namespace ChurchMusicDirectory
             {
                 MessageBox.Show(e.Message);
             }
+            
         }
 
         private static void ReadData(FormMain formPassedFromAbove, SqlDataReader reader)
         {
-            DataGridView table = formPassedFromAbove.dataGridView1;
-            table.Rows.Clear();
-            table.ColumnCount = reader.FieldCount;
-            while (reader.Read())
+            DataTable table = songInfoTable;
+            table.Load(reader);
+
+            DataGridView tableViewer = formPassedFromAbove.dataGridView1;
+            tableViewer.DataSource = table;
+            for (int columnIndex = 0; columnIndex < table.Columns.Count; columnIndex++)
             {
-                object[] row = new object[reader.FieldCount];
-                reader.GetProviderSpecificValues(row);
-                table.Rows.Add(row);
+                tableViewer.Columns[columnIndex].Width = formPassedFromAbove.songInfoColumns[columnIndex].width;
+                tableViewer.Columns[columnIndex].Name = table.Columns[columnIndex].ColumnName;
+                FillFilterList(formPassedFromAbove.songInfoColumns[columnIndex], tableViewer, columnIndex);
             }
-            for (int columnIndex = 0; columnIndex < reader.FieldCount; columnIndex++)
-            {
-                table.Columns[columnIndex].Width = formPassedFromAbove.songInfoColumns[columnIndex].width;
-                table.Columns[columnIndex].Name = reader.GetName(columnIndex);
-                FillFilterList(formPassedFromAbove.songInfoColumns[columnIndex], table, columnIndex);
-            }
-            table.Sort(table.Columns[0], ListSortDirection.Ascending);
+            tableViewer.Sort(tableViewer.Columns[0], ListSortDirection.Ascending);
         }
         static private void FillFilterList(TABLE_COLUMN settings, DataGridView table, int columnIndex)
         {
