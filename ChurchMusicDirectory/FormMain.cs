@@ -120,7 +120,7 @@ namespace ChurchMusicDirectory
             {
                 if (songInfoColumns[(int)column].allowFiltering)
                 {
-                    SongInfoContextMenuPopulate(dataGridView1.ContextMenuStrip, songInfoColumns[(int)column].filterValues);
+                    SongInfoContextMenuPopulate(dataGridView1.ContextMenuStrip, (int)column);
                     e.Cancel = false;
                 }
             }
@@ -131,16 +131,32 @@ namespace ChurchMusicDirectory
             DataGridView.HitTestInfo cellInfo = dataGridView1.HitTest(clickLocationInTable.X, clickLocationInTable.Y);
             return cellInfo;
         }
-        private void SongInfoContextMenuPopulate(ContextMenuStrip contextMenu, List<string> filterValues)
+        private void SongInfoContextMenuPopulate(ContextMenuStrip contextMenu, int columnIndex)
         {
             contextMenu.Items.Add(contextMenuExclude);
             contextMenu.Items[0].Name = contextMenuExclude; 
             contextMenu.Items[0].Click += new System.EventHandler(ContextMenuFilterExclude_Click);
-            for (int filterIndex = 0; filterIndex < filterValues.Count; filterIndex++)
+            if (columnFilters[columnIndex].type == FILTER_TYPE.EXCLUDE)
             {
-                contextMenu.Items.Add(filterValues[filterIndex].ToString());
-                contextMenu.Items[contextMenu.Items.Count - 1].Name = filterValues[filterIndex].ToString();
+                ((ToolStripMenuItem)contextMenu.Items[0]).Checked = true;
+                ((ToolStripMenuItem)contextMenu.Items[0]).CheckState = CheckState.Checked;
+            }
+            else
+            {
+                ((ToolStripMenuItem)contextMenu.Items[0]).Checked = false;
+                ((ToolStripMenuItem)contextMenu.Items[0]).CheckState = CheckState.Unchecked;
+            }
+            for (int filterIndex = 0; filterIndex < songInfoColumns[columnIndex].filterValues.Count; filterIndex++)
+            {
+                string testValue = songInfoColumns[columnIndex].filterValues[filterIndex].ToString();
+                contextMenu.Items.Add(testValue);
+                contextMenu.Items[contextMenu.Items.Count - 1].Name = testValue;
                 contextMenu.Items[contextMenu.Items.Count - 1].Click += new System.EventHandler(ContextMenuFilterItem_Click);
+                if (columnFilters[columnIndex].list.Contains(testValue))
+                {
+                    ((ToolStripMenuItem)contextMenu.Items[contextMenu.Items.Count - 1]).Checked = true;
+                    ((ToolStripMenuItem)contextMenu.Items[contextMenu.Items.Count - 1]).CheckState = CheckState.Checked;
+                }
             }
         }
         private void ContextMenuFilterExclude_Click(object? sender, EventArgs e)
@@ -175,8 +191,17 @@ namespace ChurchMusicDirectory
         private void ContextMenuFilterItem_Click(object? sender, EventArgs e)
         {
             ToolStripMenuItem senderItem = (ToolStripMenuItem)sender;
-            senderItem.Checked = true;
-            senderItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            if (senderItem.Checked)
+            {
+                senderItem.Checked = false;
+                senderItem.CheckState = CheckState.Unchecked;
+
+            }
+            else
+            {
+                senderItem.Checked = true;
+                senderItem.CheckState = CheckState.Checked;
+            }
 
             DataGridView.HitTestInfo menuLocation = MousePositionInTable();
             AddValueToFilter(sender.ToString(), menuLocation.ColumnIndex);
