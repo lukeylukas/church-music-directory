@@ -150,12 +150,12 @@ namespace ChurchMusicDirectory
             {
                 string testValue = songInfoColumns[columnIndex].filterValues[filterIndex].ToString();
                 contextMenu.Items.Add(testValue);
-                contextMenu.Items[contextMenu.Items.Count - 1].Name = testValue;
-                contextMenu.Items[contextMenu.Items.Count - 1].Click += new System.EventHandler(ContextMenuFilterItem_Click);
+                contextMenu.Items[^1].Name = testValue;
+                contextMenu.Items[^1].Click += new System.EventHandler(ContextMenuFilterItem_Click);
                 if (columnFilters[columnIndex].list.Contains(testValue))
                 {
-                    ((ToolStripMenuItem)contextMenu.Items[contextMenu.Items.Count - 1]).Checked = true;
-                    ((ToolStripMenuItem)contextMenu.Items[contextMenu.Items.Count - 1]).CheckState = CheckState.Checked;
+                    ((ToolStripMenuItem)contextMenu.Items[^1]).Checked = true;
+                    ((ToolStripMenuItem)contextMenu.Items[^1]).CheckState = CheckState.Checked;
                 }
             }
         }
