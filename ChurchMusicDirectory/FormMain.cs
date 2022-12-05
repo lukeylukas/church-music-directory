@@ -19,6 +19,7 @@ namespace ChurchMusicDirectory
         const string serverIpAddress = "localhost";
         const int serverPort = 1433;
         const string contextMenuExclude = "Exclude";
+        const string contextMenuClear = "Clear";
         private static DataTable songInfoTable;
         private const string cellNullString = "";
         enum SONG_ATTRIBUTE
@@ -136,19 +137,8 @@ namespace ChurchMusicDirectory
         }
         private void SongInfoContextMenuPopulate(ContextMenuStrip contextMenu, int columnIndex)
         {
-            contextMenu.Items.Add(contextMenuExclude);
-            contextMenu.Items[0].Name = contextMenuExclude; 
-            contextMenu.Items[0].Click += new System.EventHandler(ContextMenuFilterExclude_Click);
-            if (columnFilters[columnIndex].type == FILTER_TYPE.EXCLUDE)
-            {
-                ((ToolStripMenuItem)contextMenu.Items[0]).Checked = true;
-                ((ToolStripMenuItem)contextMenu.Items[0]).CheckState = CheckState.Checked;
-            }
-            else
-            {
-                ((ToolStripMenuItem)contextMenu.Items[0]).Checked = false;
-                ((ToolStripMenuItem)contextMenu.Items[0]).CheckState = CheckState.Unchecked;
-            }
+            AddExcludeFilter(contextMenu, columnIndex);
+
             for (int filterIndex = 0; filterIndex < songInfoColumns[columnIndex].filterValues.Count; filterIndex++)
             {
                 string testValue = songInfoColumns[columnIndex].filterValues[filterIndex].ToString();
@@ -160,6 +150,24 @@ namespace ChurchMusicDirectory
                     ((ToolStripMenuItem)contextMenu.Items[^1]).Checked = true;
                     ((ToolStripMenuItem)contextMenu.Items[^1]).CheckState = CheckState.Checked;
                 }
+            }
+        }
+        private void AddExcludeFilter(ContextMenuStrip contextMenu, int columnIndex)
+        {
+            contextMenu.Items.Add(contextMenuExclude);
+            contextMenu.Items[0].Name = contextMenuExclude;
+            contextMenu.Items[0].Click += new System.EventHandler(ContextMenuFilterExclude_Click);
+            contextMenu.Items[0].BackColor = Color.LightSteelBlue;
+
+            if (columnFilters[columnIndex].type == FILTER_TYPE.EXCLUDE)
+            {
+                ((ToolStripMenuItem)contextMenu.Items[0]).Checked = true;
+                ((ToolStripMenuItem)contextMenu.Items[0]).CheckState = CheckState.Checked;
+            }
+            else
+            {
+                ((ToolStripMenuItem)contextMenu.Items[0]).Checked = false;
+                ((ToolStripMenuItem)contextMenu.Items[0]).CheckState = CheckState.Unchecked;
             }
         }
         private void ContextMenuFilterExclude_Click(object? sender, EventArgs e)
