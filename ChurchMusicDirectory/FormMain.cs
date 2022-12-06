@@ -37,6 +37,7 @@ namespace ChurchMusicDirectory
             public bool allowFiltering;
             public List<string> filterValues;
             public int width;
+            public string name;
         };
         private TABLE_COLUMN[] songInfoColumns = new TABLE_COLUMN[(int)SONG_ATTRIBUTE.COUNT];
 
@@ -67,31 +68,36 @@ namespace ChurchMusicDirectory
             {
                 allowFiltering = false,
                 filterValues = new List<string>(),
-                width = 200
+                width = 200,
+                name = "Title"
             };
             songInfoColumns[(int)SONG_ATTRIBUTE.musicKey] = new TABLE_COLUMN
             {
                 allowFiltering = true,
                 filterValues = new List<string>(),
-                width = 75
+                width = 75,
+                name = "Key"
             };
             songInfoColumns[(int)SONG_ATTRIBUTE.subject] = new TABLE_COLUMN
             {
                 allowFiltering = true,
                 filterValues = new List<string>(),
-                width = 200
+                width = 200,
+                name = "Subject"
             };
             songInfoColumns[(int)SONG_ATTRIBUTE.tag] = new TABLE_COLUMN
             {
                 allowFiltering = false,
                 filterValues = new List<string>(),
-                width = 100
+                width = 100,
+                name = "Notes"
             };
             songInfoColumns[(int)SONG_ATTRIBUTE.numPlays] = new TABLE_COLUMN
             {
                 allowFiltering = true,
                 filterValues = new List<string>(),
-                width = 75
+                width = 75,
+                name = "Plays"
             };
             CheckColumnSettingsInitialization();
         }
@@ -336,7 +342,7 @@ namespace ChurchMusicDirectory
             for (int columnIndex = 0; columnIndex < table.Columns.Count; columnIndex++)
             {
                 tableViewer.Columns[columnIndex].Width = formPassedFromAbove.songInfoColumns[columnIndex].width;
-                tableViewer.Columns[columnIndex].Name = table.Columns[columnIndex].ColumnName;
+                tableViewer.Columns[columnIndex].HeaderText = formPassedFromAbove.songInfoColumns[columnIndex].name;
                 FillFilterList(formPassedFromAbove.songInfoColumns[columnIndex], tableViewer, columnIndex);
             }
             tableViewer.Sort(tableViewer.Columns[0], ListSortDirection.Ascending);
@@ -381,10 +387,6 @@ namespace ChurchMusicDirectory
 
         private void SongInfoFilter()
         {
-            //if there's an apostrophe in the name, query fails
-            //use IndexOf to find apostrophes and then add a slash before them. Do it iteratively to capture multiple potential apostrophes
-            //consider there may be other special characters this needs to be done for.
-            //Create a new function for it where it would be easy to add other special chars
             string query = "";
             for (int columnIndex = 0; columnIndex < (int)SONG_ATTRIBUTE.COUNT; columnIndex++)
             {
