@@ -28,8 +28,8 @@ namespace ChurchMusicDirectory
             songName,
             musicKey,
             subject,
-            tag,
             numPlays,
+            tag,
             COUNT
         }
         public struct TABLE_COLUMN
