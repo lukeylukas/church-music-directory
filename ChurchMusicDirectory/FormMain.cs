@@ -57,6 +57,7 @@ namespace ChurchMusicDirectory
         {
             InitializeComponent();
             InitializeSongInfoSettings();
+            InitializeDataGridView1();
             InitializeDataGridView1ContextMenu();
             InitializeColumnFilters();
             songInfoTable = new DataTable();
@@ -114,6 +115,17 @@ namespace ChurchMusicDirectory
                     MessageBox.Show("Settings for " + attributeIndex.ToString() + " not initialized");
                 }
             }
+        }
+        private void InitializeDataGridView1()
+        {
+            dataGridView1.RowHeadersVisible = false;
+
+            int dataGridViewWidth = 0;
+            for (int columnIndex = 0; columnIndex < (int)SONG_ATTRIBUTE.COUNT; columnIndex++)
+            {
+                dataGridViewWidth += songInfoColumns[columnIndex].width;
+            }
+            dataGridView1.Width = dataGridViewWidth + 20;
         }
         private void InitializeDataGridView1ContextMenu()
         {
