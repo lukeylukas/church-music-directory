@@ -15,6 +15,7 @@ namespace ChurchMusicDirectory
 {
     public partial class FormSongTables : Form
     {
+        private FormMain formPassedFromAbove;
         const string serverName = "ChurchMusicServer1";
         const string serverIpAddress = "localhost";
         const int serverPort = 1433;
@@ -53,7 +54,7 @@ namespace ChurchMusicDirectory
         };
         private FILTER_INFO[] columnFilters = new FILTER_INFO[(int)SONG_ATTRIBUTE.COUNT];
 
-        public FormSongTables()
+        public FormSongTables(FormMain parentForm)
         {
             InitializeComponent();
             InitializeSongInfoSettings();
@@ -62,6 +63,7 @@ namespace ChurchMusicDirectory
             InitializeColumnFilters();
             songInfoTable = new DataTable();
             contextMenuColumnIndex = 0;
+            formPassedFromAbove = parentForm;
         }
         private void InitializeSongInfoSettings()
         {
@@ -465,6 +467,11 @@ namespace ChurchMusicDirectory
                 }
             }
             return safeString;
+        }
+
+        private void buttonToggleServicePlanner_Click(object sender, EventArgs e)
+        {
+            formPassedFromAbove.ToggleServicePlanner();
         }
     }
 }

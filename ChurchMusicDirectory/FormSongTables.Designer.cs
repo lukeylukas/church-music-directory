@@ -124,6 +124,7 @@
             this.buttonToggleServicePlanner.TabIndex = 1;
             this.buttonToggleServicePlanner.Text = "Service Planner";
             this.buttonToggleServicePlanner.UseVisualStyleBackColor = true;
+            this.buttonToggleServicePlanner.Click += new System.EventHandler(this.buttonToggleServicePlanner_Click);
             // 
             // FormSongTables
             // 
