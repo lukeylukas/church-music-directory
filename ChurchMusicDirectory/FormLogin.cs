@@ -38,10 +38,7 @@ namespace ChurchMusicDirectory
             {
                 Properties.Settings.Default.Reset();
             }
-            this.Hide();
-            FormMain formMain = new FormMain();
-            FormMain.getSongInfo(formMain, richTextBoxUsername.Text, richTextBoxPassword.Text);
-            formMain.Show();
+            this.Dispose();
         }
 
         private void checkBoxRememberLogin_KeyUp(object sender, KeyEventArgs e)
