@@ -40,25 +40,11 @@ namespace ChurchMusicDirectory
         public FormSongTables(FormMain parentForm)
         {
             InitializeComponent();
-            InitializeDataGridView1();
             InitializeDataGridView1ContextMenu();
             InitializeColumnFilters();
             songInfoTable = new DataTable();
             contextMenuColumnIndex = 0;
             formPassedFromAbove = parentForm;
-        }
-        private void InitializeDataGridView1()
-        {
-            dataGridView1.RowHeadersVisible = false;
-            /*
-            int dataGridViewWidth = 0;
-            for (int columnIndex = 0; columnIndex < (int)SONG_ATTRIBUTE.COUNT; columnIndex++)
-            {
-                dataGridViewWidth += songInfoColumns[columnIndex].width;
-            }
-            dataGridView1.Width = dataGridViewWidth + 20;
-            */
-
         }
         private void InitializeDataGridView1ContextMenu()
         {
