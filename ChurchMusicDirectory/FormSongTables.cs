@@ -212,7 +212,6 @@ namespace ChurchMusicDirectory
             dataGridView1.DataSource = songInfoTable;
             for (int columnIndex = 0; columnIndex < dataGridView1.Columns.Count; columnIndex++)
             {
-                //set this based on enum name not index
                 dataGridView1.Columns[columnIndex].Width = DataCtrl.songInfoColumns[columnIndex].width;
                 dataGridView1.Columns[columnIndex].HeaderText = DataCtrl.songInfoColumns[columnIndex].name;
                 FillFilterList(DataCtrl.songInfoColumns[columnIndex], dataGridView1, columnIndex);
