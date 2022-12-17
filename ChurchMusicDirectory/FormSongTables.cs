@@ -56,7 +56,7 @@ namespace ChurchMusicDirectory
         void DataGridViewContextMenuOpen(object? sender, System.ComponentModel.CancelEventArgs e)
         {
             e.Cancel = true;
-            DataGridView.HitTestInfo menuLocation = MousePositionInTable();
+            DataGridView.HitTestInfo menuLocation = Utils.MousePositionInTable(dataGridView1, MousePosition);
             DataCtrl.SONG_ATTRIBUTE column = (DataCtrl.SONG_ATTRIBUTE)menuLocation.ColumnIndex;
             dataGridView1.ContextMenuStrip.Items.Clear();
             if (column >= 0 && column < DataCtrl.SONG_ATTRIBUTE.COUNT)
@@ -68,12 +68,6 @@ namespace ChurchMusicDirectory
                     e.Cancel = false;
                 }
             }
-        }
-        private DataGridView.HitTestInfo MousePositionInTable()
-        {
-            Point clickLocationInTable = dataGridView1.PointToClient(MousePosition);
-            DataGridView.HitTestInfo cellInfo = dataGridView1.HitTest(clickLocationInTable.X, clickLocationInTable.Y);
-            return cellInfo;
         }
         private void SongInfoContextMenuPopulate(ContextMenuStrip contextMenu, int columnIndex)
         {
