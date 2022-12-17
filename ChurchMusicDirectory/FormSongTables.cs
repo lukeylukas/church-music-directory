@@ -204,18 +204,22 @@ namespace ChurchMusicDirectory
 
         public void ImportSongInfoTable(DataTable table)
         {
-            DataGridView tableViewer = this.dataGridView1;
-            tableViewer.DataSource = table;
-            for (int columnIndex = 0; columnIndex < table.Columns.Count; columnIndex++)
+            songInfoTable = table;
+            DisplaySongInfo();
+        }
+        private void DisplaySongInfo()
+        { 
+            dataGridView1.DataSource = songInfoTable;
+            for (int columnIndex = 0; columnIndex < dataGridView1.Columns.Count; columnIndex++)
             {
                 //set this based on enum name not index
-                tableViewer.Columns[columnIndex].Width = DataCtrl.songInfoColumns[columnIndex].width;
-                tableViewer.Columns[columnIndex].HeaderText = DataCtrl.songInfoColumns[columnIndex].name;
-                FillFilterList(DataCtrl.songInfoColumns[columnIndex], tableViewer, columnIndex);
+                dataGridView1.Columns[columnIndex].Width = DataCtrl.songInfoColumns[columnIndex].width;
+                dataGridView1.Columns[columnIndex].HeaderText = DataCtrl.songInfoColumns[columnIndex].name;
+                FillFilterList(DataCtrl.songInfoColumns[columnIndex], dataGridView1, columnIndex);
             }
-            tableViewer.Columns[^1].MinimumWidth = DataCtrl.songInfoColumns[^1].width;
-            tableViewer.Columns[^1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            tableViewer.Sort(tableViewer.Columns[0], ListSortDirection.Ascending);
+            dataGridView1.Columns[^1].MinimumWidth = DataCtrl.songInfoColumns[^1].width;
+            dataGridView1.Columns[^1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dataGridView1.Sort(dataGridView1.Columns[0], ListSortDirection.Ascending);
         }
         static private void FillFilterList(DataCtrl.TABLE_COLUMN settings, DataGridView table, int columnIndex)
         {
