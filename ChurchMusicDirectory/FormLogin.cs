@@ -28,7 +28,7 @@ namespace ChurchMusicDirectory
 
         private void buttonLogin_Click(object sender, EventArgs e)
         {
-            if (checkBoxRememberLogin.CheckState == CheckState.Checked)
+            if (Properties.Settings.Default.RememberLogin == true)
             {
                 Properties.Settings.Default.Username = richTextBoxUsername.Text;
                 Properties.Settings.Default.Password = richTextBoxPassword.Text;
@@ -36,9 +36,10 @@ namespace ChurchMusicDirectory
             }
             else
             {
-                Properties.Settings.Default.Reset();
+                Properties.Settings.Default.Username = "";
+                Properties.Settings.Default.Password = "";
             }
-            this.Dispose();
+            FormMain.LoginToApplication();
         }
 
         private void checkBoxRememberLogin_KeyUp(object sender, KeyEventArgs e)

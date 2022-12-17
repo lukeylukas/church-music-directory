@@ -71,9 +71,12 @@ namespace ChurchMusicDirectory
             panelMain.Controls.Add(servicePlannerForm);
         }
 
-        private void LoginForm_Disposed(object? sender, EventArgs e)
+        public static void LoginToApplication()
         {
-            DataCtrlInit();
+            FormMain.getInstance().Invoke((MethodInvoker)delegate
+            {
+                FormMain.getInstance().DataCtrlInit();
+            });            
         }
 
         public void ToggleServicePlanner()
@@ -104,7 +107,7 @@ namespace ChurchMusicDirectory
             });
             initDataCtrlThread.Start();
         }
-        private void SongInfoCallback(bool success, string message)
+        private static void SongInfoCallback(bool success, string message)
         {
             FormMain.getInstance().Invoke((MethodInvoker)delegate
             {
@@ -113,17 +116,16 @@ namespace ChurchMusicDirectory
         }
         private void HandleResponseSongInfo(bool success, string message)
         {
-            //loginForm.HandleResult();
-            //if success the form will dispose but if not it will show the message
             if (success)
             {
+                loginForm.Dispose();
+
                 songTableForm.ImportSongInfoTable(dataCtrl.songInfoTable);
                 songTableForm.Show();
             }
             else
             {
                 MessageBox.Show(message);
-                loginForm.Show();
             }
         }
         private void HandleSongRecordsResponse(bool success, string message)
