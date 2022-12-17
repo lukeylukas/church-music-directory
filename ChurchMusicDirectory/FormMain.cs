@@ -53,7 +53,7 @@ namespace ChurchMusicDirectory
             servicePlannerForm.TopLevel = false;
             servicePlannerForm.AutoScroll = true;
             servicePlannerForm.FormBorderStyle = FormBorderStyle.None;
-            servicePlannerForm.Anchor = AnchorStyles.Right | AnchorStyles.Top;
+            servicePlannerForm.Anchor = AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom;
             servicePlannerForm.Location = new System.Drawing.Point(panelMain.Width - servicePlannerForm.Width, 0);
             panelMain.Controls.Add(servicePlannerForm);
         }
