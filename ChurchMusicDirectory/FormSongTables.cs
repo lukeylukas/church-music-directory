@@ -24,23 +24,6 @@ namespace ChurchMusicDirectory
         const string contextMenuClear = "Clear";
         private static DataTable songInfoTable;
         private const string cellNullString = "";
-        enum SONG_ATTRIBUTE
-        {
-            songName,
-            musicKey,
-            subject,
-            numPlays,
-            tag,
-            COUNT
-        }
-        public struct TABLE_COLUMN
-        {
-            public bool allowFiltering;
-            public List<string> filterValues;
-            public int width;
-            public string name;
-        };
-        private static TABLE_COLUMN[] songInfoColumns = new TABLE_COLUMN[(int)SONG_ATTRIBUTE.COUNT];
 
         public enum FILTER_TYPE
         {
@@ -52,71 +35,17 @@ namespace ChurchMusicDirectory
             public FILTER_TYPE type;
             public List<string> list;
         };
-        private FILTER_INFO[] columnFilters = new FILTER_INFO[(int)SONG_ATTRIBUTE.COUNT];
+        private FILTER_INFO[] columnFilters = new FILTER_INFO[(int)DataCtrl.SONG_ATTRIBUTE.COUNT];
 
         public FormSongTables(FormMain parentForm)
         {
             InitializeComponent();
-            InitializeSongInfoSettings();
             InitializeDataGridView1();
             InitializeDataGridView1ContextMenu();
             InitializeColumnFilters();
             songInfoTable = new DataTable();
             contextMenuColumnIndex = 0;
             formPassedFromAbove = parentForm;
-        }
-        private void InitializeSongInfoSettings()
-        {
-            songInfoColumns[(int)SONG_ATTRIBUTE.songName] = new TABLE_COLUMN
-            {
-                allowFiltering = false,
-                filterValues = new List<string>(),
-                width = 200,
-                name = "Title"
-            };
-            songInfoColumns[(int)SONG_ATTRIBUTE.musicKey] = new TABLE_COLUMN
-            {
-                allowFiltering = true,
-                filterValues = new List<string>(),
-                width = 75,
-                name = "Key"
-            };
-            songInfoColumns[(int)SONG_ATTRIBUTE.subject] = new TABLE_COLUMN
-            {
-                allowFiltering = true,
-                filterValues = new List<string>(),
-                width = 200,
-                name = "Subject"
-            };
-            songInfoColumns[(int)SONG_ATTRIBUTE.tag] = new TABLE_COLUMN
-            {
-                allowFiltering = false,
-                filterValues = new List<string>(),
-                width = 100,
-                name = "Notes"
-            };
-            songInfoColumns[(int)SONG_ATTRIBUTE.numPlays] = new TABLE_COLUMN
-            {
-                allowFiltering = true,
-                filterValues = new List<string>(),
-                width = 75,
-                name = "Plays"
-            };
-            CheckColumnSettingsInitialization();
-        }
-        private void CheckColumnSettingsInitialization()
-        {
-            for (SONG_ATTRIBUTE attributeIndex = 0; attributeIndex < SONG_ATTRIBUTE.COUNT; attributeIndex++)
-            {
-                try
-                {
-                    bool initCheck = (songInfoColumns[(int)attributeIndex].width != 1);
-                }
-                catch
-                {
-                    MessageBox.Show("Settings for " + attributeIndex.ToString() + " not initialized");
-                }
-            }
         }
         private void InitializeDataGridView1()
         {
@@ -142,11 +71,11 @@ namespace ChurchMusicDirectory
         {
             e.Cancel = true;
             DataGridView.HitTestInfo menuLocation = MousePositionInTable();
-            SONG_ATTRIBUTE column = (SONG_ATTRIBUTE)menuLocation.ColumnIndex;
+            DataCtrl.SONG_ATTRIBUTE column = (DataCtrl.SONG_ATTRIBUTE)menuLocation.ColumnIndex;
             dataGridView1.ContextMenuStrip.Items.Clear();
-            if (column >= 0 && column < SONG_ATTRIBUTE.COUNT)
+            if (column >= 0 && column < DataCtrl.SONG_ATTRIBUTE.COUNT)
             {
-                if (songInfoColumns[(int)column].allowFiltering)
+                if (DataCtrl.songInfoColumns[(int)column].allowFiltering)
                 {
                     SongInfoContextMenuPopulate(dataGridView1.ContextMenuStrip, (int)column);
                     contextMenuColumnIndex = (int)column;
@@ -165,9 +94,9 @@ namespace ChurchMusicDirectory
             AddExcludeFilter(contextMenu, columnIndex);
             AddClearFilter(contextMenu);
 
-            for (int filterIndex = 0; filterIndex < songInfoColumns[columnIndex].filterValues.Count; filterIndex++)
+            for (int filterIndex = 0; filterIndex < DataCtrl.songInfoColumns[columnIndex].filterValues.Count; filterIndex++)
             {
-                string testValue = songInfoColumns[columnIndex].filterValues[filterIndex].ToString();
+                string testValue = DataCtrl.songInfoColumns[columnIndex].filterValues[filterIndex].ToString();
                 contextMenu.Items.Add(testValue);
                 contextMenu.Items[^1].Name = testValue;
                 contextMenu.Items[^1].Click += new System.EventHandler(ContextMenuFilterItem_Click);
@@ -286,86 +215,29 @@ namespace ChurchMusicDirectory
 
         private void InitializeColumnFilters()
         {
-            for (SONG_ATTRIBUTE attribute = 0; attribute < SONG_ATTRIBUTE.COUNT; attribute++)
+            for (DataCtrl.SONG_ATTRIBUTE attribute = 0; attribute < DataCtrl.SONG_ATTRIBUTE.COUNT; attribute++)
             {
                 columnFilters[(int)attribute].type = FILTER_TYPE.INCLUDE;
                 columnFilters[(int)attribute].list = new List<string>();
             }
         }
 
-        public static void getSongInfo(FormSongTables formPassedFromAbove, string username, string password)
+        public void ImportSongInfoTable(DataTable table)
         {
-            Thread databaseThread = new Thread(() =>
-            {
-                dataGrabber(formPassedFromAbove, username, password);
-            });
-            databaseThread.Start();
-        }
-        public static void dataGrabber(FormSongTables formPassedFromAbove, string username, string password)
-        {
-            try
-            {
-                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-                builder.DataSource = serverIpAddress + "," + serverPort;
-                builder.UserID = username;
-                builder.Password = password;
-                builder.InitialCatalog = "ProvidenceSongs";
-                builder.TrustServerCertificate = true;
-
-                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
-                {
-                    string columns = "";
-                    for (SONG_ATTRIBUTE attribute = 0; attribute < SONG_ATTRIBUTE.COUNT; attribute++)
-                    {
-                        columns += attribute + ", ";
-                    }
-                    columns = columns.Substring(0, columns.Length - 2);
-
-                    String sql = "SELECT " + columns + " FROM songInfo";
-
-                    connection.Open();
-
-                    using (SqlCommand command = new SqlCommand(sql, connection))
-                    {
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            if (reader.FieldCount == (int)SONG_ATTRIBUTE.COUNT)
-                            {
-                                formPassedFromAbove.Invoke(new Action(() => ReadData(formPassedFromAbove, reader)));
-                            }
-                            else
-                            {
-                                MessageBox.Show("Server sent incorrect data size.");
-                            }
-                        }
-                    }
-                }
-            }
-            catch (SqlException e)
-            {
-                MessageBox.Show(e.Message);
-            }
-            
-        }
-
-        private static void ReadData(FormSongTables formPassedFromAbove, SqlDataReader reader)
-        {
-            DataTable table = songInfoTable;
-            table.Load(reader);
-
-            DataGridView tableViewer = formPassedFromAbove.dataGridView1;
+            DataGridView tableViewer = this.dataGridView1;
             tableViewer.DataSource = table;
-            tableViewer.Columns[^1].MinimumWidth = songInfoColumns[^1].width;
-            tableViewer.Columns[^1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             for (int columnIndex = 0; columnIndex < table.Columns.Count; columnIndex++)
             {
-                tableViewer.Columns[columnIndex].Width = songInfoColumns[columnIndex].width;
-                tableViewer.Columns[columnIndex].HeaderText = songInfoColumns[columnIndex].name;
-                FillFilterList(songInfoColumns[columnIndex], tableViewer, columnIndex);
+                //set this based on enum name not index
+                tableViewer.Columns[columnIndex].Width = DataCtrl.songInfoColumns[columnIndex].width;
+                tableViewer.Columns[columnIndex].HeaderText = DataCtrl.songInfoColumns[columnIndex].name;
+                FillFilterList(DataCtrl.songInfoColumns[columnIndex], tableViewer, columnIndex);
             }
+            tableViewer.Columns[^1].MinimumWidth = DataCtrl.songInfoColumns[^1].width;
+            tableViewer.Columns[^1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             tableViewer.Sort(tableViewer.Columns[0], ListSortDirection.Ascending);
         }
-        static private void FillFilterList(TABLE_COLUMN settings, DataGridView table, int columnIndex)
+        static private void FillFilterList(DataCtrl.TABLE_COLUMN settings, DataGridView table, int columnIndex)
         {
             if (settings.allowFiltering)
             {
@@ -378,8 +250,8 @@ namespace ChurchMusicDirectory
                         string cellValue = table.Rows[rowIndex].Cells[columnIndex].Value.ToString();
                         switch (columnIndex)
                         {
-                            case (int)SONG_ATTRIBUTE.musicKey:  columnEntries.AddRange(cellValue.Split(",", StringSplitOptions.TrimEntries));   break;
-                            default:                            columnEntries.Add(cellValue);                                                   break;
+                            case (int)DataCtrl.SONG_ATTRIBUTE.musicKey: columnEntries.AddRange(cellValue.Split(",", StringSplitOptions.TrimEntries));   break;
+                            default:                                    columnEntries.Add(cellValue);                                                   break;
                         }
                     }
                     catch { /* Do nothing */ }
@@ -406,7 +278,7 @@ namespace ChurchMusicDirectory
         private void SongInfoFilter()
         {
             string query = "";
-            for (int columnIndex = 0; columnIndex < (int)SONG_ATTRIBUTE.COUNT; columnIndex++)
+            for (int columnIndex = 0; columnIndex < (int)DataCtrl.SONG_ATTRIBUTE.COUNT; columnIndex++)
             {
 
                 if (columnFilters[columnIndex].list.Count > 0)
@@ -430,7 +302,7 @@ namespace ChurchMusicDirectory
                     query += ")";
                 }
                 if (!query.Equals("")
-                    && columnIndex < (int)SONG_ATTRIBUTE.COUNT - 1 
+                    && columnIndex < (int)DataCtrl.SONG_ATTRIBUTE.COUNT - 1 
                     && columnFilters[columnIndex + 1].list.Count > 0)
                 {
                     query += " AND ";

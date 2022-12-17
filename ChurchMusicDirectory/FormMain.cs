@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace ChurchMusicDirectory
 {
@@ -15,8 +16,19 @@ namespace ChurchMusicDirectory
         private FormLogin loginForm;
         private FormSongTables songTableForm;
         private FormServicePlanner servicePlannerForm;
+        private DataCtrl dataCtrl;
+
+        //Instance of FormMain for getInstance()
+        private static FormMain self;
+        //used to get the current instance of the form
+        public static FormMain getInstance()
+        {
+            return self;
+        }
         public FormMain()
         {
+            //Set FormMain instance to be this instance
+            self = this;
             InitializeComponent();
             Setup();
         }
@@ -25,6 +37,8 @@ namespace ChurchMusicDirectory
             SetupLoginForm();
             SetupSongTableForm();
             SetupServicePlannerForm();
+            dataCtrl = new DataCtrl();
+            loginForm.Show();
         }
         private void SetupLoginForm()
         {
@@ -35,7 +49,6 @@ namespace ChurchMusicDirectory
             loginForm.FormBorderStyle = FormBorderStyle.None;
             loginForm.Disposed += LoginForm_Disposed;
             panelMain.Controls.Add(loginForm);
-            loginForm.Show();
         }
         private void SetupSongTableForm()
         {
@@ -60,10 +73,7 @@ namespace ChurchMusicDirectory
 
         private void LoginForm_Disposed(object? sender, EventArgs e)
         {
-
-            FormSongTables.getSongInfo(songTableForm, Properties.Settings.Default.Username, Properties.Settings.Default.Password);
-
-            songTableForm.Show();
+            DataCtrlInit();
         }
 
         public void ToggleServicePlanner()
@@ -78,6 +88,47 @@ namespace ChurchMusicDirectory
                 servicePlannerForm.Show();
                 songTableForm.Width = panelMain.Width - servicePlannerForm.Width;
             }
+        }
+
+        /************************************************************************************************************************
+        ****************************************        DataCtrl        *********************************************************
+        *************************************************************************************************************************/
+        private void DataCtrlInit()
+        {
+            Thread initDataCtrlThread = new Thread(() =>
+            {
+                if(dataCtrl.GetSongInfo(SongInfoCallback))
+                {
+                    //get the other tables too
+                }
+            });
+            initDataCtrlThread.Start();
+        }
+        private void SongInfoCallback(bool success, string message)
+        {
+            FormMain.getInstance().Invoke((MethodInvoker)delegate
+            {
+                FormMain.getInstance().HandleResponseSongInfo(success, message);
+            });
+        }
+        private void HandleResponseSongInfo(bool success, string message)
+        {
+            //loginForm.HandleResult();
+            //if success the form will dispose but if not it will show the message
+            if (success)
+            {
+                songTableForm.ImportSongInfoTable(dataCtrl.songInfoTable);
+                songTableForm.Show();
+            }
+            else
+            {
+                MessageBox.Show(message);
+                loginForm.Show();
+            }
+        }
+        private void HandleSongRecordsResponse(bool success, string message)
+        {
+            //
         }
     }
 }
