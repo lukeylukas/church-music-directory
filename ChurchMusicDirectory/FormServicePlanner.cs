@@ -19,13 +19,36 @@ namespace ChurchMusicDirectory
         }
         private void Setup()
         {
+            SelectDefaultServiceDate();
+            monthCalendarDatePicker.AddBoldedDate(DateTime.Now.AddDays(-5));
+            monthCalendarDatePicker.AddBoldedDate(DateTime.Now.AddDays(-11));
+        }
+        private void SelectDefaultServiceDate()
+        {
             int addWeeks = 0;
             double days = (DayOfWeek.Sunday - DateTime.Now.DayOfWeek) % 7;
             if (days < 0)
             {
                 days = (DayOfWeek.Sunday - DateTime.Now.DayOfWeek) % 7 + 7;
             }
-            dateTimePicker1.Value = DateTime.Now.AddDays(days + addWeeks * 7);
+            DateTime selectedDate = DateTime.Now.AddDays(days + addWeeks * 7);
+            monthCalendarDatePicker.SelectionRange = new SelectionRange(selectedDate, selectedDate);
+            SyncWithCalendar();
+        }
+
+        private void buttonCalendar_Click(object sender, EventArgs e)
+        {
+            monthCalendarDatePicker.Visible = !monthCalendarDatePicker.Visible;
+        }
+
+        private void monthCalendarDatePicker_DateSelected(object sender, DateRangeEventArgs e)
+        {
+            SyncWithCalendar();
+            monthCalendarDatePicker.Visible = false;
+        }
+        private void SyncWithCalendar()
+        {
+            comboBoxServiceDate.Text = monthCalendarDatePicker.SelectionStart.ToLongDateString();
         }
     }
 }

@@ -32,11 +32,13 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.labelServicePlanner = new System.Windows.Forms.Label();
             this.dataGridViewServicePlanner = new System.Windows.Forms.DataGridView();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.ColumnElement = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnTitle = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnMusicKey = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.ColumnInfo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.buttonCalendar = new System.Windows.Forms.Button();
+            this.monthCalendarDatePicker = new System.Windows.Forms.MonthCalendar();
+            this.comboBoxServiceDate = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewServicePlanner)).BeginInit();
             this.SuspendLayout();
             // 
@@ -91,13 +93,6 @@
             this.dataGridViewServicePlanner.Size = new System.Drawing.Size(605, 416);
             this.dataGridViewServicePlanner.TabIndex = 2;
             // 
-            // dateTimePicker1
-            // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(314, 12);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(200, 23);
-            this.dateTimePicker1.TabIndex = 3;
-            // 
             // ColumnElement
             // 
             this.ColumnElement.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
@@ -129,12 +124,41 @@
             this.ColumnInfo.MinimumWidth = 50;
             this.ColumnInfo.Name = "ColumnInfo";
             // 
+            // buttonCalendar
+            // 
+            this.buttonCalendar.Location = new System.Drawing.Point(520, 14);
+            this.buttonCalendar.Name = "buttonCalendar";
+            this.buttonCalendar.Size = new System.Drawing.Size(75, 23);
+            this.buttonCalendar.TabIndex = 4;
+            this.buttonCalendar.Text = "Calendar";
+            this.buttonCalendar.UseVisualStyleBackColor = true;
+            this.buttonCalendar.Click += new System.EventHandler(this.buttonCalendar_Click);
+            // 
+            // monthCalendarDatePicker
+            // 
+            this.monthCalendarDatePicker.Location = new System.Drawing.Point(368, 35);
+            this.monthCalendarDatePicker.MaxSelectionCount = 1;
+            this.monthCalendarDatePicker.Name = "monthCalendarDatePicker";
+            this.monthCalendarDatePicker.TabIndex = 5;
+            this.monthCalendarDatePicker.Visible = false;
+            this.monthCalendarDatePicker.DateSelected += new System.Windows.Forms.DateRangeEventHandler(this.monthCalendarDatePicker_DateSelected);
+            // 
+            // comboBoxServiceDate
+            // 
+            this.comboBoxServiceDate.FormattingEnabled = true;
+            this.comboBoxServiceDate.Location = new System.Drawing.Point(368, 9);
+            this.comboBoxServiceDate.Name = "comboBoxServiceDate";
+            this.comboBoxServiceDate.Size = new System.Drawing.Size(146, 23);
+            this.comboBoxServiceDate.TabIndex = 6;
+            // 
             // FormServicePlanner
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(607, 479);
-            this.Controls.Add(this.dateTimePicker1);
+            this.Controls.Add(this.comboBoxServiceDate);
+            this.Controls.Add(this.monthCalendarDatePicker);
+            this.Controls.Add(this.buttonCalendar);
             this.Controls.Add(this.dataGridViewServicePlanner);
             this.Controls.Add(this.labelServicePlanner);
             this.Name = "FormServicePlanner";
@@ -148,10 +172,12 @@
         #endregion
         private Label labelServicePlanner;
         private DataGridView dataGridViewServicePlanner;
-        private DateTimePicker dateTimePicker1;
         private DataGridViewTextBoxColumn ColumnElement;
         private DataGridViewTextBoxColumn ColumnTitle;
         private DataGridViewComboBoxColumn ColumnMusicKey;
         private DataGridViewTextBoxColumn ColumnInfo;
+        private Button buttonCalendar;
+        private MonthCalendar monthCalendarDatePicker;
+        private ComboBox comboBoxServiceDate;
     }
 }
