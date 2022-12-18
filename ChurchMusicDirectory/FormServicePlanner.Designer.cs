@@ -126,9 +126,9 @@
             // 
             // buttonCalendar
             // 
-            this.buttonCalendar.Location = new System.Drawing.Point(520, 14);
+            this.buttonCalendar.Location = new System.Drawing.Point(520, 9);
             this.buttonCalendar.Name = "buttonCalendar";
-            this.buttonCalendar.Size = new System.Drawing.Size(75, 23);
+            this.buttonCalendar.Size = new System.Drawing.Size(75, 28);
             this.buttonCalendar.TabIndex = 4;
             this.buttonCalendar.Text = "Calendar";
             this.buttonCalendar.UseVisualStyleBackColor = true;

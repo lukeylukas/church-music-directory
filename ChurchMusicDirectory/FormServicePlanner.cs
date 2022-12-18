@@ -20,8 +20,6 @@ namespace ChurchMusicDirectory
         private void Setup()
         {
             SelectDefaultServiceDate();
-            monthCalendarDatePicker.AddBoldedDate(DateTime.Now.AddDays(-5));
-            monthCalendarDatePicker.AddBoldedDate(DateTime.Now.AddDays(-11));
         }
         private void SelectDefaultServiceDate()
         {
