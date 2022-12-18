@@ -47,7 +47,6 @@ namespace ChurchMusicDirectory
             loginForm.AutoScroll = true;
             loginForm.Location = new System.Drawing.Point(100,100);
             loginForm.FormBorderStyle = FormBorderStyle.None;
-            loginForm.Disposed += LoginForm_Disposed;
             panelMain.Controls.Add(loginForm);
         }
         private void SetupSongTableForm()
@@ -76,7 +75,7 @@ namespace ChurchMusicDirectory
             FormMain.getInstance().Invoke((MethodInvoker)delegate
             {
                 FormMain.getInstance().DataCtrlInit();
-            });            
+            });
         }
 
         public void ToggleServicePlanner()
