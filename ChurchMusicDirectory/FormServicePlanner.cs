@@ -15,6 +15,17 @@ namespace ChurchMusicDirectory
         public FormServicePlanner()
         {
             InitializeComponent();
+            Setup();
+        }
+        private void Setup()
+        {
+            int addWeeks = 0;
+            double days = (DayOfWeek.Sunday - DateTime.Now.DayOfWeek) % 7;
+            if (days < 0)
+            {
+                days = (DayOfWeek.Sunday - DateTime.Now.DayOfWeek) % 7 + 7;
+            }
+            dateTimePicker1.Value = DateTime.Now.AddDays(days + addWeeks * 7);
         }
     }
 }
