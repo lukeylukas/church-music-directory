@@ -32,13 +32,16 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.labelServicePlanner = new System.Windows.Forms.Label();
             this.dataGridViewServicePlanner = new System.Windows.Forms.DataGridView();
-            this.ColumnElement = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnElement = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.ColumnTitle = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnMusicKey = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.ColumnInfo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnPassage = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnNotes = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.buttonCalendar = new System.Windows.Forms.Button();
             this.monthCalendarDatePicker = new System.Windows.Forms.MonthCalendar();
             this.comboBoxServiceDate = new System.Windows.Forms.ComboBox();
+            this.comboBoxServiceNumber = new System.Windows.Forms.ComboBox();
+            this.labelServiceNumber = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewServicePlanner)).BeginInit();
             this.SuspendLayout();
             // 
@@ -76,7 +79,8 @@
             this.ColumnElement,
             this.ColumnTitle,
             this.ColumnMusicKey,
-            this.ColumnInfo});
+            this.ColumnPassage,
+            this.ColumnNotes});
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -86,18 +90,22 @@
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dataGridViewServicePlanner.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridViewServicePlanner.GridColor = System.Drawing.SystemColors.Control;
-            this.dataGridViewServicePlanner.Location = new System.Drawing.Point(1, 62);
+            this.dataGridViewServicePlanner.Location = new System.Drawing.Point(1, 70);
             this.dataGridViewServicePlanner.Name = "dataGridViewServicePlanner";
             this.dataGridViewServicePlanner.RowHeadersVisible = false;
             this.dataGridViewServicePlanner.RowTemplate.Height = 25;
-            this.dataGridViewServicePlanner.Size = new System.Drawing.Size(605, 416);
+            this.dataGridViewServicePlanner.Size = new System.Drawing.Size(678, 408);
             this.dataGridViewServicePlanner.TabIndex = 2;
             // 
             // ColumnElement
             // 
             this.ColumnElement.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.ColumnElement.HeaderText = "Element";
+            this.ColumnElement.MinimumWidth = 150;
             this.ColumnElement.Name = "ColumnElement";
+            this.ColumnElement.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.ColumnElement.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.ColumnElement.Width = 150;
             // 
             // ColumnTitle
             // 
@@ -116,19 +124,28 @@
             this.ColumnMusicKey.Name = "ColumnMusicKey";
             this.ColumnMusicKey.Width = 50;
             // 
-            // ColumnInfo
+            // ColumnPassage
             // 
-            this.ColumnInfo.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.ColumnInfo.FillWeight = 21.2766F;
-            this.ColumnInfo.HeaderText = "Info";
-            this.ColumnInfo.MinimumWidth = 50;
-            this.ColumnInfo.Name = "ColumnInfo";
+            this.ColumnPassage.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.ColumnPassage.HeaderText = "Passage";
+            this.ColumnPassage.MinimumWidth = 150;
+            this.ColumnPassage.Name = "ColumnPassage";
+            this.ColumnPassage.Width = 150;
+            // 
+            // ColumnNotes
+            // 
+            this.ColumnNotes.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ColumnNotes.FillWeight = 21.2766F;
+            this.ColumnNotes.HeaderText = "Notes";
+            this.ColumnNotes.MinimumWidth = 100;
+            this.ColumnNotes.Name = "ColumnNotes";
             // 
             // buttonCalendar
             // 
-            this.buttonCalendar.Location = new System.Drawing.Point(520, 9);
+            this.buttonCalendar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonCalendar.Location = new System.Drawing.Point(587, 9);
             this.buttonCalendar.Name = "buttonCalendar";
-            this.buttonCalendar.Size = new System.Drawing.Size(75, 28);
+            this.buttonCalendar.Size = new System.Drawing.Size(75, 31);
             this.buttonCalendar.TabIndex = 4;
             this.buttonCalendar.Text = "Calendar";
             this.buttonCalendar.UseVisualStyleBackColor = true;
@@ -136,7 +153,8 @@
             // 
             // monthCalendarDatePicker
             // 
-            this.monthCalendarDatePicker.Location = new System.Drawing.Point(368, 35);
+            this.monthCalendarDatePicker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.monthCalendarDatePicker.Location = new System.Drawing.Point(435, 38);
             this.monthCalendarDatePicker.MaxSelectionCount = 1;
             this.monthCalendarDatePicker.Name = "monthCalendarDatePicker";
             this.monthCalendarDatePicker.TabIndex = 5;
@@ -145,17 +163,39 @@
             // 
             // comboBoxServiceDate
             // 
+            this.comboBoxServiceDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxServiceDate.FormattingEnabled = true;
-            this.comboBoxServiceDate.Location = new System.Drawing.Point(368, 9);
+            this.comboBoxServiceDate.Location = new System.Drawing.Point(435, 9);
             this.comboBoxServiceDate.Name = "comboBoxServiceDate";
             this.comboBoxServiceDate.Size = new System.Drawing.Size(146, 23);
             this.comboBoxServiceDate.TabIndex = 6;
+            // 
+            // comboBoxServiceNumber
+            // 
+            this.comboBoxServiceNumber.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxServiceNumber.FormattingEnabled = true;
+            this.comboBoxServiceNumber.Location = new System.Drawing.Point(495, 38);
+            this.comboBoxServiceNumber.Name = "comboBoxServiceNumber";
+            this.comboBoxServiceNumber.Size = new System.Drawing.Size(49, 23);
+            this.comboBoxServiceNumber.TabIndex = 7;
+            // 
+            // labelServiceNumber
+            // 
+            this.labelServiceNumber.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelServiceNumber.AutoSize = true;
+            this.labelServiceNumber.Location = new System.Drawing.Point(435, 41);
+            this.labelServiceNumber.Name = "labelServiceNumber";
+            this.labelServiceNumber.Size = new System.Drawing.Size(54, 15);
+            this.labelServiceNumber.TabIndex = 8;
+            this.labelServiceNumber.Text = "Service #";
             // 
             // FormServicePlanner
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(607, 479);
+            this.ClientSize = new System.Drawing.Size(680, 479);
+            this.Controls.Add(this.labelServiceNumber);
+            this.Controls.Add(this.comboBoxServiceNumber);
             this.Controls.Add(this.comboBoxServiceDate);
             this.Controls.Add(this.monthCalendarDatePicker);
             this.Controls.Add(this.buttonCalendar);
@@ -172,12 +212,15 @@
         #endregion
         private Label labelServicePlanner;
         private DataGridView dataGridViewServicePlanner;
-        private DataGridViewTextBoxColumn ColumnElement;
-        private DataGridViewTextBoxColumn ColumnTitle;
-        private DataGridViewComboBoxColumn ColumnMusicKey;
-        private DataGridViewTextBoxColumn ColumnInfo;
         private Button buttonCalendar;
         private MonthCalendar monthCalendarDatePicker;
         private ComboBox comboBoxServiceDate;
+        private ComboBox comboBoxServiceNumber;
+        private Label labelServiceNumber;
+        private DataGridViewComboBoxColumn ColumnElement;
+        private DataGridViewTextBoxColumn ColumnTitle;
+        private DataGridViewComboBoxColumn ColumnMusicKey;
+        private DataGridViewTextBoxColumn ColumnPassage;
+        private DataGridViewTextBoxColumn ColumnNotes;
     }
 }
