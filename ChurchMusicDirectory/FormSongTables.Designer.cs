@@ -32,16 +32,17 @@
             this.tabControlMain = new System.Windows.Forms.TabControl();
             this.tabPageSongInfo = new System.Windows.Forms.TabPage();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.tabPageWorshipPlanner = new System.Windows.Forms.TabPage();
-            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
+            this.tabPageServiceRecords = new System.Windows.Forms.TabPage();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.helloToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonToggleServicePlanner = new System.Windows.Forms.Button();
+            this.dataGridViewServiceRecords = new System.Windows.Forms.DataGridView();
             this.tabControlMain.SuspendLayout();
             this.tabPageSongInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            this.tabPageWorshipPlanner.SuspendLayout();
+            this.tabPageServiceRecords.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewServiceRecords)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControlMain
@@ -50,7 +51,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControlMain.Controls.Add(this.tabPageSongInfo);
-            this.tabControlMain.Controls.Add(this.tabPageWorshipPlanner);
+            this.tabControlMain.Controls.Add(this.tabPageServiceRecords);
             this.tabControlMain.Location = new System.Drawing.Point(12, 12);
             this.tabControlMain.Name = "tabControlMain";
             this.tabControlMain.SelectedIndex = 0;
@@ -83,25 +84,16 @@
             this.dataGridView1.Size = new System.Drawing.Size(1003, 717);
             this.dataGridView1.TabIndex = 2;
             // 
-            // tabPageWorshipPlanner
+            // tabPageServiceRecords
             // 
-            this.tabPageWorshipPlanner.Controls.Add(this.richTextBox2);
-            this.tabPageWorshipPlanner.Location = new System.Drawing.Point(4, 24);
-            this.tabPageWorshipPlanner.Name = "tabPageWorshipPlanner";
-            this.tabPageWorshipPlanner.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageWorshipPlanner.Size = new System.Drawing.Size(1015, 729);
-            this.tabPageWorshipPlanner.TabIndex = 1;
-            this.tabPageWorshipPlanner.Text = "Worship Planner";
-            this.tabPageWorshipPlanner.UseVisualStyleBackColor = true;
-            // 
-            // richTextBox2
-            // 
-            this.richTextBox2.Location = new System.Drawing.Point(129, 87);
-            this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.Size = new System.Drawing.Size(362, 96);
-            this.richTextBox2.TabIndex = 0;
-            this.richTextBox2.Text = "This page allows the user to arrange and select elements of worship, creating an " +
-    "order of service. (The ability for users to create a template would be good)";
+            this.tabPageServiceRecords.Controls.Add(this.dataGridViewServiceRecords);
+            this.tabPageServiceRecords.Location = new System.Drawing.Point(4, 24);
+            this.tabPageServiceRecords.Name = "tabPageServiceRecords";
+            this.tabPageServiceRecords.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageServiceRecords.Size = new System.Drawing.Size(1015, 729);
+            this.tabPageServiceRecords.TabIndex = 1;
+            this.tabPageServiceRecords.Text = "Service Records";
+            this.tabPageServiceRecords.UseVisualStyleBackColor = true;
             // 
             // contextMenuStrip1
             // 
@@ -127,6 +119,20 @@
             this.buttonToggleServicePlanner.UseVisualStyleBackColor = true;
             this.buttonToggleServicePlanner.Click += new System.EventHandler(this.buttonToggleServicePlanner_Click);
             // 
+            // dataGridViewServiceRecords
+            // 
+            this.dataGridViewServiceRecords.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridViewServiceRecords.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
+            this.dataGridViewServiceRecords.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewServiceRecords.Location = new System.Drawing.Point(6, 6);
+            this.dataGridViewServiceRecords.Name = "dataGridViewServiceRecords";
+            this.dataGridViewServiceRecords.RowHeadersVisible = false;
+            this.dataGridViewServiceRecords.RowTemplate.Height = 25;
+            this.dataGridViewServiceRecords.Size = new System.Drawing.Size(1003, 717);
+            this.dataGridViewServiceRecords.TabIndex = 3;
+            // 
             // FormSongTables
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -140,8 +146,9 @@
             this.tabControlMain.ResumeLayout(false);
             this.tabPageSongInfo.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            this.tabPageWorshipPlanner.ResumeLayout(false);
+            this.tabPageServiceRecords.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewServiceRecords)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -150,11 +157,11 @@
 
         private TabControl tabControlMain;
         private TabPage tabPageSongInfo;
-        private TabPage tabPageWorshipPlanner;
-        private RichTextBox richTextBox2;
+        private TabPage tabPageServiceRecords;
         private DataGridView dataGridView1;
         private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem helloToolStripMenuItem;
         private Button buttonToggleServicePlanner;
+        private DataGridView dataGridViewServiceRecords;
     }
 }
