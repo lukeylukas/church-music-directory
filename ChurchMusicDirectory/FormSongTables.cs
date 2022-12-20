@@ -278,10 +278,10 @@ namespace ChurchMusicDirectory
                     for (int filterIndex = 0; filterIndex <= columnFilters[columnIndex].list.Count - 2; filterIndex++)
                     {
                         query += songInfoTable.Columns[columnIndex].ColumnName + excludeString + " LIKE \'%";
-                        query += EscapeSpecialCharacters(columnFilters[columnIndex].list[filterIndex]) + "%\'" + joinString;
+                        query += Utils.EscapeSpecialCharacters(columnFilters[columnIndex].list[filterIndex]) + "%\'" + joinString;
                     }
                     query += songInfoTable.Columns[columnIndex].ColumnName + excludeString + " LIKE \'%";
-                    query += EscapeSpecialCharacters(columnFilters[columnIndex].list[^1]) + "%\'";
+                    query += Utils.EscapeSpecialCharacters(columnFilters[columnIndex].list[^1]) + "%\'";
                     query += ")";
                 }
                 if (!query.Equals("")
@@ -296,32 +296,6 @@ namespace ChurchMusicDirectory
             {
                 songInfoTable.DefaultView.RowFilter = query;
             }
-        }
-        private string EscapeSpecialCharacters(string input)
-        {
-            string safeString = input;
-            char[] specialChars = new char[] { '\'' };
-            for (int specialCharIndex = 0; specialCharIndex < specialChars.Length; specialCharIndex++)
-            {
-                int nextSpecialChar = safeString.IndexOf(specialChars[specialCharIndex]);
-                while (nextSpecialChar != -1)
-                {
-                    if (specialChars[specialCharIndex] == '\'')
-                    {
-                        safeString = safeString.Insert(nextSpecialChar, "'");
-                    }
-                    else
-                    {
-                        safeString = safeString.Insert(nextSpecialChar, @"\");
-                    }
-                    if (nextSpecialChar == safeString.Length - 2)
-                    {
-                        break;
-                    }
-                    nextSpecialChar = safeString.IndexOf(specialChars[specialCharIndex], nextSpecialChar + 2);
-                }
-            }
-            return safeString;
         }
 
         private void buttonToggleServicePlanner_Click(object sender, EventArgs e)
