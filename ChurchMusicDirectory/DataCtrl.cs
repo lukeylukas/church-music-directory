@@ -28,61 +28,15 @@ namespace ChurchMusicDirectory
         public enum SERVICE_RECORD_ATTRIBUTE
         {
             date,
-            serviceNumber,
-            orderInService,
-            elementName,
             title,
             musicKey,
             passage,
+            elementName,
+            serviceNumber,
+            orderInService,
             notes,
             COUNT
-
         }
-        public struct TABLE_COLUMN
-        {
-            public bool allowFiltering;
-            public List<string> filterValues;
-            public int width;
-            public string name;
-        };
-        public static TABLE_COLUMN[] songInfoColumns = new TABLE_COLUMN[(int)SONG_ATTRIBUTE.COUNT]
-        {
-            new TABLE_COLUMN
-            {
-                allowFiltering = false,
-                filterValues = new List<string>(),
-                width = 200,
-                name = "Title"
-            },
-            new TABLE_COLUMN
-            {
-                allowFiltering = true,
-                filterValues = new List<string>(),
-                width = 75,
-                name = "Key"
-            },
-            new TABLE_COLUMN
-            {
-                allowFiltering = true,
-                filterValues = new List<string>(),
-                width = 200,
-                name = "Subject"
-            },
-            new TABLE_COLUMN
-            {
-                allowFiltering = true,
-                filterValues = new List<string>(),
-                width = 75,
-                name = "Plays"
-            },
-            new TABLE_COLUMN
-            {
-                allowFiltering = false,
-                filterValues = new List<string>(),
-                width = 100,
-                name = "Notes"
-            },
-        };
 
         public List<string> worshipElements = new List<string>
         {
@@ -120,7 +74,6 @@ namespace ChurchMusicDirectory
             callback(songInfoReceived, statusMessage);
             return songInfoReceived;
         }
-
         private string BuildSongInfoQuery()
         {
             string columns = "";
@@ -132,32 +85,6 @@ namespace ChurchMusicDirectory
             columns = columns.Substring(0, columns.Length - connectorString.Length);
 
             return "SELECT " + columns + " FROM songInfo";
-        }
-
-        public bool GetTableData(out DataTable destTable, string query, int expectedNumColumns, out string message)
-        {
-            bool receivedCorrectTable = false;
-            message = "";
-            destTable = new DataTable();
-
-            if (ServerCommunication.QuerySqlServer(query, out DataTable tempTable))
-            {
-                if (tempTable.Columns.Count == expectedNumColumns)
-                {
-                    receivedCorrectTable = true;
-                    destTable = tempTable;
-                }
-                else
-                {
-                    message = "Server sent incorrect data size.";
-                }
-            }
-            else
-            {
-                message = "Response not received.";
-            }
-
-            return receivedCorrectTable;
         }
 
         public bool GetServiceRecords(DataCtrlResponseHandler callback)
@@ -185,6 +112,32 @@ namespace ChurchMusicDirectory
             columns = columns.Substring(0, columns.Length - connectorString.Length);
 
             return "SELECT " + columns + " FROM serviceRecords";
+        }
+
+        public bool GetTableData(out DataTable destTable, string query, int expectedNumColumns, out string message)
+        {
+            bool receivedCorrectTable = false;
+            message = "";
+            destTable = new DataTable();
+
+            if (ServerCommunication.QuerySqlServer(query, out DataTable tempTable))
+            {
+                if (tempTable.Columns.Count == expectedNumColumns)
+                {
+                    receivedCorrectTable = true;
+                    destTable = tempTable;
+                }
+                else
+                {
+                    message = "Server sent incorrect data size.";
+                }
+            }
+            else
+            {
+                message = "Response not received.";
+            }
+
+            return receivedCorrectTable;
         }
     }
 }

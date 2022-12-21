@@ -101,7 +101,7 @@ namespace ChurchMusicDirectory
             {
                 if(dataCtrl.GetSongInfo(SongInfoCallback))
                 {
-                    //get the other tables too
+                    dataCtrl.GetServiceRecords(ServiceRecordsCallback);
                 }
             });
             initDataCtrlThread.Start();
@@ -117,8 +117,10 @@ namespace ChurchMusicDirectory
         {
             if (success)
             {
-                loginForm.Dispose();
-
+                if (!loginForm.IsDisposed)
+                {
+                    loginForm.Dispose();
+                }
                 songTableForm.ImportSongInfoTable(dataCtrl.songInfoTable);
                 songTableForm.Show();
             }
@@ -127,9 +129,30 @@ namespace ChurchMusicDirectory
                 MessageBox.Show(message);
             }
         }
-        private void HandleSongRecordsResponse(bool success, string message)
+
+        private static void ServiceRecordsCallback(bool success, string message)
         {
-            //
+            FormMain.getInstance().Invoke((MethodInvoker)delegate
+            {
+                FormMain.getInstance().HandleServiceRecordsResponse(success, message);
+            });
+        }
+        private void HandleServiceRecordsResponse(bool success, string message)
+        {
+
+            if (success)
+            {
+                if (!loginForm.IsDisposed)
+                {
+                    loginForm.Dispose();
+                }
+                songTableForm.ImportServiceRecordsTable(dataCtrl.serviceRecordsTable);
+                songTableForm.Show();
+            }
+            else
+            {
+                MessageBox.Show(message);
+            }
         }
     }
 }

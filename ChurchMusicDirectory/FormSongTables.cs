@@ -10,6 +10,7 @@ using System.Data.Common;
 using Microsoft.Data.SqlClient;
 using System.Linq;
 using Microsoft.IdentityModel.Tokens;
+using static ChurchMusicDirectory.DataCtrl;
 
 namespace ChurchMusicDirectory
 {
@@ -23,7 +24,114 @@ namespace ChurchMusicDirectory
         const string contextMenuExclude = "Exclude";
         const string contextMenuClear = "Clear";
         private static DataTable songInfoTable;
+        private static DataTable serviceRecordsTable;
         private const string cellNullString = "";
+
+        public struct TABLE_COLUMN
+        {
+            public bool allowFiltering;
+            public List<string> filterValues;
+            public int width;
+            public string name;
+        };
+        public static TABLE_COLUMN[] songInfoColumns = new TABLE_COLUMN[(int)SONG_ATTRIBUTE.COUNT]
+        {
+            new TABLE_COLUMN
+            {
+                allowFiltering = false,
+                filterValues = new List<string>(),
+                width = 200,
+                name = "Title"
+            },
+            new TABLE_COLUMN
+            {
+                allowFiltering = true,
+                filterValues = new List<string>(),
+                width = 75,
+                name = "Key"
+            },
+            new TABLE_COLUMN
+            {
+                allowFiltering = true,
+                filterValues = new List<string>(),
+                width = 200,
+                name = "Subject"
+            },
+            new TABLE_COLUMN
+            {
+                allowFiltering = true,
+                filterValues = new List<string>(),
+                width = 75,
+                name = "Plays"
+            },
+            new TABLE_COLUMN
+            {
+                allowFiltering = false,
+                filterValues = new List<string>(),
+                width = 100,
+                name = "Notes"
+            },
+        };
+
+        public static TABLE_COLUMN[] serviceRecordColumns = new TABLE_COLUMN[(int)SERVICE_RECORD_ATTRIBUTE.COUNT]
+        {
+            new TABLE_COLUMN
+            {
+                allowFiltering = false,
+                filterValues = new List<string>(),
+                width = 75,
+                name = "Date"
+            },
+            new TABLE_COLUMN
+            {
+                allowFiltering = false,
+                filterValues = new List<string>(),
+                width = 200,
+                name = "Title"
+            },
+            new TABLE_COLUMN
+            {
+                allowFiltering = false,
+                filterValues = new List<string>(),
+                width = 75,
+                name = "Key"
+            },
+            new TABLE_COLUMN
+            {
+                allowFiltering = false,
+                filterValues = new List<string>(),
+                width = 100,
+                name = "Scripture Passage"
+            },
+            new TABLE_COLUMN
+            {
+                allowFiltering = false,
+                filterValues = new List<string>(),
+                width = 75,
+                name = "Type"
+            },
+            new TABLE_COLUMN
+            {
+                allowFiltering = false,
+                filterValues = new List<string>(),
+                width = 50,
+                name = "Service Number"
+            },
+            new TABLE_COLUMN
+            {
+                allowFiltering = false,
+                filterValues = new List<string>(),
+                width = 50,
+                name = "Order in Service"
+            },
+            new TABLE_COLUMN
+            {
+                allowFiltering = false,
+                filterValues = new List<string>(),
+                width = 100,
+                name = "Notes"
+            },
+        };
 
         public enum FILTER_TYPE
         {
@@ -61,7 +169,7 @@ namespace ChurchMusicDirectory
             dataGridView1.ContextMenuStrip.Items.Clear();
             if (column >= 0 && column < DataCtrl.SONG_ATTRIBUTE.COUNT)
             {
-                if (DataCtrl.songInfoColumns[(int)column].allowFiltering)
+                if (songInfoColumns[(int)column].allowFiltering)
                 {
                     SongInfoContextMenuPopulate(dataGridView1.ContextMenuStrip, (int)column);
                     contextMenuColumnIndex = (int)column;
@@ -74,9 +182,9 @@ namespace ChurchMusicDirectory
             AddExcludeFilter(contextMenu, columnIndex);
             AddClearFilter(contextMenu);
 
-            for (int filterIndex = 0; filterIndex < DataCtrl.songInfoColumns[columnIndex].filterValues.Count; filterIndex++)
+            for (int filterIndex = 0; filterIndex < songInfoColumns[columnIndex].filterValues.Count; filterIndex++)
             {
-                string testValue = DataCtrl.songInfoColumns[columnIndex].filterValues[filterIndex].ToString();
+                string testValue = songInfoColumns[columnIndex].filterValues[filterIndex].ToString();
                 contextMenu.Items.Add(testValue);
                 contextMenu.Items[^1].Name = testValue;
                 contextMenu.Items[^1].Click += new System.EventHandler(ContextMenuFilterItem_Click);
@@ -212,15 +320,15 @@ namespace ChurchMusicDirectory
             dataGridView1.DataSource = songInfoTable;
             for (int columnIndex = 0; columnIndex < dataGridView1.Columns.Count; columnIndex++)
             {
-                dataGridView1.Columns[columnIndex].Width = DataCtrl.songInfoColumns[columnIndex].width;
-                dataGridView1.Columns[columnIndex].HeaderText = DataCtrl.songInfoColumns[columnIndex].name;
-                FillFilterList(DataCtrl.songInfoColumns[columnIndex], dataGridView1, columnIndex);
+                dataGridView1.Columns[columnIndex].Width = songInfoColumns[columnIndex].width;
+                dataGridView1.Columns[columnIndex].HeaderText = songInfoColumns[columnIndex].name;
+                FillFilterList(songInfoColumns[columnIndex], dataGridView1, columnIndex);
             }
-            dataGridView1.Columns[^1].MinimumWidth = DataCtrl.songInfoColumns[^1].width;
+            dataGridView1.Columns[^1].MinimumWidth = songInfoColumns[^1].width;
             dataGridView1.Columns[^1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             dataGridView1.Sort(dataGridView1.Columns[0], ListSortDirection.Ascending);
         }
-        static private void FillFilterList(DataCtrl.TABLE_COLUMN settings, DataGridView table, int columnIndex)
+        static private void FillFilterList(TABLE_COLUMN settings, DataGridView table, int columnIndex)
         {
             if (settings.allowFiltering)
             {
@@ -301,6 +409,30 @@ namespace ChurchMusicDirectory
         private void buttonToggleServicePlanner_Click(object sender, EventArgs e)
         {
             formPassedFromAbove.ToggleServicePlanner();
+        }
+
+        /**********************************************************************************************************************
+         * ***************************************      Service Records Tab     ***********************************************
+         * *******************************************************************************************************************/
+        public void ImportServiceRecordsTable(DataTable table)
+        {
+            serviceRecordsTable = table;
+            DisplayServiceRecords();
+        }
+        private void DisplayServiceRecords()
+        {
+            dataGridViewServiceRecords.DataSource = serviceRecordsTable;
+            
+            for (int columnIndex = 0; columnIndex < dataGridViewServiceRecords.Columns.Count; columnIndex++)
+            {
+                dataGridViewServiceRecords.Columns[columnIndex].Width = serviceRecordColumns[columnIndex].width;
+                dataGridViewServiceRecords.Columns[columnIndex].HeaderText = serviceRecordColumns[columnIndex].name;
+                //FillFilterList(serviceRecordColumns[columnIndex], dataGridViewServiceRecords, columnIndex);
+            }
+
+            dataGridViewServiceRecords.Columns[^1].MinimumWidth = serviceRecordColumns[^1].width;
+            dataGridViewServiceRecords.Columns[^1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            //DataGridViewServiceRecords.Sort(dataGridViewServiceRecords.Columns[0], ListSortDirection.Ascending);
         }
     }
 }
