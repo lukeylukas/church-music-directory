@@ -179,6 +179,10 @@ namespace ChurchMusicDirectory
         }
         private void SongInfoContextMenuPopulate(ContextMenuStrip contextMenu, int columnIndex)
         {
+            if (columnIndex == (int)SONG_ATTRIBUTE.numPlays)
+            {
+                AddTimeSpanSubmenu(contextMenu);
+            }
             AddExcludeFilter(contextMenu, columnIndex);
             AddClearFilter(contextMenu);
 
@@ -194,6 +198,20 @@ namespace ChurchMusicDirectory
                     ((ToolStripMenuItem)contextMenu.Items[^1]).CheckState = CheckState.Checked;
                 }
             }
+        }
+        private void AddTimeSpanSubmenu(ContextMenuStrip contextMenu)
+        {
+            ToolStripItem[] timespanSubMenuItems = new ToolStripItem[] 
+            {
+                new ToolStripMenuItem ("This Year"),
+                new ToolStripMenuItem ("Last Year"),
+                new ToolStripMenuItem ("2 Years Ago"),
+                new ToolStripMenuItem ("Last 12 months"),
+                new ToolStripMenuItem ("Last 24 months"),
+                new ToolStripMenuItem ("Last 36 months"),
+            };
+            contextMenu.Items.Add("Timespan");
+            ((ToolStripMenuItem)contextMenu.Items[0]).DropDownItems.AddRange( timespanSubMenuItems );
         }
         private void AddExcludeFilter(ContextMenuStrip contextMenu, int columnIndex)
         {
