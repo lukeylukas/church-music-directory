@@ -46,7 +46,6 @@ namespace ChurchMusicDirectory
             }
             catch (SqlException e)
             {
-                MessageBox.Show(e.Message);
             }
             return dataRetrieved;
         }
