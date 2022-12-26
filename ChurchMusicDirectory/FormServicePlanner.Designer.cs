@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
             this.labelServicePlanner = new System.Windows.Forms.Label();
             this.dataGridViewServicePlanner = new System.Windows.Forms.DataGridView();
             this.ColumnElement = new System.Windows.Forms.DataGridViewComboBoxColumn();
@@ -46,6 +46,8 @@
             this.comboBoxServiceDate = new System.Windows.Forms.ComboBox();
             this.comboBoxServiceNumber = new System.Windows.Forms.ComboBox();
             this.labelServiceNumber = new System.Windows.Forms.Label();
+            this.buttonDiscardChanges = new System.Windows.Forms.Button();
+            this.buttonSaveChanges = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewServicePlanner)).BeginInit();
             this.SuspendLayout();
             // 
@@ -70,14 +72,14 @@
             this.dataGridViewServicePlanner.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridViewServicePlanner.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleVertical;
             this.dataGridViewServicePlanner.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewServicePlanner.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewServicePlanner.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle13;
             this.dataGridViewServicePlanner.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewServicePlanner.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ColumnElement,
@@ -85,32 +87,32 @@
             this.ColumnMusicKey,
             this.ColumnPassage,
             this.ColumnNotes});
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewServicePlanner.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle18.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewServicePlanner.DefaultCellStyle = dataGridViewCellStyle18;
             this.dataGridViewServicePlanner.GridColor = System.Drawing.SystemColors.Control;
             this.dataGridViewServicePlanner.Location = new System.Drawing.Point(1, 70);
             this.dataGridViewServicePlanner.Name = "dataGridViewServicePlanner";
             this.dataGridViewServicePlanner.RowHeadersVisible = false;
             this.dataGridViewServicePlanner.RowTemplate.Height = 25;
-            this.dataGridViewServicePlanner.Size = new System.Drawing.Size(678, 408);
+            this.dataGridViewServicePlanner.Size = new System.Drawing.Size(678, 365);
             this.dataGridViewServicePlanner.TabIndex = 2;
             this.dataGridViewServicePlanner.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridViewServicePlanner_EditingControlShowing);
             // 
             // ColumnElement
             // 
             this.ColumnElement.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.ColumnElement.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle14.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle14.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.ColumnElement.DefaultCellStyle = dataGridViewCellStyle14;
             this.ColumnElement.HeaderText = "Element";
             this.ColumnElement.MinimumWidth = 100;
             this.ColumnElement.Name = "ColumnElement";
@@ -120,8 +122,8 @@
             // ColumnTitle
             // 
             this.ColumnTitle.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.ColumnTitle.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.ColumnTitle.DefaultCellStyle = dataGridViewCellStyle15;
             this.ColumnTitle.FillWeight = 178.7234F;
             this.ColumnTitle.HeaderText = "Title";
             this.ColumnTitle.MinimumWidth = 200;
@@ -133,8 +135,8 @@
             // ColumnMusicKey
             // 
             this.ColumnMusicKey.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.ColumnMusicKey.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.ColumnMusicKey.DefaultCellStyle = dataGridViewCellStyle16;
             this.ColumnMusicKey.HeaderText = "Key";
             this.ColumnMusicKey.MinimumWidth = 75;
             this.ColumnMusicKey.Name = "ColumnMusicKey";
@@ -144,8 +146,8 @@
             // ColumnPassage
             // 
             this.ColumnPassage.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.ColumnPassage.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.ColumnPassage.DefaultCellStyle = dataGridViewCellStyle17;
             this.ColumnPassage.HeaderText = "Passage";
             this.ColumnPassage.MinimumWidth = 150;
             this.ColumnPassage.Name = "ColumnPassage";
@@ -208,11 +210,33 @@
             this.labelServiceNumber.TabIndex = 8;
             this.labelServiceNumber.Text = "Service #";
             // 
+            // buttonDiscardChanges
+            // 
+            this.buttonDiscardChanges.Location = new System.Drawing.Point(420, 443);
+            this.buttonDiscardChanges.Name = "buttonDiscardChanges";
+            this.buttonDiscardChanges.Size = new System.Drawing.Size(124, 23);
+            this.buttonDiscardChanges.TabIndex = 9;
+            this.buttonDiscardChanges.Text = "Discard Changes";
+            this.buttonDiscardChanges.UseVisualStyleBackColor = true;
+            this.buttonDiscardChanges.Click += new System.EventHandler(this.buttonDiscardChanges_Click);
+            // 
+            // buttonSaveChanges
+            // 
+            this.buttonSaveChanges.Location = new System.Drawing.Point(560, 443);
+            this.buttonSaveChanges.Name = "buttonSaveChanges";
+            this.buttonSaveChanges.Size = new System.Drawing.Size(102, 23);
+            this.buttonSaveChanges.TabIndex = 10;
+            this.buttonSaveChanges.Text = "Save Changes";
+            this.buttonSaveChanges.UseVisualStyleBackColor = true;
+            this.buttonSaveChanges.Click += new System.EventHandler(this.buttonSaveChanges_Click);
+            // 
             // FormServicePlanner
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(680, 479);
+            this.Controls.Add(this.buttonSaveChanges);
+            this.Controls.Add(this.buttonDiscardChanges);
             this.Controls.Add(this.labelServiceNumber);
             this.Controls.Add(this.comboBoxServiceNumber);
             this.Controls.Add(this.comboBoxServiceDate);
@@ -241,5 +265,7 @@
         private DataGridViewComboBoxColumn ColumnMusicKey;
         private DataGridViewTextBoxColumn ColumnPassage;
         private DataGridViewTextBoxColumn ColumnNotes;
+        private Button buttonDiscardChanges;
+        private Button buttonSaveChanges;
     }
 }

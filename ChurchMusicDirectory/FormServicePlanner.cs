@@ -216,5 +216,15 @@ namespace ChurchMusicDirectory
         {
             // (No need to write anything in here)
         }
+
+        private void buttonDiscardChanges_Click(object sender, EventArgs e)
+        {
+            //update the dataGridView with the original data; discard current state of dataGridView
+        }
+
+        private void buttonSaveChanges_Click(object sender, EventArgs e)
+        {
+            //save dataGridView state to table for that day
+        }
     }
 }
