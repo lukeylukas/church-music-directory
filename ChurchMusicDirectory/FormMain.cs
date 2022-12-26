@@ -31,23 +31,20 @@ namespace ChurchMusicDirectory
             self = this;
             InitializeComponent();
             Setup();
+            if (Properties.Settings.Default.RememberLogin)
+            {
+                DataCtrlInit();
+            }
+            else
+            {
+                loginForm.Show();
+            }
         }
         private void Setup()
         {
-            SetupLoginForm();
-            SetupSongTableForm();
-            SetupServicePlannerForm();
             dataCtrl = new DataCtrl();
-            loginForm.Show();
-        }
-        private void SetupLoginForm()
-        {
-            loginForm = new FormLogin();
-            loginForm.TopLevel = false;
-            loginForm.AutoScroll = true;
-            loginForm.Location = new System.Drawing.Point(100,100);
-            loginForm.FormBorderStyle = FormBorderStyle.None;
-            panelMain.Controls.Add(loginForm);
+            SetupSongTableForm();
+            SetupLoginForm();
         }
         private void SetupSongTableForm()
         {
@@ -59,9 +56,18 @@ namespace ChurchMusicDirectory
             songTableForm.Size = panelMain.Size;
             panelMain.Controls.Add(songTableForm);
         }
+        private void SetupLoginForm()
+        {
+            loginForm = new FormLogin();
+            loginForm.TopLevel = false;
+            loginForm.AutoScroll = true;
+            loginForm.Location = new System.Drawing.Point(100, 100);
+            loginForm.FormBorderStyle = FormBorderStyle.None;
+            panelMain.Controls.Add(loginForm);
+        }
         private void SetupServicePlannerForm()
         {
-            servicePlannerForm = new FormServicePlanner();
+            servicePlannerForm = new FormServicePlanner(dataCtrl);
             servicePlannerForm.TopLevel = false;
             servicePlannerForm.AutoScroll = true;
             servicePlannerForm.FormBorderStyle = FormBorderStyle.None;
@@ -92,6 +98,15 @@ namespace ChurchMusicDirectory
             }
         }
 
+        private void LoginComplete()
+        {
+            if (!loginForm.IsDisposed)
+            {
+                loginForm.Dispose();
+            }
+            SetupServicePlannerForm();
+        }
+
         /************************************************************************************************************************
         ****************************************        DataCtrl        *********************************************************
         *************************************************************************************************************************/
@@ -117,16 +132,14 @@ namespace ChurchMusicDirectory
         {
             if (success)
             {
-                if (!loginForm.IsDisposed)
-                {
-                    loginForm.Dispose();
-                }
+                LoginComplete();
                 songTableForm.ImportSongInfoTable(dataCtrl.songInfoTable);
                 songTableForm.Show();
             }
             else
             {
                 MessageBox.Show(message);
+                loginForm.Show();
             }
         }
 
@@ -142,10 +155,7 @@ namespace ChurchMusicDirectory
 
             if (success)
             {
-                if (!loginForm.IsDisposed)
-                {
-                    loginForm.Dispose();
-                }
+                LoginComplete();
                 songTableForm.ImportServiceRecordsTable(dataCtrl.serviceRecordsTable);
                 songTableForm.Show();
             }

@@ -23,8 +23,8 @@ namespace ChurchMusicDirectory
         private int contextMenuColumnIndex;
         const string contextMenuExclude = "Exclude";
         const string contextMenuClear = "Clear";
-        private static DataTable songInfoTable;
-        private static DataTable serviceRecordsTable;
+        private DataTable songInfoTable;
+        private DataTable serviceRecordsTable;
         private const string cellNullString = "";
 
         public struct TABLE_COLUMN
@@ -151,6 +151,7 @@ namespace ChurchMusicDirectory
             InitializeDataGridView1ContextMenu();
             InitializeColumnFilters();
             songInfoTable = new DataTable();
+            serviceRecordsTable = new DataTable();
             contextMenuColumnIndex = 0;
             formPassedFromAbove = parentForm;
         }
@@ -212,7 +213,13 @@ namespace ChurchMusicDirectory
             };
             contextMenu.Items.Add("Timespan");
             ((ToolStripMenuItem)contextMenu.Items[0]).DropDownItems.AddRange( timespanSubMenuItems );
+            ((ToolStripMenuItem)contextMenu.Items[0]).DropDown.Click += new System.EventHandler(ContextMenuTimespanSubMenu_Click);
         }
+        private void ContextMenuTimespanSubMenu_Click(object? sender, EventArgs e)
+        {
+            MessageBox.Show("you did it!");
+        }
+
         private void AddExcludeFilter(ContextMenuStrip contextMenu, int columnIndex)
         {
             contextMenu.Items.Add(contextMenuExclude);
@@ -354,16 +361,15 @@ namespace ChurchMusicDirectory
                 
                 for (int rowIndex = 0; rowIndex < table.RowCount; rowIndex++)
                 {
-                    try
+                    if (table.Rows[rowIndex].Cells[columnIndex].Value != null)
                     {
                         string cellValue = table.Rows[rowIndex].Cells[columnIndex].Value.ToString();
                         switch (columnIndex)
                         {
-                            case (int)DataCtrl.SONG_ATTRIBUTE.musicKey: columnEntries.AddRange(cellValue.Split(",", StringSplitOptions.TrimEntries));   break;
-                            default:                                    columnEntries.Add(cellValue);                                                   break;
+                            case (int)DataCtrl.SONG_ATTRIBUTE.musicKey: columnEntries.AddRange(cellValue.Split(",", StringSplitOptions.TrimEntries)); break;
+                            default: columnEntries.Add(cellValue); break;
                         }
                     }
-                    catch { /* Do nothing */ }
                 }
 
                 columnEntries.Sort();

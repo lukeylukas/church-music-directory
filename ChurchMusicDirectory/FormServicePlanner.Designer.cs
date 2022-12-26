@@ -29,11 +29,15 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             this.labelServicePlanner = new System.Windows.Forms.Label();
             this.dataGridViewServicePlanner = new System.Windows.Forms.DataGridView();
             this.ColumnElement = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.ColumnTitle = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnTitle = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.ColumnMusicKey = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.ColumnPassage = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnNotes = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -81,14 +85,14 @@
             this.ColumnMusicKey,
             this.ColumnPassage,
             this.ColumnNotes});
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewServicePlanner.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewServicePlanner.DefaultCellStyle = dataGridViewCellStyle6;
             this.dataGridViewServicePlanner.GridColor = System.Drawing.SystemColors.Control;
             this.dataGridViewServicePlanner.Location = new System.Drawing.Point(1, 70);
             this.dataGridViewServicePlanner.Name = "dataGridViewServicePlanner";
@@ -96,37 +100,52 @@
             this.dataGridViewServicePlanner.RowTemplate.Height = 25;
             this.dataGridViewServicePlanner.Size = new System.Drawing.Size(678, 408);
             this.dataGridViewServicePlanner.TabIndex = 2;
+            this.dataGridViewServicePlanner.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridViewServicePlanner_EditingControlShowing);
             // 
             // ColumnElement
             // 
             this.ColumnElement.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.ColumnElement.DefaultCellStyle = dataGridViewCellStyle2;
             this.ColumnElement.HeaderText = "Element";
-            this.ColumnElement.MinimumWidth = 150;
+            this.ColumnElement.MinimumWidth = 100;
             this.ColumnElement.Name = "ColumnElement";
             this.ColumnElement.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.ColumnElement.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.ColumnElement.Width = 150;
             // 
             // ColumnTitle
             // 
             this.ColumnTitle.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.ColumnTitle.DefaultCellStyle = dataGridViewCellStyle3;
             this.ColumnTitle.FillWeight = 178.7234F;
             this.ColumnTitle.HeaderText = "Title";
             this.ColumnTitle.MinimumWidth = 200;
             this.ColumnTitle.Name = "ColumnTitle";
+            this.ColumnTitle.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.ColumnTitle.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.ColumnTitle.Width = 200;
             // 
             // ColumnMusicKey
             // 
             this.ColumnMusicKey.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.ColumnMusicKey.DefaultCellStyle = dataGridViewCellStyle4;
             this.ColumnMusicKey.HeaderText = "Key";
-            this.ColumnMusicKey.MinimumWidth = 50;
+            this.ColumnMusicKey.MinimumWidth = 75;
             this.ColumnMusicKey.Name = "ColumnMusicKey";
-            this.ColumnMusicKey.Width = 50;
+            this.ColumnMusicKey.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.ColumnMusicKey.Width = 75;
             // 
             // ColumnPassage
             // 
             this.ColumnPassage.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.ColumnPassage.DefaultCellStyle = dataGridViewCellStyle5;
             this.ColumnPassage.HeaderText = "Passage";
             this.ColumnPassage.MinimumWidth = 150;
             this.ColumnPassage.Name = "ColumnPassage";
@@ -218,7 +237,7 @@
         private ComboBox comboBoxServiceNumber;
         private Label labelServiceNumber;
         private DataGridViewComboBoxColumn ColumnElement;
-        private DataGridViewTextBoxColumn ColumnTitle;
+        private DataGridViewComboBoxColumn ColumnTitle;
         private DataGridViewComboBoxColumn ColumnMusicKey;
         private DataGridViewTextBoxColumn ColumnPassage;
         private DataGridViewTextBoxColumn ColumnNotes;

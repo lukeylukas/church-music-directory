@@ -37,27 +37,68 @@ namespace ChurchMusicDirectory
             notes,
             COUNT
         }
-
-        public List<string> worshipElements = new List<string>
+        static List<char> flatsList = new List<char>
         {
-            "Song",
-            "Sermon",
-            "Offering",
-            "Prayer",
-            "Pastoral Prayer",
-            "Communion",
-            "Invocation",
-            "Benediction",
-            "Responsive Reading",
-            "Scripture Reading",
-            "Announcements",
-            "Greeting",
+            'A',
+            'B',
+            'D',
+            'E',
+            'G'
         };
+
+        public List<string> worshipElements;
+
+        public List<string> musicKeys;
+
+        public List<string> titlesList;
 
         public DataCtrl()
         {
             songInfoTable = new DataTable();
             serviceRecordsTable = new DataTable();
+            worshipElements = new List<string>
+            {
+                "Song",
+                "Sermon",
+                "Offering",
+                "Prayer",
+                "Pastoral Prayer",
+                "Communion",
+                "Invocation",
+                "Benediction",
+                "Responsive Reading",
+                "Scripture Reading",
+                "Announcements",
+                "Greeting",
+            };
+            GenerateMusicKeysList();
+            titlesList = new List<string>();
+        }
+
+        private void GenerateMusicKeysList()
+        {
+            musicKeys = new List<string>();
+            for (char seedChar = 'A'; seedChar <= 'G'; seedChar++)
+            {
+                if (flatsList.Contains(seedChar))
+                {
+                    musicKeys.Add(seedChar.ToString() + Convert.ToChar(0x266D)); //musical flat
+                    musicKeys.Add(seedChar.ToString() + Convert.ToChar(0x266D) + "min");
+                }
+                musicKeys.Add(seedChar.ToString());
+                musicKeys.Add(seedChar.ToString() + "min");
+            }
+        }
+        private void GenerateTitlesList()
+        {
+            int columnIndex = (int)SONG_ATTRIBUTE.songName;
+            foreach (DataRow item in this.songInfoTable.Rows)
+            {
+                if (item.ItemArray[columnIndex] != null)
+                {
+                    titlesList.Add(item.ItemArray[columnIndex].ToString());
+                }
+            }
         }
 
         public bool GetSongInfo(DataCtrlResponseHandler callback)
@@ -66,11 +107,8 @@ namespace ChurchMusicDirectory
             int expectedNumColumns = (int)SONG_ATTRIBUTE.COUNT;
 
             bool songInfoReceived = GetTableData(out songInfoTable, songInfoQuery, expectedNumColumns, out string statusMessage);
-            if (statusMessage.Length != 0)
-            {
-                MessageBox.Show(statusMessage);
-            }
 
+            GenerateTitlesList();
             callback(songInfoReceived, statusMessage);
             return songInfoReceived;
         }
@@ -93,10 +131,6 @@ namespace ChurchMusicDirectory
             int expectedNumColumns = (int)SERVICE_RECORD_ATTRIBUTE.COUNT;
 
             bool serviceRecordsReceived = GetTableData(out serviceRecordsTable, serviceRecordsQuery, expectedNumColumns, out string statusMessage);
-            if (statusMessage.Length != 0)
-            {
-                MessageBox.Show(statusMessage);
-            }
 
             callback(serviceRecordsReceived, statusMessage);
             return serviceRecordsReceived;
