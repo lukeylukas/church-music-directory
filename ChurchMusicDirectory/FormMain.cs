@@ -18,6 +18,10 @@ namespace ChurchMusicDirectory
         private FormServicePlanner servicePlannerForm;
         private DataCtrl dataCtrl;
 
+        private bool loggedIn = false;
+        private bool songInfoReceived = false;
+        private bool serviceRecordsReceived = false;
+
         //Instance of FormMain for getInstance()
         private static FormMain self;
         //used to get the current instance of the form
@@ -43,7 +47,6 @@ namespace ChurchMusicDirectory
         private void Setup()
         {
             dataCtrl = new DataCtrl();
-            SetupSongTableForm();
             SetupLoginForm();
         }
         private void SetupSongTableForm()
@@ -98,12 +101,34 @@ namespace ChurchMusicDirectory
             }
         }
 
+        private void DataResponseHandler()
+        {
+            LoginComplete();
+
+            if (songInfoReceived && serviceRecordsReceived)
+            {
+                UseFilledDataCtrlObject();
+            }
+        }
         private void LoginComplete()
         {
-            if (!loginForm.IsDisposed)
+            if (!loggedIn)
             {
-                loginForm.Dispose();
+                loggedIn = true;
+
+                if (!loginForm.IsDisposed)
+                {
+                    loginForm.Dispose();
+                }
             }
+        }
+        private void UseFilledDataCtrlObject()
+        {
+            SetupSongTableForm();
+            songTableForm.ImportSongInfoTable(dataCtrl.songInfoTable);
+            songTableForm.ImportServiceRecordsTable(dataCtrl.serviceRecordsTable);
+            songTableForm.Show();
+
             SetupServicePlannerForm();
         }
 
@@ -132,9 +157,8 @@ namespace ChurchMusicDirectory
         {
             if (success)
             {
-                LoginComplete();
-                songTableForm.ImportSongInfoTable(dataCtrl.songInfoTable);
-                songTableForm.Show();
+                songInfoReceived = true;
+                DataResponseHandler();
             }
             else
             {
@@ -155,9 +179,8 @@ namespace ChurchMusicDirectory
 
             if (success)
             {
-                LoginComplete();
-                songTableForm.ImportServiceRecordsTable(dataCtrl.serviceRecordsTable);
-                songTableForm.Show();
+                serviceRecordsReceived = true;
+                DataResponseHandler();
             }
             else
             {
