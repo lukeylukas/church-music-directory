@@ -21,9 +21,11 @@ namespace ChurchMusicDirectory
         const string columnPassageName = "ColumnPassage";
         const string columnNotesName = "ColumnNotes";
 
+        DataCtrl dataCtrl;
         string[]? worshipElements;
         string[]? songTitles;
         string[]? musicKeys;
+        List<DateTime> serviceDatesList = new List<DateTime>();
         Dictionary<int, SERVICE_PLANNER_COLUMN> plannerColumns;
         Dictionary<string, int> inversePlannerColumns;
 
@@ -41,13 +43,15 @@ namespace ChurchMusicDirectory
         }
         private void Setup(DataCtrl dataCtrlInstance)
         {
+            dataCtrl = dataCtrlInstance;
             worshipElements = dataCtrlInstance.worshipElements.ToArray();
             songTitles = dataCtrlInstance.titlesList.ToArray();
             musicKeys = dataCtrlInstance.musicKeys.ToArray();
             InitializeDataGridView();
 
-            SelectDefaultServiceDate();
             monthCalendarDatePicker.BringToFront();
+
+            InitializeServiceDates();
         }
         private void InitializeDataGridView()
         {
@@ -80,7 +84,14 @@ namespace ChurchMusicDirectory
             dataGridViewServicePlanner.CellEndEdit += new DataGridViewCellEventHandler(dataGridViewServicePlanner_CellEndEdit);
         }
 
-        private void SelectDefaultServiceDate()
+        private void InitializeServiceDates()
+        {
+            GetServiceDatesList();
+            comboBoxServiceDate.DataSource = Array.ConvertAll(serviceDatesList.ToArray(), x => x.ToLongDateString());
+            DateTime defaultDate = GetDefaultServiceDate();
+            monthCalendarDatePicker.SelectionRange = new SelectionRange(defaultDate, defaultDate);
+        }
+        private DateTime GetDefaultServiceDate()
         {
             int addWeeks = 0;
             double days = (DayOfWeek.Sunday - DateTime.Now.DayOfWeek) % 7;
@@ -88,9 +99,31 @@ namespace ChurchMusicDirectory
             {
                 days += 7;
             }
-            DateTime selectedDate = DateTime.Now.AddDays(days + addWeeks * 7);
-            monthCalendarDatePicker.SelectionRange = new SelectionRange(selectedDate, selectedDate);
-            SyncWithCalendar();
+            DateTime defaultDate = DateTime.Now.AddDays(days + addWeeks * 7);
+            return defaultDate;
+        }
+        private void SyncWithCalendar()
+        {
+            comboBoxServiceDate.Text = monthCalendarDatePicker.SelectionStart.ToLongDateString();
+            // every time, add date to combobox, refresh the combobox data, select the date in combobox
+            // figure out how to ensure only populated dates stay in combobox
+        }
+        private List<DateTime> GetServiceDatesList()
+        {
+            for (int rowIndex = 0; rowIndex < dataCtrl.serviceRecordsTable.Rows.Count; rowIndex++)
+            {
+                object serviceDate = dataCtrl.serviceRecordsTable.Rows[rowIndex][(int)DataCtrl.SERVICE_RECORD_ATTRIBUTE.date];
+                if (serviceDate != null)
+                {
+                    if (!serviceDatesList.Contains((DateTime)serviceDate))
+                    {
+                        serviceDatesList.Add((DateTime)serviceDate);
+                    }
+                }
+            }
+            serviceDatesList.Sort();
+            serviceDatesList.Reverse();
+            return serviceDatesList;
         }
 
         private void buttonCalendar_Click(object sender, EventArgs e)
@@ -102,10 +135,6 @@ namespace ChurchMusicDirectory
         {
             SyncWithCalendar();
             monthCalendarDatePicker.Visible = false;
-        }
-        private void SyncWithCalendar()
-        {
-            comboBoxServiceDate.Text = monthCalendarDatePicker.SelectionStart.ToLongDateString();
         }
 
         private void dataGridViewServicePlanner_EditingControlShowing(object? sender, DataGridViewEditingControlShowingEventArgs e)
@@ -170,7 +199,7 @@ namespace ChurchMusicDirectory
                 {
                     SetupRowBasedOnWorshipElement(cell.RowIndex);
                 }
-                else if (ElementIsMusical() == false)
+                else if (!ElementIsMusical())
                 {
                     cell.DataSource = new string[] { tempComboBoxValue };
                 }
@@ -225,6 +254,11 @@ namespace ChurchMusicDirectory
         private void buttonSaveChanges_Click(object sender, EventArgs e)
         {
             //save dataGridView state to table for that day
+        }
+
+        private void FormServicePlanner_Shown(object sender, EventArgs e)
+        {
+            SyncWithCalendar();
         }
     }
 }
