@@ -25,6 +25,7 @@ namespace ChurchMusicDirectory
             {
                 SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
                 builder.DataSource = serverIpAddress + "," + serverPort;
+                // TODO: doesn't work unless you select "remember me"
                 builder.UserID = Properties.Settings.Default.Username;
                 builder.Password = Properties.Settings.Default.Password;
                 builder.InitialCatalog = "ProvidenceSongs";
