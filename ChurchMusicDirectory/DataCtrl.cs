@@ -100,6 +100,25 @@ namespace ChurchMusicDirectory
                 }
             }
         }
+        public List<DateTime> GetServiceDatesList()
+        {
+            List < DateTime > serviceDatesList = new List < DateTime >();
+
+            for (int rowIndex = 0; rowIndex < serviceRecordsTable.Rows.Count; rowIndex++)
+            {
+                object serviceDate = serviceRecordsTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.date];
+                if (serviceDate != null)
+                {
+                    if (!serviceDatesList.Contains((DateTime)serviceDate))
+                    {
+                        serviceDatesList.Add((DateTime)serviceDate);
+                    }
+                }
+            }
+            serviceDatesList.Sort();
+            serviceDatesList.Reverse();
+            return serviceDatesList;
+        }
 
         public bool GetSongInfo(DataCtrlResponseHandler callback)
         {
