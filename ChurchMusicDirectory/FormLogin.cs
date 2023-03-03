@@ -23,7 +23,6 @@ namespace ChurchMusicDirectory
             richTextBoxUsername.Text = Properties.Settings.Default.Username;
             richTextBoxPassword.Text = Properties.Settings.Default.Password;
             checkBoxRememberLogin.Checked = Properties.Settings.Default.RememberLogin;
-            checkBoxRememberLogin.CheckState = (Properties.Settings.Default.RememberLogin? CheckState.Checked: CheckState.Unchecked);
         }
 
         private void buttonLogin_Click(object sender, EventArgs e)
@@ -42,27 +41,14 @@ namespace ChurchMusicDirectory
             FormMain.LoginToApplication();
         }
 
-        private void checkBoxRememberLogin_KeyUp(object sender, KeyEventArgs e)
+        private void checkBoxRememberLogin_Click(object sender, EventArgs e)
         {
-            switch (e.KeyCode)
-            {
-                case Keys.Enter: CheckBoxChangeCheck(); break;
-                default: break;
-            }
+            CheckBoxSaveCheck();
         }
-        private void CheckBoxChangeCheck()
+        private void CheckBoxSaveCheck()
         {
-            if (checkBoxRememberLogin.Checked)
-            {
-                checkBoxRememberLogin.Checked = false;
-                checkBoxRememberLogin.CheckState = CheckState.Unchecked;
-            }
-            else
-            {
-                checkBoxRememberLogin.Checked = true;
-                checkBoxRememberLogin.CheckState = CheckState.Checked;
-            }
-            Properties.Settings.Default.RememberLogin = (checkBoxRememberLogin.CheckState == CheckState.Checked);
+            Properties.Settings.Default.RememberLogin = checkBoxRememberLogin.Checked;
         }
+
     }
 }

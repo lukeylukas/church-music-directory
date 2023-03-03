@@ -93,7 +93,7 @@
             this.checkBoxRememberLogin.TabIndex = 3;
             this.checkBoxRememberLogin.Text = "Remember Login";
             this.checkBoxRememberLogin.UseVisualStyleBackColor = true;
-            this.checkBoxRememberLogin.KeyUp += new System.Windows.Forms.KeyEventHandler(this.checkBoxRememberLogin_KeyUp);
+            this.checkBoxRememberLogin.Click += new System.EventHandler(this.checkBoxRememberLogin_Click);
             // 
             // FormLogin
             // 
