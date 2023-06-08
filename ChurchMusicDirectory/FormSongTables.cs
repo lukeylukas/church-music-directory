@@ -170,20 +170,20 @@ namespace ChurchMusicDirectory
             dataGridView1.ContextMenuStrip.Items.Clear();
             if (column >= 0 && column < DataCtrl.SONG_ATTRIBUTE.COUNT)
             {
+                if (column == SONG_ATTRIBUTE.numPlays)
+                {
+                    AddTimeSpanSubmenu(dataGridView1.ContextMenuStrip);
+                }
                 if (songInfoColumns[(int)column].allowFiltering)
                 {
-                    SongInfoContextMenuPopulate(dataGridView1.ContextMenuStrip, (int)column);
+                    SongInfoContextMenuAddFiltering(dataGridView1.ContextMenuStrip, (int)column);
                     contextMenuColumnIndex = (int)column;
                     e.Cancel = false;
                 }
             }
         }
-        private void SongInfoContextMenuPopulate(ContextMenuStrip contextMenu, int columnIndex)
+        private void SongInfoContextMenuAddFiltering(ContextMenuStrip contextMenu, int columnIndex)
         {
-            if (columnIndex == (int)SONG_ATTRIBUTE.numPlays)
-            {
-                AddTimeSpanSubmenu(contextMenu);
-            }
             AddExcludeFilter(contextMenu, columnIndex);
             AddClearFilter(contextMenu);
 
