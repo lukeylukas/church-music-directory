@@ -142,6 +142,7 @@ namespace ChurchMusicDirectory
                 if(dataCtrl.GetSongInfo(SongInfoCallback))
                 {
                     dataCtrl.GetServiceRecords(ServiceRecordsCallback);
+                    dataCtrl.GenerateCalculatedData();
                 }
             });
             initDataCtrlThread.Start();

@@ -192,5 +192,71 @@ namespace ChurchMusicDirectory
 
             return receivedCorrectTable;
         }
+
+        public void GenerateCalculatedData()
+        {
+            GenerateCalculatedSongInfo();
+        }
+
+        private void GenerateCalculatedSongInfo()
+        {
+            GenerateNumPlays();
+        }
+        private void GenerateNumPlays()
+        {
+            Dictionary<string, int> songNameNumPlaysDict = GetNumPlaysFromServiceRecords();
+
+            SaveNumPlaysToSongInfo(songNameNumPlaysDict);
+        }
+
+        private Dictionary<string, int> GetNumPlaysFromServiceRecords()
+        {
+            // create a dictionary for songName and numPlays
+            Dictionary<string, int> numPlaysDict = new Dictionary<string, int>();
+
+            // for each row in serviceRecordsTable
+            for (int rowIndex = 0; rowIndex < serviceRecordsTable.Rows.Count; rowIndex++)
+            {
+                string songName = (string)serviceRecordsTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.title];
+                if (songName != null)
+                {
+                    // if songName is not in the dictionary
+                    if (!numPlaysDict.ContainsKey(songName))
+                    {
+                        // add songName to dictionary with value 1
+                        numPlaysDict.Add(songName, 1);
+                    }
+                    // else
+                    else
+                    {
+                        // increment the value of songName in the dictionary
+                        numPlaysDict[songName]++;
+                    }
+                }
+            }
+            return numPlaysDict;
+        }
+        private void SaveNumPlaysToSongInfo(Dictionary<string, int> numPlaysDict)
+        {
+            // for each row in songInfoTable
+            for (int rowIndex = 0; rowIndex < songInfoTable.Rows.Count; rowIndex++)
+            {
+                string songName = (string)songInfoTable.Rows[rowIndex][(int)SONG_ATTRIBUTE.songName];
+                if (songName != null)
+                {
+                    // if songName is in the dictionary
+                    if (numPlaysDict.ContainsKey(songName))
+                    {
+                        // set the numPlays column to the value of songName in the dictionary
+                        songInfoTable.Rows[rowIndex][(int)SONG_ATTRIBUTE.numPlays] = numPlaysDict[songName];
+                    }
+                    else
+                    {
+                        // set the numPlays column to 0
+                        songInfoTable.Rows[rowIndex][(int)SONG_ATTRIBUTE.numPlays] = 0;
+                    }
+                }
+            }
+        }
     }
 }
