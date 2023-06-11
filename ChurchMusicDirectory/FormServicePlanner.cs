@@ -58,7 +58,7 @@ namespace ChurchMusicDirectory
 
             InitializeDataGridView();
 
-            monthCalendarDatePicker.BringToFront();
+            calendarDatePicker.BringToFront();
 
             InitializeServiceDates(dataCtrlInstance);
         }
@@ -159,7 +159,7 @@ namespace ChurchMusicDirectory
             serviceDatesList = dataCtrlInstance.GetServiceDatesList();
             comboBoxServiceDate.DataSource = Array.ConvertAll(serviceDatesList.ToArray(), x => x.ToLongDateString());
             DateTime defaultDate = GetDefaultServiceDate();
-            monthCalendarDatePicker.SelectionRange = new SelectionRange(defaultDate, defaultDate);
+            calendarDatePicker.SelectionRange = new SelectionRange(defaultDate, defaultDate);
         }
         private DateTime GetDefaultServiceDate()
         {
@@ -175,17 +175,17 @@ namespace ChurchMusicDirectory
 
         private void buttonCalendar_Click(object sender, EventArgs e)
         {
-            monthCalendarDatePicker.Visible = !monthCalendarDatePicker.Visible;
+            calendarDatePicker.Visible = !calendarDatePicker.Visible;
         }
 
-        private void monthCalendarDatePicker_DateSelected(object sender, DateRangeEventArgs e)
+        private void calendarDatePicker_DateSelected(object sender, DateRangeEventArgs e)
         {
             SyncWithCalendar();
-            monthCalendarDatePicker.Visible = false;
+            calendarDatePicker.Visible = false;
         }
         private void SyncWithCalendar()
         {
-            comboBoxServiceDate.Text = monthCalendarDatePicker.SelectionStart.ToLongDateString();
+            comboBoxServiceDate.Text = calendarDatePicker.SelectionStart.ToLongDateString();
             // every time, add date to combobox, refresh the combobox data, select the date in combobox
             // figure out how to ensure only populated dates stay in combobox
         }

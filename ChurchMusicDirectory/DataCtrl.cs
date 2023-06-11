@@ -106,7 +106,7 @@ namespace ChurchMusicDirectory
                 }
             }
             serviceDatesList.Sort();
-            serviceDatesList.Reverse();
+            serviceDatesList.Reverse(); // puts most recent date first
             return serviceDatesList;
         }
 

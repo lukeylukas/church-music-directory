@@ -33,7 +33,7 @@
             this.labelServicePlanner = new System.Windows.Forms.Label();
             this.dataGridViewServicePlanner = new System.Windows.Forms.DataGridView();
             this.buttonCalendar = new System.Windows.Forms.Button();
-            this.monthCalendarDatePicker = new System.Windows.Forms.MonthCalendar();
+            this.calendarDatePicker = new System.Windows.Forms.MonthCalendar();
             this.comboBoxServiceDate = new System.Windows.Forms.ComboBox();
             this.comboBoxServiceNumber = new System.Windows.Forms.ComboBox();
             this.labelServiceNumber = new System.Windows.Forms.Label();
@@ -101,15 +101,15 @@
             this.buttonCalendar.UseVisualStyleBackColor = true;
             this.buttonCalendar.Click += new System.EventHandler(this.buttonCalendar_Click);
             // 
-            // monthCalendarDatePicker
+            // calendarDatePicker
             // 
-            this.monthCalendarDatePicker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.monthCalendarDatePicker.Location = new System.Drawing.Point(435, 38);
-            this.monthCalendarDatePicker.MaxSelectionCount = 1;
-            this.monthCalendarDatePicker.Name = "monthCalendarDatePicker";
-            this.monthCalendarDatePicker.TabIndex = 5;
-            this.monthCalendarDatePicker.Visible = false;
-            this.monthCalendarDatePicker.DateSelected += new System.Windows.Forms.DateRangeEventHandler(this.monthCalendarDatePicker_DateSelected);
+            this.calendarDatePicker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.calendarDatePicker.Location = new System.Drawing.Point(435, 38);
+            this.calendarDatePicker.MaxSelectionCount = 1;
+            this.calendarDatePicker.Name = "calendarDatePicker";
+            this.calendarDatePicker.TabIndex = 5;
+            this.calendarDatePicker.Visible = false;
+            this.calendarDatePicker.DateSelected += new System.Windows.Forms.DateRangeEventHandler(this.calendarDatePicker_DateSelected);
             // 
             // comboBoxServiceDate
             // 
@@ -183,7 +183,7 @@
             this.Controls.Add(this.labelServiceNumber);
             this.Controls.Add(this.comboBoxServiceNumber);
             this.Controls.Add(this.comboBoxServiceDate);
-            this.Controls.Add(this.monthCalendarDatePicker);
+            this.Controls.Add(this.calendarDatePicker);
             this.Controls.Add(this.buttonCalendar);
             this.Controls.Add(this.dataGridViewServicePlanner);
             this.Controls.Add(this.labelServicePlanner);
@@ -200,7 +200,7 @@
         private Label labelServicePlanner;
         private DataGridView dataGridViewServicePlanner;
         private Button buttonCalendar;
-        private MonthCalendar monthCalendarDatePicker;
+        private MonthCalendar calendarDatePicker;
         private ComboBox comboBoxServiceDate;
         private ComboBox comboBoxServiceNumber;
         private Label labelServiceNumber;
