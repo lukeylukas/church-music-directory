@@ -16,6 +16,7 @@ namespace ChurchMusicDirectory
         public DataTable songInfoTable;
         public DataTable serviceRecordsTable;
         public delegate void DataCtrlResponseHandler(bool success, string message);
+        
         public enum SONG_ATTRIBUTE
         {
             songName,
@@ -89,17 +90,6 @@ namespace ChurchMusicDirectory
                 musicKeys.Add(seedChar.ToString() + "min");
             }
         }
-        private void GenerateTitlesList()
-        {
-            int columnIndex = (int)SONG_ATTRIBUTE.songName;
-            foreach (DataRow item in this.songInfoTable.Rows)
-            {
-                if (item.ItemArray[columnIndex] != null)
-                {
-                    titlesList.Add(item.ItemArray[columnIndex].ToString());
-                }
-            }
-        }
         public List<DateTime> GetServiceDatesList()
         {
             List < DateTime > serviceDatesList = new List < DateTime >();
@@ -122,52 +112,60 @@ namespace ChurchMusicDirectory
 
         public bool GetSongInfo(DataCtrlResponseHandler callback)
         {
-            string songInfoQuery = BuildSongInfoQuery();
-            int expectedNumColumns = (int)SONG_ATTRIBUTE.COUNT;
+            string songInfoQuery = BuildSongInfoQuery(out int expectedNumColumns);
 
-            bool songInfoReceived = GetTableData(out songInfoTable, songInfoQuery, expectedNumColumns, out string statusMessage);
+            bool songInfoReceived = GetTableData(out DataTable tempTable, songInfoQuery, expectedNumColumns, out string statusMessage);
+            //for each column in FormSongTables.songInfoColumns, if isDerived is false, add the column from tempTable to the songInfoTable
+            for (int columnNum = 0; columnNum < FormSongTables.songInfoColumns.Length; columnNum++)
+            {
+                if (!FormSongTables.songInfoColumns[columnNum].isDerived)
+                {
+                    songInfoTable.Columns.Add(tempTable.Columns[0].ColumnName);
+                    // copy data from tempTable to songInfoTable
+                    for (int rowNum = 0; rowNum < tempTable.Rows.Count; rowNum++)
+                    {
+                        // if row does not exist for songInfoTable, add it
+                        if (songInfoTable.Rows.Count <= rowNum)
+                        {
+                            songInfoTable.Rows.Add();
+                        }
+                        songInfoTable.Rows[rowNum][columnNum] = tempTable.Rows[rowNum][0];
+                    }
+                    // remove 0th column from tempTable
+                    tempTable.Columns.RemoveAt(0);
+                }
+                // else add an empty column to the songInfoTable
+                else
+                {
+                    songInfoTable.Columns.Add();
+                }
+            }
 
             GenerateTitlesList();
             callback(songInfoReceived, statusMessage);
             return songInfoReceived;
         }
-        private string BuildSongInfoQuery()
+        private string BuildSongInfoQuery(out int numColumns)
         {
             string columns = "";
             string connectorString = ", ";
-            for (SONG_ATTRIBUTE attribute = 0; attribute < SONG_ATTRIBUTE.COUNT; attribute++)
+            numColumns = 0;
+            // Get column names from the FormSongTables.songInfoColumns source element
+            for (int columnNum = 0; columnNum < FormSongTables.songInfoColumns.Length; columnNum++)
             {
-                columns += attribute + connectorString;
+                SONG_ATTRIBUTE source = (SONG_ATTRIBUTE)FormSongTables.songInfoColumns[columnNum].id;
+                if (!FormSongTables.songInfoColumns[columnNum].isDerived)
+                {
+                    columns += source + connectorString;
+                    numColumns++;
+                }
             }
+
             columns = columns.Substring(0, columns.Length - connectorString.Length);
 
             return "SELECT " + columns + " FROM songInfo";
         }
-
-        public bool GetServiceRecords(DataCtrlResponseHandler callback)
-        {
-            string serviceRecordsQuery = BuildServiceRecordsQuery();
-            int expectedNumColumns = (int)SERVICE_RECORD_ATTRIBUTE.COUNT;
-
-            bool serviceRecordsReceived = GetTableData(out serviceRecordsTable, serviceRecordsQuery, expectedNumColumns, out string statusMessage);
-
-            callback(serviceRecordsReceived, statusMessage);
-            return serviceRecordsReceived;
-        }
-        private string BuildServiceRecordsQuery()
-        {
-            string columns = "";
-            string connectorString = ", ";
-            for (SERVICE_RECORD_ATTRIBUTE attribute = 0; attribute < SERVICE_RECORD_ATTRIBUTE.COUNT; attribute++)
-            {
-                columns += attribute + connectorString;
-            }
-            columns = columns.Substring(0, columns.Length - connectorString.Length);
-
-            return "SELECT " + columns + " FROM serviceRecords";
-        }
-
-        public bool GetTableData(out DataTable destTable, string query, int expectedNumColumns, out string message)
+        private bool GetTableData(out DataTable destTable, string query, int expectedNumColumns, out string message)
         {
             bool receivedCorrectTable = false;
             message = "";
@@ -191,6 +189,46 @@ namespace ChurchMusicDirectory
             }
 
             return receivedCorrectTable;
+        }
+        private void GenerateTitlesList()
+        {
+            int columnIndex = (int)SONG_ATTRIBUTE.songName;
+            foreach (DataRow item in this.songInfoTable.Rows)
+            {
+                if (item.ItemArray[columnIndex] != null)
+                {
+                    titlesList.Add(item.ItemArray[columnIndex].ToString());
+                }
+            }
+        }
+
+        public bool GetServiceRecords(DataCtrlResponseHandler callback)
+        {
+            string serviceRecordsQuery = BuildServiceRecordsQuery(out int expectedNumColumns);
+
+            bool serviceRecordsReceived = GetTableData(out serviceRecordsTable, serviceRecordsQuery, expectedNumColumns, out string statusMessage);
+
+            callback(serviceRecordsReceived, statusMessage);
+            return serviceRecordsReceived;
+        }
+        private string BuildServiceRecordsQuery(out int numColumns)
+        {
+            string columns = "";
+            string connectorString = ", ";
+            numColumns = 0;
+            // Get column names from the FormSongTables.serviceRecordsColumns source element
+            for (int columnNum = 0; columnNum < FormSongTables.serviceRecordColumns.Length; columnNum++)
+            {
+                SERVICE_RECORD_ATTRIBUTE source = (SERVICE_RECORD_ATTRIBUTE)FormSongTables.serviceRecordColumns[columnNum].id;
+                if (!FormSongTables.serviceRecordColumns[columnNum].isDerived)
+                {
+                    columns += source + connectorString;
+                    numColumns++;
+                }
+            }
+            columns = columns.Substring(0, columns.Length - connectorString.Length);
+
+            return "SELECT " + columns + " FROM serviceRecords";
         }
 
         public void GenerateCalculatedData()
@@ -241,9 +279,10 @@ namespace ChurchMusicDirectory
             // for each row in songInfoTable
             for (int rowIndex = 0; rowIndex < songInfoTable.Rows.Count; rowIndex++)
             {
-                string songName = (string)songInfoTable.Rows[rowIndex][(int)SONG_ATTRIBUTE.songName];
-                if (songName != null)
+                // if songName is not DBNull
+                if (songInfoTable.Rows[rowIndex][(int)SONG_ATTRIBUTE.songName] != DBNull.Value)
                 {
+                    string songName = (string)songInfoTable.Rows[rowIndex][(int)SONG_ATTRIBUTE.songName];
                     // if songName is in the dictionary
                     if (numPlaysDict.ContainsKey(songName))
                     {
