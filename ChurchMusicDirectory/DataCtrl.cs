@@ -15,6 +15,11 @@ namespace ChurchMusicDirectory
     {
         public DataTable songInfoTable;
         public DataTable serviceRecordsTable;
+        // create a dictionary with all the dates
+        // for each date, create a dictionary with all the services
+        // for each service, create a dictionary with all the IDs (orderInService)
+        // each one will contain a full service record DataRow
+        private Dictionary<DateOnly, Dictionary<int, Dictionary<int, DataRow>>> serviceRecordsDictionary;
         public delegate void DataCtrlResponseHandler(bool success, string message);
         
         public enum SONG_ATTRIBUTE
@@ -209,6 +214,38 @@ namespace ChurchMusicDirectory
             bool serviceRecordsReceived = GetTableData(out serviceRecordsTable, serviceRecordsQuery, expectedNumColumns, out string statusMessage);
 
             callback(serviceRecordsReceived, statusMessage);
+
+            // write data to the serviceRecordsDictionary
+            for (int rowIndex = 0; rowIndex < serviceRecordsTable.Rows.Count; rowIndex++)
+            {
+                object serviceDate = serviceRecordsTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.date];
+                if (serviceDate != null)
+                {
+                    if (!serviceRecordsDictionary.ContainsKey((DateOnly)serviceDate))
+                    {
+                        serviceRecordsDictionary.Add((DateOnly)serviceDate, new Dictionary<int, Dictionary<int, DataRow>>());
+                    }
+                    // get the serviceNumber
+                    object serviceNumber = serviceRecordsTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.serviceNumber];
+                    if (serviceNumber != null)
+                    {
+                        if (!serviceRecordsDictionary[(DateOnly)serviceDate].ContainsKey((int)serviceNumber))
+                        {
+                            serviceRecordsDictionary[(DateOnly)serviceDate].Add((int)serviceNumber, new Dictionary<int, DataRow>());
+                        }
+                        // get the orderInService
+                        object orderInService = serviceRecordsTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.orderInService];
+                        if (orderInService != null)
+                        {
+                            if (!serviceRecordsDictionary[(DateOnly)serviceDate][(int)serviceNumber].ContainsKey((int)orderInService))
+                            {
+                                serviceRecordsDictionary[(DateOnly)serviceDate][(int)serviceNumber].Add((int)orderInService, serviceRecordsTable.Rows[rowIndex]);
+                            }
+                        }
+                    }
+                }
+            }
+
             return serviceRecordsReceived;
         }
         private string BuildServiceRecordsQuery(out int numColumns)
