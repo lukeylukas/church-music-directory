@@ -215,6 +215,9 @@ namespace ChurchMusicDirectory
 
             callback(serviceRecordsReceived, statusMessage);
 
+            // initialize the serviceRecordsDictionary
+            serviceRecordsDictionary = new Dictionary<DateTime, Dictionary<int, Dictionary<int, DataRow>>>();
+
             // write data to the serviceRecordsDictionary
             for (int rowIndex = 0; rowIndex < serviceRecordsTable.Rows.Count; rowIndex++)
             {
