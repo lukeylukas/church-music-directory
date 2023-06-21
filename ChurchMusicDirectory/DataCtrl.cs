@@ -120,29 +120,32 @@ namespace ChurchMusicDirectory
             string songInfoQuery = BuildSongInfoQuery(out int expectedNumColumns);
 
             bool songInfoReceived = GetTableData(out DataTable tempTable, songInfoQuery, expectedNumColumns, out string statusMessage);
-            //for each column in FormSongTables.songInfoColumns, if isDerived is false, add the column from tempTable to the songInfoTable
-            for (int columnNum = 0; columnNum < FormSongTables.songInfoColumns.Length; columnNum++)
+            if (songInfoReceived)
             {
-                if (!FormSongTables.songInfoColumns[columnNum].isDerived)
+                //for each column in FormSongTables.songInfoColumns, if isDerived is false, add the column from tempTable to the songInfoTable
+                for (int columnNum = 0; columnNum < FormSongTables.songInfoColumns.Length; columnNum++)
                 {
-                    songInfoTable.Columns.Add(tempTable.Columns[0].ColumnName);
-                    // copy data from tempTable to songInfoTable
-                    for (int rowNum = 0; rowNum < tempTable.Rows.Count; rowNum++)
+                    if (!FormSongTables.songInfoColumns[columnNum].isDerived)
                     {
-                        // if row does not exist for songInfoTable, add it
-                        if (songInfoTable.Rows.Count <= rowNum)
+                        songInfoTable.Columns.Add(tempTable.Columns[0].ColumnName);
+                        // copy data from tempTable to songInfoTable
+                        for (int rowNum = 0; rowNum < tempTable.Rows.Count; rowNum++)
                         {
-                            songInfoTable.Rows.Add();
+                            // if row does not exist for songInfoTable, add it
+                            if (songInfoTable.Rows.Count <= rowNum)
+                            {
+                                songInfoTable.Rows.Add();
+                            }
+                            songInfoTable.Rows[rowNum][columnNum] = tempTable.Rows[rowNum][0];
                         }
-                        songInfoTable.Rows[rowNum][columnNum] = tempTable.Rows[rowNum][0];
+                        // remove 0th column from tempTable
+                        tempTable.Columns.RemoveAt(0);
                     }
-                    // remove 0th column from tempTable
-                    tempTable.Columns.RemoveAt(0);
-                }
-                // else add an empty column to the songInfoTable
-                else
-                {
-                    songInfoTable.Columns.Add();
+                    // else add an empty column to the songInfoTable
+                    else
+                    {
+                        songInfoTable.Columns.Add();
+                    }
                 }
             }
 
@@ -176,21 +179,29 @@ namespace ChurchMusicDirectory
             message = "";
             destTable = new DataTable();
 
-            if (ServerCommunication.QuerySqlServer(query, out DataTable tempTable))
+            // try to get data from server
+            try
             {
-                if (tempTable.Columns.Count == expectedNumColumns)
+                if (ServerCommunication.QuerySqlServer(query, out DataTable tempTable))
                 {
-                    receivedCorrectTable = true;
-                    destTable = tempTable;
+                    if (tempTable.Columns.Count == expectedNumColumns)
+                    {
+                        receivedCorrectTable = true;
+                        destTable = tempTable;
+                    }
+                    else
+                    {
+                        message = "Server sent incorrect data size.";
+                    }
                 }
                 else
                 {
-                    message = "Server sent incorrect data size.";
+                    message = "Response not received.";
                 }
             }
-            else
+            catch (Exception ex)
             {
-                message = "Response not received.";
+                message = ex.Message;
             }
 
             return receivedCorrectTable;
@@ -257,15 +268,15 @@ namespace ChurchMusicDirectory
             string connectorString = ", ";
             numColumns = 0;
             // Get column names from the FormSongTables.serviceRecordsColumns source element
-            for (int columnNum = 0; columnNum < FormSongTables.serviceRecordColumns.Length; columnNum++)
-            {
-                SERVICE_RECORD_ATTRIBUTE source = (SERVICE_RECORD_ATTRIBUTE)FormSongTables.serviceRecordColumns[columnNum].id;
+                    for (int columnNum = 0; columnNum < FormSongTables.serviceRecordColumns.Length; columnNum++)
+                    {
+                        SERVICE_RECORD_ATTRIBUTE source = (SERVICE_RECORD_ATTRIBUTE)FormSongTables.serviceRecordColumns[columnNum].id;
                 if (!FormSongTables.serviceRecordColumns[columnNum].isDerived)
-                {
+                    {
                     columns += source + connectorString;
                     numColumns++;
+                    }
                 }
-            }
             columns = columns.Substring(0, columns.Length - connectorString.Length);
 
             return "SELECT " + columns + " FROM serviceRecords";

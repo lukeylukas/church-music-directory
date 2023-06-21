@@ -47,6 +47,7 @@ namespace ChurchMusicDirectory
             }
             catch (SqlException e)
             {
+                throw new Exception("Error connecting to SQL Server: " + e.Message);
             }
             return dataRetrieved;
         }
