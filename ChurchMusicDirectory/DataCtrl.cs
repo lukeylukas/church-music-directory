@@ -226,6 +226,31 @@ namespace ChurchMusicDirectory
 
             callback(serviceRecordsReceived, statusMessage);
 
+            GenerateServiceRecordsDictionary();
+
+            return serviceRecordsReceived;
+        }
+        private string BuildServiceRecordsQuery(out int numColumns)
+        {
+            string columns = "";
+            string connectorString = ", ";
+            numColumns = 0;
+            // Get column names from the FormSongTables.serviceRecordsColumns source element
+            for (int columnNum = 0; columnNum < FormSongTables.serviceRecordColumns.Length; columnNum++)
+            {
+                SERVICE_RECORD_ATTRIBUTE source = (SERVICE_RECORD_ATTRIBUTE)FormSongTables.serviceRecordColumns[columnNum].id;
+                if (!FormSongTables.serviceRecordColumns[columnNum].isDerived)
+                {
+                    columns += source + connectorString;
+                    numColumns++;
+                }
+            }
+            columns = columns.Substring(0, columns.Length - connectorString.Length);
+
+            return "SELECT " + columns + " FROM serviceRecords";
+        }
+        private void GenerateServiceRecordsDictionary()
+        {
             // initialize the serviceRecordsDictionary
             serviceRecordsDictionary = new Dictionary<DateTime, Dictionary<int, Dictionary<int, DataRow>>>();
 
@@ -259,27 +284,33 @@ namespace ChurchMusicDirectory
                     }
                 }
             }
-
-            return serviceRecordsReceived;
         }
-        private string BuildServiceRecordsQuery(out int numColumns)
+
+        public DataTable GetServiceInfo(int date, int serviceNumber)
         {
-            string columns = "";
-            string connectorString = ", ";
-            numColumns = 0;
-            // Get column names from the FormSongTables.serviceRecordsColumns source element
+            // create a new DataTable
+            DataTable serviceInfoTable = new DataTable();
+            // if serviceRecordsDictionary contains the date
+            if (serviceRecordsDictionary.ContainsKey(new DateTime(date)))
+            {
+                // if serviceRecordsDictionary[date] contains the serviceNumber
+                if (serviceRecordsDictionary[new DateTime(date)].ContainsKey(serviceNumber))
+                {
+                    // add columns to the DataTable
                     for (int columnNum = 0; columnNum < FormSongTables.serviceRecordColumns.Length; columnNum++)
                     {
                         SERVICE_RECORD_ATTRIBUTE source = (SERVICE_RECORD_ATTRIBUTE)FormSongTables.serviceRecordColumns[columnNum].id;
-                if (!FormSongTables.serviceRecordColumns[columnNum].isDerived)
+                        serviceInfoTable.Columns.Add(source.ToString());
+                    }
+                    // add rows to the DataTable
+                    for (int orderInService = 0; orderInService < serviceRecordsDictionary[new DateTime(date)][serviceNumber].Count; orderInService++)
                     {
-                    columns += source + connectorString;
-                    numColumns++;
+                        serviceInfoTable.Rows.Add(serviceRecordsDictionary[new DateTime(date)][serviceNumber][orderInService].ItemArray);
                     }
                 }
-            columns = columns.Substring(0, columns.Length - connectorString.Length);
-
-            return "SELECT " + columns + " FROM serviceRecords";
+            }
+            // return the DataTable
+            return serviceInfoTable;
         }
 
         public void GenerateCalculatedData()

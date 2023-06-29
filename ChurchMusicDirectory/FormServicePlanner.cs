@@ -127,6 +127,7 @@ namespace ChurchMusicDirectory
             dataGridViewServicePlanner.EditMode = DataGridViewEditMode.EditOnEnter;
             dataGridViewServicePlanner.DataError += new DataGridViewDataErrorEventHandler(dataGridViewServicePlanner_DataError);
             dataGridViewServicePlanner.CellEndEdit += new DataGridViewCellEventHandler(dataGridViewServicePlanner_CellEndEdit);
+            // figure out what the source will be
         }
         private void InitializeServicePlannerColumn(SERVICE_PLANNER_COLUMN columnInfo)
         {
