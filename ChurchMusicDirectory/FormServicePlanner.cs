@@ -123,14 +123,12 @@ namespace ChurchMusicDirectory
             for (int columnIndex = 0; columnIndex < plannerColumns.Count; columnIndex++)
             {
                 InitializeServicePlannerColumn(plannerColumns[(SERVICE_PLANNER_COLUMN_ID)columnIndex]);
+                dataGridViewServicePlanner.Columns[columnIndex].DisplayIndex = columnIndex;
             }
-
             dataGridViewServicePlanner.Columns[plannerColumns.Count - 1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             dataGridViewServicePlanner.EditMode = DataGridViewEditMode.EditOnEnter;
             dataGridViewServicePlanner.DataError += new DataGridViewDataErrorEventHandler(dataGridViewServicePlanner_DataError);
             dataGridViewServicePlanner.CellEndEdit += new DataGridViewCellEventHandler(dataGridViewServicePlanner_CellEndEdit);
-            dataGridViewServicePlanner.DataSource = dataCtrlInstance.GetServiceInfo(calendarDatePicker.SelectionStart, 0);
-            // instead of above, we need a way to put the data in each column or each cell so that it doesn't just add a bunch of columns to the side
         }
         private void InitializeServicePlannerColumn(SERVICE_PLANNER_COLUMN columnInfo)
         {
@@ -155,6 +153,15 @@ namespace ChurchMusicDirectory
             column.MinimumWidth = columnInfo.width;
             column.Width = columnInfo.width;
             column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            switch(columnInfo.name)
+            {
+                case "Element":  column.DataPropertyName = "elementName";    break;
+                case "Title":    column.DataPropertyName = "title";          break;
+                case "Key":      column.DataPropertyName = "musicKey";       break;
+                case "Passage":  column.DataPropertyName = "passage";        break;
+                case "Notes":    column.DataPropertyName = "notes";          break;
+                default:         throw new Exception("service planner column is unsupported type");
+            }
             dataGridViewServicePlanner.Columns.Add(column);
         }
 
@@ -186,13 +193,21 @@ namespace ChurchMusicDirectory
         {
             SyncWithCalendar();
             calendarDatePicker.Visible = false;
-            dataGridViewServicePlanner.DataSource = dataCtrlInstance.GetServiceInfo(calendarDatePicker.SelectionStart, 0);
+            FormatDataGridView();
         }
         private void SyncWithCalendar()
         {
             comboBoxServiceDate.Text = calendarDatePicker.SelectionStart.ToLongDateString();
             // every time, add date to combobox, refresh the combobox data, select the date in combobox
             // figure out how to ensure only populated dates stay in combobox
+        }
+        private void FormatDataGridView()
+        {
+            dataGridViewServicePlanner.DataSource = dataCtrlInstance.GetServiceInfo(calendarDatePicker.SelectionStart, 0);
+            dataGridViewServicePlanner.Columns["date"].Visible = false;
+            dataGridViewServicePlanner.Columns["serviceNumber"].Visible = false;
+            dataGridViewServicePlanner.Columns["orderInService"].Visible = false;
+            dataGridViewServicePlanner.Sort(dataGridViewServicePlanner.Columns["orderInService"], ListSortDirection.Ascending);
         }
 
         private void dataGridViewServicePlanner_EditingControlShowing(object? sender, DataGridViewEditingControlShowingEventArgs e)
