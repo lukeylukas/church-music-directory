@@ -13,7 +13,6 @@ namespace ChurchMusicDirectory
 {
     internal class ServerCommunication
     {
-        const string serverName = "ChurchMusicServer1";
         const string serverIpAddress = "localhost";
         const int serverPort = 1433;
 
