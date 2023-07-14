@@ -19,6 +19,7 @@ namespace ChurchMusicDirectory
         string[]? musicKeys;
         List<DateTime> serviceDatesList;
         Dictionary<SERVICE_PLANNER_COLUMN_ID, SERVICE_PLANNER_COLUMN> plannerColumns;
+        static private DataCtrl dataCtrlInstance = new DataCtrl();
 
         enum SERVICE_PLANNER_COLUMN_ID
         {
@@ -37,12 +38,13 @@ namespace ChurchMusicDirectory
             public string[] dataSource { get; set; }
         };
 
-        public FormServicePlanner(DataCtrl dataCtrlInstance)
+        public FormServicePlanner(DataCtrl dataCtrlPassedIn)
         {
+            dataCtrlInstance = dataCtrlPassedIn;
             InitializeComponent();
-            Setup(dataCtrlInstance);
+            Setup();
         }
-        private void Setup(DataCtrl dataCtrlInstance)
+        private void Setup()
         {
             worshipElements = new string[dataCtrlInstance.worshipElements.Count + 1];
             worshipElements[0] = "";
@@ -60,7 +62,7 @@ namespace ChurchMusicDirectory
 
             calendarDatePicker.BringToFront();
 
-            InitializeServiceDates(dataCtrlInstance);
+            InitializeServiceDates();
         }
         private void InitializeDataGridView()
         {
@@ -127,7 +129,8 @@ namespace ChurchMusicDirectory
             dataGridViewServicePlanner.EditMode = DataGridViewEditMode.EditOnEnter;
             dataGridViewServicePlanner.DataError += new DataGridViewDataErrorEventHandler(dataGridViewServicePlanner_DataError);
             dataGridViewServicePlanner.CellEndEdit += new DataGridViewCellEventHandler(dataGridViewServicePlanner_CellEndEdit);
-            // figure out what the source will be
+            dataGridViewServicePlanner.DataSource = dataCtrlInstance.GetServiceInfo(calendarDatePicker.SelectionStart, 0);
+            // instead of above, we need a way to put the data in each column or each cell so that it doesn't just add a bunch of columns to the side
         }
         private void InitializeServicePlannerColumn(SERVICE_PLANNER_COLUMN columnInfo)
         {
@@ -155,12 +158,12 @@ namespace ChurchMusicDirectory
             dataGridViewServicePlanner.Columns.Add(column);
         }
 
-        private void InitializeServiceDates(DataCtrl dataCtrlInstance)
+        private void InitializeServiceDates()
         {
             serviceDatesList = dataCtrlInstance.GetServiceDatesList();
             comboBoxServiceDate.DataSource = Array.ConvertAll(serviceDatesList.ToArray(), x => x.ToLongDateString());
             DateTime defaultDate = GetDefaultServiceDate();
-            calendarDatePicker.SelectionRange = new SelectionRange(defaultDate, defaultDate);
+            calendarDatePicker.SetSelectionRange(defaultDate, defaultDate);
         }
         private DateTime GetDefaultServiceDate()
         {
@@ -183,6 +186,7 @@ namespace ChurchMusicDirectory
         {
             SyncWithCalendar();
             calendarDatePicker.Visible = false;
+            dataGridViewServicePlanner.DataSource = dataCtrlInstance.GetServiceInfo(calendarDatePicker.SelectionStart, 0);
         }
         private void SyncWithCalendar()
         {

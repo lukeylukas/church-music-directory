@@ -122,26 +122,21 @@ namespace ChurchMusicDirectory
             bool songInfoReceived = GetTableData(out DataTable tempTable, songInfoQuery, expectedNumColumns, out string statusMessage);
             if (songInfoReceived)
             {
-                //for each column in FormSongTables.songInfoColumns, if isDerived is false, add the column from tempTable to the songInfoTable
                 for (int columnNum = 0; columnNum < FormSongTables.songInfoColumns.Length; columnNum++)
                 {
                     if (!FormSongTables.songInfoColumns[columnNum].isDerived)
                     {
                         songInfoTable.Columns.Add(tempTable.Columns[0].ColumnName);
-                        // copy data from tempTable to songInfoTable
                         for (int rowNum = 0; rowNum < tempTable.Rows.Count; rowNum++)
                         {
-                            // if row does not exist for songInfoTable, add it
                             if (songInfoTable.Rows.Count <= rowNum)
                             {
                                 songInfoTable.Rows.Add();
                             }
                             songInfoTable.Rows[rowNum][columnNum] = tempTable.Rows[rowNum][0];
                         }
-                        // remove 0th column from tempTable
                         tempTable.Columns.RemoveAt(0);
                     }
-                    // else add an empty column to the songInfoTable
                     else
                     {
                         songInfoTable.Columns.Add();
@@ -158,7 +153,6 @@ namespace ChurchMusicDirectory
             string columns = "";
             string connectorString = ", ";
             numColumns = 0;
-            // Get column names from the FormSongTables.songInfoColumns source element
             for (int columnNum = 0; columnNum < FormSongTables.songInfoColumns.Length; columnNum++)
             {
                 SONG_ATTRIBUTE source = (SONG_ATTRIBUTE)FormSongTables.songInfoColumns[columnNum].id;
@@ -179,7 +173,6 @@ namespace ChurchMusicDirectory
             message = "";
             destTable = new DataTable();
 
-            // try to get data from server
             try
             {
                 if (ServerCommunication.QuerySqlServer(query, out DataTable tempTable))
@@ -224,9 +217,9 @@ namespace ChurchMusicDirectory
 
             bool serviceRecordsReceived = GetTableData(out serviceRecordsTable, serviceRecordsQuery, expectedNumColumns, out string statusMessage);
 
-            callback(serviceRecordsReceived, statusMessage);
-
             GenerateServiceRecordsDictionary();
+
+            callback(serviceRecordsReceived, statusMessage);
 
             return serviceRecordsReceived;
         }
@@ -235,7 +228,6 @@ namespace ChurchMusicDirectory
             string columns = "";
             string connectorString = ", ";
             numColumns = 0;
-            // Get column names from the FormSongTables.serviceRecordsColumns source element
             for (int columnNum = 0; columnNum < FormSongTables.serviceRecordColumns.Length; columnNum++)
             {
                 SERVICE_RECORD_ATTRIBUTE source = (SERVICE_RECORD_ATTRIBUTE)FormSongTables.serviceRecordColumns[columnNum].id;
@@ -251,10 +243,8 @@ namespace ChurchMusicDirectory
         }
         private void GenerateServiceRecordsDictionary()
         {
-            // initialize the serviceRecordsDictionary
             serviceRecordsDictionary = new Dictionary<DateTime, Dictionary<int, Dictionary<int, DataRow>>>();
 
-            // write data to the serviceRecordsDictionary
             for (int rowIndex = 0; rowIndex < serviceRecordsTable.Rows.Count; rowIndex++)
             {
                 object serviceDate = serviceRecordsTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.date];
@@ -264,7 +254,6 @@ namespace ChurchMusicDirectory
                     {
                         serviceRecordsDictionary.Add((DateTime)serviceDate, new Dictionary<int, Dictionary<int, DataRow>>());
                     }
-                    // get the serviceNumber
                     object serviceNumber = serviceRecordsTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.serviceNumber];
                     if (serviceNumber != null)
                     {
@@ -272,7 +261,6 @@ namespace ChurchMusicDirectory
                         {
                             serviceRecordsDictionary[(DateTime)serviceDate].Add((int)serviceNumber, new Dictionary<int, DataRow>());
                         }
-                        // get the orderInService
                         object orderInService = serviceRecordsTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.orderInService];
                         if (orderInService != null)
                         {
@@ -286,30 +274,24 @@ namespace ChurchMusicDirectory
             }
         }
 
-        public DataTable GetServiceInfo(int date, int serviceNumber)
+        public DataTable GetServiceInfo(DateTime date, int serviceNumber)
         {
-            // create a new DataTable
             DataTable serviceInfoTable = new DataTable();
-            // if serviceRecordsDictionary contains the date
-            if (serviceRecordsDictionary.ContainsKey(new DateTime(date)))
+            if (serviceRecordsDictionary.ContainsKey(date))
             {
-                // if serviceRecordsDictionary[date] contains the serviceNumber
-                if (serviceRecordsDictionary[new DateTime(date)].ContainsKey(serviceNumber))
+                if (serviceRecordsDictionary[date].ContainsKey(serviceNumber))
                 {
-                    // add columns to the DataTable
                     for (int columnNum = 0; columnNum < FormSongTables.serviceRecordColumns.Length; columnNum++)
                     {
                         SERVICE_RECORD_ATTRIBUTE source = (SERVICE_RECORD_ATTRIBUTE)FormSongTables.serviceRecordColumns[columnNum].id;
                         serviceInfoTable.Columns.Add(source.ToString());
                     }
-                    // add rows to the DataTable
-                    for (int orderInService = 0; orderInService < serviceRecordsDictionary[new DateTime(date)][serviceNumber].Count; orderInService++)
+                    for (int orderInService = 1; orderInService <= serviceRecordsDictionary[date][serviceNumber].Count; orderInService++)
                     {
-                        serviceInfoTable.Rows.Add(serviceRecordsDictionary[new DateTime(date)][serviceNumber][orderInService].ItemArray);
+                        serviceInfoTable.Rows.Add(serviceRecordsDictionary[date][serviceNumber][orderInService].ItemArray);
                     }
                 }
             }
-            // return the DataTable
             return serviceInfoTable;
         }
 
@@ -331,25 +313,19 @@ namespace ChurchMusicDirectory
 
         private Dictionary<string, int> GetNumPlaysFromServiceRecords()
         {
-            // create a dictionary for songName and numPlays
             Dictionary<string, int> numPlaysDict = new Dictionary<string, int>();
 
-            // for each row in serviceRecordsTable
             for (int rowIndex = 0; rowIndex < serviceRecordsTable.Rows.Count; rowIndex++)
             {
                 string songName = (string)serviceRecordsTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.title];
                 if (songName != null)
                 {
-                    // if songName is not in the dictionary
                     if (!numPlaysDict.ContainsKey(songName))
                     {
-                        // add songName to dictionary with value 1
                         numPlaysDict.Add(songName, 1);
                     }
-                    // else
                     else
                     {
-                        // increment the value of songName in the dictionary
                         numPlaysDict[songName]++;
                     }
                 }
@@ -358,22 +334,17 @@ namespace ChurchMusicDirectory
         }
         private void SaveNumPlaysToSongInfo(Dictionary<string, int> numPlaysDict)
         {
-            // for each row in songInfoTable
             for (int rowIndex = 0; rowIndex < songInfoTable.Rows.Count; rowIndex++)
             {
-                // if songName is not DBNull
                 if (songInfoTable.Rows[rowIndex][(int)SONG_ATTRIBUTE.songName] != DBNull.Value)
                 {
                     string songName = (string)songInfoTable.Rows[rowIndex][(int)SONG_ATTRIBUTE.songName];
-                    // if songName is in the dictionary
                     if (numPlaysDict.ContainsKey(songName))
                     {
-                        // set the numPlays column to the value of songName in the dictionary
                         songInfoTable.Rows[rowIndex][(int)SONG_ATTRIBUTE.numPlays] = numPlaysDict[songName];
                     }
                     else
                     {
-                        // set the numPlays column to 0
                         songInfoTable.Rows[rowIndex][(int)SONG_ATTRIBUTE.numPlays] = 0;
                     }
                 }
