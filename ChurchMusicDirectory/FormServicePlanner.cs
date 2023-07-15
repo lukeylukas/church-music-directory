@@ -337,6 +337,15 @@ namespace ChurchMusicDirectory
         private void buttonSaveChanges_Click(object sender, EventArgs e)
         {
             //save dataGridView state to table for that day
+            if (dataGridViewServicePlanner.DataSource == dataCtrlInstance.GetServiceInfo(calendarDatePicker.SelectionStart, 0))
+            {
+                MessageBox.Show("No changes to save");
+            }
+            else
+            {
+                //dataCtrlInstance.UpdateServiceInfo(calendarDatePicker.SelectionStart, 0, (DataTable)dataGridViewServicePlanner.DataSource);
+                MessageBox.Show("Changes saved");
+            }
         }
 
         private void FormServicePlanner_Shown(object sender, EventArgs e)
