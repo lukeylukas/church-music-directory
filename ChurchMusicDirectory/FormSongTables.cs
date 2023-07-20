@@ -171,7 +171,7 @@ namespace ChurchMusicDirectory
             public FILTER_TYPE type;
             public List<string> list;
         };
-        private FILTER_INFO[] columnFilters = new FILTER_INFO[(int)DataCtrl.SONG_ATTRIBUTE.COUNT];
+        private FILTER_INFO[] columnFilters = new FILTER_INFO[(int)SONG_ATTRIBUTE.COUNT];
 
         public FormSongTables(FormMain parentForm)
         {
@@ -194,9 +194,9 @@ namespace ChurchMusicDirectory
         {
             e.Cancel = true;
             DataGridView.HitTestInfo menuLocation = Utils.MousePositionInTable(dataGridView1, MousePosition);
-            DataCtrl.SONG_ATTRIBUTE column = (DataCtrl.SONG_ATTRIBUTE)menuLocation.ColumnIndex;
+            SONG_ATTRIBUTE column = (SONG_ATTRIBUTE)menuLocation.ColumnIndex;
             dataGridView1.ContextMenuStrip.Items.Clear();
-            if (column >= 0 && column < DataCtrl.SONG_ATTRIBUTE.COUNT)
+            if (column >= 0 && column < SONG_ATTRIBUTE.COUNT)
             {
                 if (column == SONG_ATTRIBUTE.numPlays)
                 {
@@ -356,7 +356,7 @@ namespace ChurchMusicDirectory
 
         private void InitializeColumnFilters()
         {
-            for (DataCtrl.SONG_ATTRIBUTE attribute = 0; attribute < DataCtrl.SONG_ATTRIBUTE.COUNT; attribute++)
+            for (SONG_ATTRIBUTE attribute = 0; attribute < SONG_ATTRIBUTE.COUNT; attribute++)
             {
                 columnFilters[(int)attribute].type = FILTER_TYPE.INCLUDE;
                 columnFilters[(int)attribute].list = new List<string>();
@@ -394,7 +394,7 @@ namespace ChurchMusicDirectory
                         string cellValue = table.Rows[rowIndex].Cells[columnIndex].Value.ToString();
                         switch (columnIndex)
                         {
-                            case (int)DataCtrl.SONG_ATTRIBUTE.musicKey: columnEntries.AddRange(cellValue.Split(",", StringSplitOptions.TrimEntries)); break;
+                            case (int)SONG_ATTRIBUTE.musicKey: columnEntries.AddRange(cellValue.Split(",", StringSplitOptions.TrimEntries)); break;
                             default: columnEntries.Add(cellValue); break;
                         }
                     }
@@ -421,7 +421,7 @@ namespace ChurchMusicDirectory
         private void SongInfoFilter()
         {
             string query = "";
-            for (int columnIndex = 0; columnIndex < (int)DataCtrl.SONG_ATTRIBUTE.COUNT; columnIndex++)
+            for (int columnIndex = 0; columnIndex < (int)SONG_ATTRIBUTE.COUNT; columnIndex++)
             {
 
                 if (columnFilters[columnIndex].list.Count > 0)
@@ -445,7 +445,7 @@ namespace ChurchMusicDirectory
                     query += ")";
                 }
                 if (!query.Equals("")
-                    && columnIndex < (int)DataCtrl.SONG_ATTRIBUTE.COUNT - 1 
+                    && columnIndex < (int)SONG_ATTRIBUTE.COUNT - 1 
                     && columnFilters[columnIndex + 1].list.Count > 0)
                 {
                     query += " AND ";

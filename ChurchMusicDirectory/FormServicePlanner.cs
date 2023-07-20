@@ -18,24 +18,16 @@ namespace ChurchMusicDirectory
         string[]? songTitles;
         string[]? musicKeys;
         List<DateTime> serviceDatesList;
-        Dictionary<SERVICE_PLANNER_COLUMN_ID, SERVICE_PLANNER_COLUMN> plannerColumns;
+        Dictionary<SERVICE_RECORD_ATTRIBUTE, SERVICE_PLANNER_COLUMN> plannerColumns;
         static private DataCtrl dataCtrlInstance = new DataCtrl();
-
-        enum SERVICE_PLANNER_COLUMN_ID
-        {
-            Element,
-            Title,
-            Key,
-            Passage,
-            Notes,
-        }
 
         class SERVICE_PLANNER_COLUMN
         {
             public string name { get; set; }
+            public bool visible { get; set; }
             public Type type { get; set; }
             public int width { get; set; }
-            public string[] dataSource { get; set; }
+            public string[]? dataSource { get; set; }
         };
 
         public FormServicePlanner(DataCtrl dataCtrlPassedIn)
@@ -66,64 +58,103 @@ namespace ChurchMusicDirectory
         }
         private void InitializeDataGridView()
         {
-            plannerColumns = new Dictionary<SERVICE_PLANNER_COLUMN_ID, SERVICE_PLANNER_COLUMN>()
+            plannerColumns = new Dictionary<SERVICE_RECORD_ATTRIBUTE, SERVICE_PLANNER_COLUMN>()
             {
                 {
-                    SERVICE_PLANNER_COLUMN_ID.Element,
+                    SERVICE_RECORD_ATTRIBUTE.elementName,
                     new SERVICE_PLANNER_COLUMN
                     {
-                        name=SERVICE_PLANNER_COLUMN_ID.Element.ToString(),
+                        name="Element",
+                        visible=true,
                         type=(new DataGridViewComboBoxColumn()).GetType(),
                         width=100,
                         dataSource = worshipElements
                     }
                 },
                 {
-                    SERVICE_PLANNER_COLUMN_ID.Title,
+                    SERVICE_RECORD_ATTRIBUTE.title,
                     new SERVICE_PLANNER_COLUMN
                     {
-                        name=SERVICE_PLANNER_COLUMN_ID.Title.ToString(),
+                        name="Title",
+                        visible=true,
                         type=(new DataGridViewComboBoxColumn()).GetType(),
                         width=200,
                         dataSource = songTitles
                     }
                 },
                 {
-                    SERVICE_PLANNER_COLUMN_ID.Key,
+                    SERVICE_RECORD_ATTRIBUTE.musicKey,
                     new SERVICE_PLANNER_COLUMN
                     {
-                        name=SERVICE_PLANNER_COLUMN_ID.Key.ToString(),
+                        name="Key",
+                        visible=true,
                         type=(new DataGridViewComboBoxColumn()).GetType(),
                         width=75,
                         dataSource = musicKeys
                     }
                 },
                 {
-                    SERVICE_PLANNER_COLUMN_ID.Passage,
+                    SERVICE_RECORD_ATTRIBUTE.passage,
                     new SERVICE_PLANNER_COLUMN
                     {
-                        name=SERVICE_PLANNER_COLUMN_ID.Passage.ToString(),
+                        name="Passage",
+                        visible=true,
                         type=(new DataGridViewTextBoxColumn()).GetType(),
                         width=150,
                         dataSource = (new string[] { "" })
                     }
                 },
                 {
-                    SERVICE_PLANNER_COLUMN_ID.Notes,
+                    SERVICE_RECORD_ATTRIBUTE.notes,
                     new SERVICE_PLANNER_COLUMN
                     {
-                        name=SERVICE_PLANNER_COLUMN_ID.Notes.ToString(),
+                        name="Notes",
+                        visible=true,
                         type=(new DataGridViewTextBoxColumn()).GetType(),
                         width=100,
                         dataSource = (new string[] { "" })
+                    }
+                },
+                {
+                    SERVICE_RECORD_ATTRIBUTE.date,
+                    new SERVICE_PLANNER_COLUMN
+                    {
+                        name="Date",
+                        visible=false,
+                        type=(new DataGridViewComboBoxColumn()).GetType(),
+                        width=100,
+                        dataSource = null
+                    }
+                },
+                {
+                    SERVICE_RECORD_ATTRIBUTE.serviceNumber,
+                    new SERVICE_PLANNER_COLUMN
+                    {
+                        name="ServiceNumber",
+                        visible=false,
+                        type=(new DataGridViewComboBoxColumn()).GetType(),
+                        width=100,
+                        dataSource = null
+                    }
+                },
+                {
+                    SERVICE_RECORD_ATTRIBUTE.orderInService,
+                    new SERVICE_PLANNER_COLUMN
+                    {
+                        name="Order",
+                        visible=false,
+                        type=(new DataGridViewComboBoxColumn()).GetType(),
+                        width=100,
+                        dataSource = null
                     }
                 },
             };
 
             for (int columnIndex = 0; columnIndex < plannerColumns.Count; columnIndex++)
             {
-                InitializeServicePlannerColumn(plannerColumns[(SERVICE_PLANNER_COLUMN_ID)columnIndex]);
-                dataGridViewServicePlanner.Columns[columnIndex].DisplayIndex = columnIndex;
+                InitializeServicePlannerColumn(plannerColumns[(SERVICE_RECORD_ATTRIBUTE)columnIndex]);
+                dataGridViewServicePlanner.Columns[columnIndex].Visible = plannerColumns[(SERVICE_RECORD_ATTRIBUTE)columnIndex].visible;
+                dataGridViewServicePlanner.Columns[columnIndex].DataPropertyName = ((SERVICE_RECORD_ATTRIBUTE)columnIndex).ToString();
             }
             dataGridViewServicePlanner.Columns[plannerColumns.Count - 1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             dataGridViewServicePlanner.EditMode = DataGridViewEditMode.EditOnEnter;
@@ -144,8 +175,7 @@ namespace ChurchMusicDirectory
             }
             else
             {
-                MessageBox.Show("service planner column is unsupported type");
-                return; //TODO: throw actual error instead
+                column = new DataGridViewTextBoxColumn(); //this is for all the non-visible columns. They still need to be added to the dataGridView
             }
 
             column.Name = columnInfo.name;
@@ -153,15 +183,6 @@ namespace ChurchMusicDirectory
             column.MinimumWidth = columnInfo.width;
             column.Width = columnInfo.width;
             column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            switch(columnInfo.name)
-            {
-                case "Element":  column.DataPropertyName = "elementName";    break;
-                case "Title":    column.DataPropertyName = "title";          break;
-                case "Key":      column.DataPropertyName = "musicKey";       break;
-                case "Passage":  column.DataPropertyName = "passage";        break;
-                case "Notes":    column.DataPropertyName = "notes";          break;
-                default:         throw new Exception("service planner column is unsupported type");
-            }
             dataGridViewServicePlanner.Columns.Add(column);
         }
 
@@ -204,10 +225,7 @@ namespace ChurchMusicDirectory
         private void FormatDataGridView()
         {
             dataGridViewServicePlanner.DataSource = dataCtrlInstance.GetServiceInfo(calendarDatePicker.SelectionStart, 0);
-            dataGridViewServicePlanner.Columns["date"].Visible = false;
-            dataGridViewServicePlanner.Columns["serviceNumber"].Visible = false;
-            dataGridViewServicePlanner.Columns["orderInService"].Visible = false;
-            dataGridViewServicePlanner.Sort(dataGridViewServicePlanner.Columns["orderInService"], ListSortDirection.Ascending);
+            dataGridViewServicePlanner.Sort(dataGridViewServicePlanner.Columns[(int)SERVICE_RECORD_ATTRIBUTE.orderInService], ListSortDirection.Ascending);
         }
 
         private void dataGridViewServicePlanner_EditingControlShowing(object? sender, DataGridViewEditingControlShowingEventArgs e)
@@ -216,7 +234,7 @@ namespace ChurchMusicDirectory
             if (comboEditor != null)
             {
                 if (ElementIsMusical(dataGridViewServicePlanner.CurrentCell.RowIndex)
-                    || (dataGridViewServicePlanner.CurrentCell.ColumnIndex == (int)SERVICE_PLANNER_COLUMN_ID.Element))
+                    || (dataGridViewServicePlanner.CurrentCell.ColumnIndex == (int)SERVICE_RECORD_ATTRIBUTE.elementName))
                 {
                     comboEditor.DropDownStyle = ComboBoxStyle.DropDown;
                     comboEditor.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
@@ -239,9 +257,9 @@ namespace ChurchMusicDirectory
             AutoCompleteStringCollection DataCollection = new AutoCompleteStringCollection();
             switch (dataGridViewServicePlanner.CurrentCell.ColumnIndex)
             {
-                case (int)SERVICE_PLANNER_COLUMN_ID.Element:   DataCollection.AddRange(worshipElements); break;
-                case (int)SERVICE_PLANNER_COLUMN_ID.Title:     DataCollection.AddRange(songTitles);      break;
-                case (int)SERVICE_PLANNER_COLUMN_ID.Key:       DataCollection.AddRange(musicKeys);       break;
+                case (int)SERVICE_RECORD_ATTRIBUTE.elementName:   DataCollection.AddRange(worshipElements); break;
+                case (int)SERVICE_RECORD_ATTRIBUTE.title:     DataCollection.AddRange(songTitles);      break;
+                case (int)SERVICE_RECORD_ATTRIBUTE.musicKey:       DataCollection.AddRange(musicKeys);       break;
                 default:                                                                                 break;
             }
             return DataCollection;
@@ -253,7 +271,7 @@ namespace ChurchMusicDirectory
             {
                 if (dataGridViewServicePlanner.Rows[dataGridViewServicePlanner.CurrentCell.RowIndex].Cells[0].Value != null)
                 {
-                    int elementColumnIndex = (int)SERVICE_PLANNER_COLUMN_ID.Element;
+                    int elementColumnIndex = (int)SERVICE_RECORD_ATTRIBUTE.elementName;
                     string element = dataGridViewServicePlanner.Rows[rowIndex].Cells[elementColumnIndex].Value.ToString();
                     if (element == "Song" 
                         || element == "Offering" 
@@ -278,7 +296,7 @@ namespace ChurchMusicDirectory
             {
                 cell.Value = tempComboBoxValue;
 
-                if (cell.OwningColumn.Name == SERVICE_PLANNER_COLUMN_ID.Element.ToString())
+                if (cell.OwningColumn.Name == SERVICE_RECORD_ATTRIBUTE.elementName.ToString())
                 {
                     SetupRowBasedOnWorshipElement(cell.RowIndex);
                 }
@@ -291,9 +309,9 @@ namespace ChurchMusicDirectory
         private void SetupRowBasedOnWorshipElement(int rowIndex)
         {
             bool elementIsMusical = ElementIsMusical(rowIndex);
-            int titleColumnIndex = (int)SERVICE_PLANNER_COLUMN_ID.Title;
+            int titleColumnIndex = (int)SERVICE_RECORD_ATTRIBUTE.title;
             SetTitleComboBoxDataSource(dataGridViewServicePlanner.Rows[rowIndex].Cells[titleColumnIndex], elementIsMusical);
-            int musicKeyColumnIndex = (int)SERVICE_PLANNER_COLUMN_ID.Key;
+            int musicKeyColumnIndex = (int)SERVICE_RECORD_ATTRIBUTE.musicKey;
             dataGridViewServicePlanner.Rows[rowIndex].Cells[musicKeyColumnIndex].ReadOnly = !elementIsMusical;
         }
         private void SetTitleComboBoxDataSource(DataGridViewCell titleCell, bool elementIsMusical)

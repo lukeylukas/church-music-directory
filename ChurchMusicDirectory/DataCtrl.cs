@@ -11,38 +11,34 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace ChurchMusicDirectory
 {
+    public enum SONG_ATTRIBUTE
+    {
+        songName,
+        musicKey,
+        subject,
+        numPlays,
+        tag,
+        COUNT
+    }
+    public enum SERVICE_RECORD_ATTRIBUTE
+    {
+        date,
+        serviceNumber,
+        orderInService,
+        elementName,
+        title,
+        musicKey,
+        passage,
+        notes,
+        COUNT
+    }
     public class DataCtrl
     {
         public DataTable songInfoTable;
         public DataTable serviceRecordsTable;
-        // create a dictionary with all the dates
-        // for each date, create a dictionary with all the services
-        // for each service, create a dictionary with all the IDs (orderInService)
-        // each one will contain a full service record DataRow
         private Dictionary<DateTime, Dictionary<int, Dictionary<int, DataRow>>> serviceRecordsDictionary;
         public delegate void DataCtrlResponseHandler(bool success, string message);
         
-        public enum SONG_ATTRIBUTE
-        {
-            songName,
-            musicKey,
-            subject,
-            numPlays,
-            tag,
-            COUNT
-        }
-        public enum SERVICE_RECORD_ATTRIBUTE
-        {
-            date,
-            title,
-            musicKey,
-            passage,
-            elementName,
-            serviceNumber,
-            orderInService,
-            notes,
-            COUNT
-        }
         static List<char> flatsList = new List<char>
         {
             'A',
