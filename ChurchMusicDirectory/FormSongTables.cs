@@ -29,137 +29,299 @@ namespace ChurchMusicDirectory
 
         public struct TABLE_COLUMN
         {
-            public int id;
             public string name;
+            public int displayOrder;
             public bool allowFiltering;
             public List<string> filterValues;
             public int width;
             public bool isDerived;
         };
-        public static TABLE_COLUMN[] songInfoColumns = new TABLE_COLUMN[(int)SONG_ATTRIBUTE.COUNT]
+        private static Dictionary<SONG_ATTRIBUTE, TABLE_COLUMN> songInfoColumns = new Dictionary<SONG_ATTRIBUTE, TABLE_COLUMN>()
         {
-            new TABLE_COLUMN
             {
-                id = (int)SONG_ATTRIBUTE.songName,
-                name = "Title",
-                allowFiltering = false,
-                filterValues = new List<string>(),
-                width = 200,
-                isDerived = false
+                SONG_ATTRIBUTE.songName,
+                new TABLE_COLUMN
+                {
+                    name = "Title",
+                    displayOrder = 0,
+                    allowFiltering = false,
+                    filterValues = new List<string>(),
+                    width = 200,
+                    isDerived = false
+                }
             },
-            new TABLE_COLUMN
             {
-                id = (int)SONG_ATTRIBUTE.musicKey,
-                name = "Key",
-                allowFiltering = true,
-                filterValues = new List<string>(),
-                width = 75,
-                isDerived = false
+                SONG_ATTRIBUTE.musicKey,
+                new TABLE_COLUMN
+                {
+                    name = "Key",
+                    displayOrder = 0,
+                    allowFiltering = true,
+                    filterValues = new List<string>(),
+                    width = 75,
+                    isDerived = false
+                }
             },
-            new TABLE_COLUMN
             {
-                id = (int)SONG_ATTRIBUTE.subject,
-                name = "Subject",
-                allowFiltering = true,
-                filterValues = new List<string>(),
-                width = 200,
-                isDerived = false
+                SONG_ATTRIBUTE.subject,
+                new TABLE_COLUMN
+                {
+                    name = "Subject",
+                    displayOrder = 0,
+                    allowFiltering = true,
+                    filterValues = new List<string>(),
+                    width = 200,
+                    isDerived = false
+                }
             },
-            new TABLE_COLUMN
             {
-                id = (int)SONG_ATTRIBUTE.numPlays,
-                name = "Plays",
-                allowFiltering = true,
-                filterValues = new List<string>(),
-                width = 75,
-                isDerived = true
+                SONG_ATTRIBUTE.numPlays,
+                new TABLE_COLUMN
+                {
+                    name = "Plays",
+                    displayOrder = 0,
+                    allowFiltering = true,
+                    filterValues = new List<string>(),
+                    width = 75,
+                    isDerived = true
+                }
             },
-            new TABLE_COLUMN
             {
-                id = (int)SONG_ATTRIBUTE.tag,
-                name = "Notes",
-                allowFiltering = false,
-                filterValues = new List<string>(),
-                width = 100,
-                isDerived = false
-            },
+                SONG_ATTRIBUTE.tag,
+                new TABLE_COLUMN
+                {
+                    name = "Notes",
+                    displayOrder = 0,
+                    allowFiltering = false,
+                    filterValues = new List<string>(),
+                    width = 100,
+                    isDerived = false
+                }
+            }
         };
+        // public static TABLE_COLUMN[] songInfoColumns = new TABLE_COLUMN[(int)SONG_ATTRIBUTE.COUNT]
+        // {
+        //     new TABLE_COLUMN
+        //     {
+        //         id = (int)SONG_ATTRIBUTE.songName,
+        //         name = "Title",
+        //         allowFiltering = false,
+        //         filterValues = new List<string>(),
+        //         width = 200,
+        //         isDerived = false
+        //     },
+        //     new TABLE_COLUMN
+        //     {
+        //         id = (int)SONG_ATTRIBUTE.musicKey,
+        //         name = "Key",
+        //         allowFiltering = true,
+        //         filterValues = new List<string>(),
+        //         width = 75,
+        //         isDerived = false
+        //     },
+        //     new TABLE_COLUMN
+        //     {
+        //         id = (int)SONG_ATTRIBUTE.subject,
+        //         name = "Subject",
+        //         allowFiltering = true,
+        //         filterValues = new List<string>(),
+        //         width = 200,
+        //         isDerived = false
+        //     },
+        //     new TABLE_COLUMN
+        //     {
+        //         id = (int)SONG_ATTRIBUTE.numPlays,
+        //         name = "Plays",
+        //         allowFiltering = true,
+        //         filterValues = new List<string>(),
+        //         width = 75,
+        //         isDerived = true
+        //     },
+        //     new TABLE_COLUMN
+        //     {
+        //         id = (int)SONG_ATTRIBUTE.tag,
+        //         name = "Notes",
+        //         allowFiltering = false,
+        //         filterValues = new List<string>(),
+        //         width = 100,
+        //         isDerived = false
+        //     },
+        // };
 
-        public static TABLE_COLUMN[] serviceRecordColumns = new TABLE_COLUMN[(int)SERVICE_RECORD_ATTRIBUTE.COUNT]
+        private static Dictionary<SERVICE_RECORD_ATTRIBUTE, TABLE_COLUMN> serviceRecordColumns = new Dictionary<SERVICE_RECORD_ATTRIBUTE, TABLE_COLUMN>()
         {
-            new TABLE_COLUMN
             {
-                id = (int)SERVICE_RECORD_ATTRIBUTE.date,
-                name = "Date",
-                allowFiltering = false,
-                filterValues = new List<string>(),
-                width = 75,
-                isDerived = false
+                SERVICE_RECORD_ATTRIBUTE.date,
+                new TABLE_COLUMN
+                {
+                    name = "Date",
+                    displayOrder = 0,
+                    allowFiltering = false,
+                    filterValues = new List<string>(),
+                    width = 75,
+                    isDerived = false
+                }
             },
-            new TABLE_COLUMN
             {
-                id = (int)SERVICE_RECORD_ATTRIBUTE.title,
-                name = "Title",
-                allowFiltering = false,
-                filterValues = new List<string>(),
-                width = 200,
-                isDerived = false
+                SERVICE_RECORD_ATTRIBUTE.title,
+                new TABLE_COLUMN
+                {
+                    name = "Title",
+                    displayOrder = 1,
+                    allowFiltering = false,
+                    filterValues = new List<string>(),
+                    width = 200,
+                    isDerived = false
+                }
             },
-            new TABLE_COLUMN
             {
-                id = (int)SERVICE_RECORD_ATTRIBUTE.musicKey,
-                name = "Key",
-                allowFiltering = false,
-                filterValues = new List<string>(),
-                width = 75,
-                isDerived = false
+                SERVICE_RECORD_ATTRIBUTE.musicKey,
+                new TABLE_COLUMN
+                {
+                    name = "Key",
+                    displayOrder = 2,
+                    allowFiltering = false,
+                    filterValues = new List<string>(),
+                    width = 75,
+                    isDerived = false
+                }
             },
-            new TABLE_COLUMN
             {
-                id = (int)SERVICE_RECORD_ATTRIBUTE.passage,
-                name = "Scripture Passage",
-                allowFiltering = false,
-                filterValues = new List<string>(),
-                width = 100,
-                isDerived = false
+                SERVICE_RECORD_ATTRIBUTE.passage,
+                new TABLE_COLUMN
+                {
+                    name = "Scripture Passage",
+                    displayOrder = 3,
+                    allowFiltering = false,
+                    filterValues = new List<string>(),
+                    width = 100,
+                    isDerived = false
+                }
             },
-            new TABLE_COLUMN
             {
-                id = (int)SERVICE_RECORD_ATTRIBUTE.elementName,
-                name = "Type",
-                allowFiltering = false,
-                filterValues = new List<string>(),
-                width = 75,
-                isDerived = false
+                SERVICE_RECORD_ATTRIBUTE.elementName,
+                new TABLE_COLUMN
+                {
+                    name = "Type",
+                    displayOrder = 4,
+                    allowFiltering = false,
+                    filterValues = new List<string>(),
+                    width = 75,
+                    isDerived = false
+                }
             },
-            new TABLE_COLUMN
             {
-                id = (int)SERVICE_RECORD_ATTRIBUTE.serviceNumber,
-                name = "Service Number",
-                allowFiltering = false,
-                filterValues = new List<string>(),
-                width = 50,
-                isDerived = false
+                SERVICE_RECORD_ATTRIBUTE.serviceNumber,
+                new TABLE_COLUMN
+                {
+                    name = "Service Number",
+                    displayOrder = 5,
+                    allowFiltering = false,
+                    filterValues = new List<string>(),
+                    width = 50,
+                    isDerived = false
+                }
             },
-            new TABLE_COLUMN
             {
-                id = (int)SERVICE_RECORD_ATTRIBUTE.orderInService,
-                name = "Order in Service",
-                allowFiltering = false,
-                filterValues = new List<string>(),
-                width = 50,
-                isDerived = false
+                SERVICE_RECORD_ATTRIBUTE.orderInService,
+                new TABLE_COLUMN
+                {
+                    name = "Order in Service",
+                    displayOrder = 6,
+                    allowFiltering = false,
+                    filterValues = new List<string>(),
+                    width = 50,
+                    isDerived = false
+                }
             },
-            new TABLE_COLUMN
             {
-                id = (int)SERVICE_RECORD_ATTRIBUTE.notes,
-                name = "Notes",
-                allowFiltering = false,
-                filterValues = new List<string>(),
-                width = 100,
-                isDerived = false
-            },
+                SERVICE_RECORD_ATTRIBUTE.notes,
+                new TABLE_COLUMN
+                {
+                    name = "Notes",
+                    displayOrder = 7,
+                    allowFiltering = false,
+                    filterValues = new List<string>(),
+                    width = 100,
+                    isDerived = false
+                }
+            }
         };
+        // public static TABLE_COLUMN[] serviceRecordColumns = new TABLE_COLUMN[(int)SERVICE_RECORD_ATTRIBUTE.COUNT]
+        // {
+        //     new TABLE_COLUMN
+        //     {
+        //         id = (int)SERVICE_RECORD_ATTRIBUTE.date,
+        //         name = "Date",
+        //         allowFiltering = false,
+        //         filterValues = new List<string>(),
+        //         width = 75,
+        //         isDerived = false
+        //     },
+        //     new TABLE_COLUMN
+        //     {
+        //         id = (int)SERVICE_RECORD_ATTRIBUTE.title,
+        //         name = "Title",
+        //         allowFiltering = false,
+        //         filterValues = new List<string>(),
+        //         width = 200,
+        //         isDerived = false
+        //     },
+        //     new TABLE_COLUMN
+        //     {
+        //         id = (int)SERVICE_RECORD_ATTRIBUTE.musicKey,
+        //         name = "Key",
+        //         allowFiltering = false,
+        //         filterValues = new List<string>(),
+        //         width = 75,
+        //         isDerived = false
+        //     },
+        //     new TABLE_COLUMN
+        //     {
+        //         id = (int)SERVICE_RECORD_ATTRIBUTE.passage,
+        //         name = "Scripture Passage",
+        //         allowFiltering = false,
+        //         filterValues = new List<string>(),
+        //         width = 100,
+        //         isDerived = false
+        //     },
+        //     new TABLE_COLUMN
+        //     {
+        //         id = (int)SERVICE_RECORD_ATTRIBUTE.elementName,
+        //         name = "Type",
+        //         allowFiltering = false,
+        //         filterValues = new List<string>(),
+        //         width = 75,
+        //         isDerived = false
+        //     },
+        //     new TABLE_COLUMN
+        //     {
+        //         id = (int)SERVICE_RECORD_ATTRIBUTE.serviceNumber,
+        //         name = "Service Number",
+        //         allowFiltering = false,
+        //         filterValues = new List<string>(),
+        //         width = 50,
+        //         isDerived = false
+        //     },
+        //     new TABLE_COLUMN
+        //     {
+        //         id = (int)SERVICE_RECORD_ATTRIBUTE.orderInService,
+        //         name = "Order in Service",
+        //         allowFiltering = false,
+        //         filterValues = new List<string>(),
+        //         width = 50,
+        //         isDerived = false
+        //     },
+        //     new TABLE_COLUMN
+        //     {
+        //         id = (int)SERVICE_RECORD_ATTRIBUTE.notes,
+        //         name = "Notes",
+        //         allowFiltering = false,
+        //         filterValues = new List<string>(),
+        //         width = 100,
+        //         isDerived = false
+        //     },
+        // };
 
         public enum FILTER_TYPE
         {
@@ -475,13 +637,29 @@ namespace ChurchMusicDirectory
         {
             dataGridViewServiceRecords.DataSource = serviceRecordsTable;
             
+            int lastDisplayedColumnIndex = 0;
             for (int columnIndex = 0; columnIndex < dataGridViewServiceRecords.Columns.Count; columnIndex++)
             {
-                dataGridViewServiceRecords.Columns[columnIndex].Width = serviceRecordColumns[columnIndex].width;
-                dataGridViewServiceRecords.Columns[columnIndex].HeaderText = serviceRecordColumns[columnIndex].name;
+                SERVICE_RECORD_ATTRIBUTE serviceRecordAttribute = (SERVICE_RECORD_ATTRIBUTE)Enum.Parse(typeof(SERVICE_RECORD_ATTRIBUTE), dataGridViewServiceRecords.Columns[columnIndex].Name);
+                //find the service record column with that index (has to be a dict)
+                // if exists, format the column. If not, hide it.
+                if (serviceRecordColumns.ContainsKey(serviceRecordAttribute))
+                {
+                    dataGridViewServiceRecords.Columns[columnIndex].Width = serviceRecordColumns[serviceRecordAttribute].width;
+                    dataGridViewServiceRecords.Columns[columnIndex].HeaderText = serviceRecordColumns[serviceRecordAttribute].name;
+                    dataGridViewServiceRecords.Columns[columnIndex].DisplayIndex = serviceRecordColumns[serviceRecordAttribute].displayOrder;
+                    if (serviceRecordColumns[serviceRecordAttribute].displayOrder > lastDisplayedColumnIndex)
+                    {
+                        lastDisplayedColumnIndex = serviceRecordColumns[serviceRecordAttribute].displayOrder;
+                    }
+                }
+                else
+                {
+                    dataGridViewServiceRecords.Columns[columnIndex].Visible = false;
+                }
                 //FillFilterList(serviceRecordColumns[columnIndex], dataGridViewServiceRecords, columnIndex);
             }
-
+            //column with highest display order in service record columns must be set to the following
             dataGridViewServiceRecords.Columns[^1].MinimumWidth = serviceRecordColumns[^1].width;
             dataGridViewServiceRecords.Columns[^1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             //DataGridViewServiceRecords.Sort(dataGridViewServiceRecords.Columns[0], ListSortDirection.Ascending);
