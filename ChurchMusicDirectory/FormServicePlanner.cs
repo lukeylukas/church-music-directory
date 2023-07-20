@@ -389,5 +389,11 @@ namespace ChurchMusicDirectory
         {
             dataGridViewServicePlanner.Rows.Add();
         }
+
+        private void comboBoxServiceDate_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            calendarDatePicker.SetSelectionRange(DateTime.Parse(comboBoxServiceDate.Text), DateTime.Parse(comboBoxServiceDate.Text));
+            FormatDataGridView();
+        }
     }
 }

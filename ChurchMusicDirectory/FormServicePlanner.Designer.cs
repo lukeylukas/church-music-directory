@@ -119,6 +119,7 @@
             this.comboBoxServiceDate.Name = "comboBoxServiceDate";
             this.comboBoxServiceDate.Size = new System.Drawing.Size(96, 23);
             this.comboBoxServiceDate.TabIndex = 6;
+            this.comboBoxServiceDate.SelectedIndexChanged += new System.EventHandler(this.comboBoxServiceDate_SelectedIndexChanged);
             // 
             // comboBoxServiceNumber
             // 
