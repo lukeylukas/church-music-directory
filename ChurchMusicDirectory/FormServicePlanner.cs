@@ -60,104 +60,104 @@ namespace ChurchMusicDirectory
         private void InitializeDataGridView()
         {
             plannerColumns = new Dictionary<SERVICE_RECORD_ATTRIBUTE, SERVICE_PLANNER_COLUMN>()
+        {
             {
+                SERVICE_RECORD_ATTRIBUTE.elementName,
+                new SERVICE_PLANNER_COLUMN
                 {
-                    SERVICE_RECORD_ATTRIBUTE.elementName,
-                    new SERVICE_PLANNER_COLUMN
-                    {
-                        name="Element",
-                        visible=true,
-                        displayOrder=1,
-                        type=(new DataGridViewComboBoxColumn()).GetType(),
-                        width=100,
+                    name="Element",
+                    visible=true,
+                    displayOrder=1,
+                    type=(new DataGridViewComboBoxColumn()).GetType(),
+                    width=100,
                         dataSource = worshipElements
-                    }
-                },
+                }
+            },
+            {
+                SERVICE_RECORD_ATTRIBUTE.title,
+                new SERVICE_PLANNER_COLUMN
                 {
-                    SERVICE_RECORD_ATTRIBUTE.title,
-                    new SERVICE_PLANNER_COLUMN
-                    {
-                        name="Title",
-                        visible=true,
-                        displayOrder=2,
-                        type=(new DataGridViewComboBoxColumn()).GetType(),
-                        width=200,
+                    name="Title",
+                    visible=true,
+                    displayOrder=2,
+                    type=(new DataGridViewComboBoxColumn()).GetType(),
+                    width=200,
                         dataSource = songTitles
-                    }
-                },
+                }
+            },
+            {
+                SERVICE_RECORD_ATTRIBUTE.musicKey,
+                new SERVICE_PLANNER_COLUMN
                 {
-                    SERVICE_RECORD_ATTRIBUTE.musicKey,
-                    new SERVICE_PLANNER_COLUMN
-                    {
-                        name="Key",
-                        visible=true,
-                        displayOrder=3,
-                        type=(new DataGridViewComboBoxColumn()).GetType(),
-                        width=75,
+                    name="Key",
+                    visible=true,
+                    displayOrder=3,
+                    type=(new DataGridViewComboBoxColumn()).GetType(),
+                    width=75,
                         dataSource = musicKeys
-                    }
-                },
+                }
+            },
+            {
+                SERVICE_RECORD_ATTRIBUTE.passage,
+                new SERVICE_PLANNER_COLUMN
                 {
-                    SERVICE_RECORD_ATTRIBUTE.passage,
-                    new SERVICE_PLANNER_COLUMN
-                    {
-                        name="Passage",
-                        visible=true,
-                        displayOrder=4,
-                        type=(new DataGridViewTextBoxColumn()).GetType(),
-                        width=150,
-                        dataSource = (new string[] { "" })
-                    }
-                },
+                    name="Passage",
+                    visible=true,
+                    displayOrder=4,
+                    type=(new DataGridViewTextBoxColumn()).GetType(),
+                    width=150,
+                    dataSource = null
+                }
+            },
+            {
+                SERVICE_RECORD_ATTRIBUTE.notes,
+                new SERVICE_PLANNER_COLUMN
                 {
-                    SERVICE_RECORD_ATTRIBUTE.notes,
-                    new SERVICE_PLANNER_COLUMN
-                    {
-                        name="Notes",
-                        visible=true,
-                        displayOrder=5,
-                        type=(new DataGridViewTextBoxColumn()).GetType(),
-                        width=100,
-                        dataSource = (new string[] { "" })
-                    }
-                },
+                    name="Notes",
+                    visible=true,
+                    displayOrder=5,
+                    type=(new DataGridViewTextBoxColumn()).GetType(),
+                    width=100,
+                    dataSource = null
+                }
+            },
+            {
+                SERVICE_RECORD_ATTRIBUTE.date,
+                new SERVICE_PLANNER_COLUMN
                 {
-                    SERVICE_RECORD_ATTRIBUTE.date,
-                    new SERVICE_PLANNER_COLUMN
-                    {
-                        name="Date",
-                        visible=false,
-                        displayOrder=0,
-                        type=(new DataGridViewComboBoxColumn()).GetType(),
-                        width=100,
-                        dataSource = null
-                    }
-                },
+                    name="Date",
+                    visible=false,
+                    displayOrder=0,
+                    type=(new DataGridViewComboBoxColumn()).GetType(),
+                    width=100,
+                    dataSource = null
+                }
+            },
+            {
+                SERVICE_RECORD_ATTRIBUTE.serviceNumber,
+                new SERVICE_PLANNER_COLUMN
                 {
-                    SERVICE_RECORD_ATTRIBUTE.serviceNumber,
-                    new SERVICE_PLANNER_COLUMN
-                    {
-                        name="ServiceNumber",
-                        visible=false,
-                        displayOrder=6,
-                        type=(new DataGridViewComboBoxColumn()).GetType(),
-                        width=100,
-                        dataSource = null
-                    }
-                },
+                    name="ServiceNumber",
+                    visible=false,
+                    displayOrder=6,
+                    type=(new DataGridViewComboBoxColumn()).GetType(),
+                    width=100,
+                    dataSource = null
+                }
+            },
+            {
+                SERVICE_RECORD_ATTRIBUTE.orderInService,
+                new SERVICE_PLANNER_COLUMN
                 {
-                    SERVICE_RECORD_ATTRIBUTE.orderInService,
-                    new SERVICE_PLANNER_COLUMN
-                    {
-                        name="Order",
-                        visible=false,
-                        displayOrder=7,
-                        type=(new DataGridViewComboBoxColumn()).GetType(),
-                        width=100,
-                        dataSource = null
-                    }
-                },
-            };
+                    name="Order",
+                    visible=false,
+                    displayOrder=7,
+                    type=(new DataGridViewComboBoxColumn()).GetType(),
+                    width=100,
+                    dataSource = null
+                }
+            }
+        };
 
             for (int columnIndex = 0; columnIndex < plannerColumns.Count; columnIndex++)
             {
@@ -185,7 +185,10 @@ namespace ChurchMusicDirectory
             else if (columnInfo.type == new DataGridViewComboBoxColumn().GetType())
             {
                 column = new DataGridViewComboBoxColumn();
-                ((DataGridViewComboBoxColumn)column).DataSource = columnInfo.dataSource;
+                if (columnInfo.dataSource != null)
+                {
+                    ((DataGridViewComboBoxColumn)column).DataSource = columnInfo.dataSource;
+                }
             }
             else
             {
@@ -269,12 +272,9 @@ namespace ChurchMusicDirectory
         private AutoCompleteStringCollection GetDataCollection()
         {
             AutoCompleteStringCollection DataCollection = new AutoCompleteStringCollection();
-            switch (dataGridViewServicePlanner.CurrentCell.ColumnIndex)
+            if (plannerColumns[(SERVICE_RECORD_ATTRIBUTE)dataGridViewServicePlanner.CurrentCell.ColumnIndex].dataSource != null)
             {
-                case (int)SERVICE_RECORD_ATTRIBUTE.elementName:   DataCollection.AddRange(worshipElements); break;
-                case (int)SERVICE_RECORD_ATTRIBUTE.title:     DataCollection.AddRange(songTitles);      break;
-                case (int)SERVICE_RECORD_ATTRIBUTE.musicKey:       DataCollection.AddRange(musicKeys);       break;
-                default:                                                                                 break;
+                DataCollection.AddRange(plannerColumns[(SERVICE_RECORD_ATTRIBUTE)dataGridViewServicePlanner.CurrentCell.ColumnIndex].dataSource);
             }
             return DataCollection;
         }
