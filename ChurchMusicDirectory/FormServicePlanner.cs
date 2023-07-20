@@ -363,7 +363,7 @@ namespace ChurchMusicDirectory
 
         private void buttonDiscardChanges_Click(object sender, EventArgs e)
         {
-            //update the dataGridView with the original data; discard current state of dataGridView
+            FormatDataGridView();
         }
 
         private void buttonSaveChanges_Click(object sender, EventArgs e)
