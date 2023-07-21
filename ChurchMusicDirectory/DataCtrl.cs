@@ -20,18 +20,18 @@ namespace ChurchMusicDirectory
         tag,
         COUNT
     }
-        public enum SERVICE_RECORD_ATTRIBUTE
-        {
-            date,
-            title,
-            musicKey,
-            passage,
-            elementName,
-            serviceNumber,
-            orderInService,
-            notes,
-            COUNT
-        }
+    public enum SERVICE_RECORD_ATTRIBUTE
+    {
+        date,
+        serviceNumber,
+        orderInService,
+        elementName,
+        title,
+        musicKey,
+        passage,
+        notes,
+        COUNT
+    }
     public class DataCtrl
     {
         public DataTable songInfoTable;
