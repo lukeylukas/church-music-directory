@@ -389,7 +389,11 @@ namespace ChurchMusicDirectory
 
         private void buttonAddRow_Click(object sender, EventArgs e)
         {
-            dataGridViewServicePlanner.Rows.Add();
+            DataRow newRow = ((DataTable)dataGridViewServicePlanner.DataSource).NewRow();
+            newRow[(int)SERVICE_RECORD_ATTRIBUTE.date] = dataGridViewServicePlanner.Rows[0].Cells[(int)SERVICE_RECORD_ATTRIBUTE.date].Value;
+            newRow[(int)SERVICE_RECORD_ATTRIBUTE.serviceNumber] = dataGridViewServicePlanner.Rows[0].Cells[(int)SERVICE_RECORD_ATTRIBUTE.serviceNumber].Value;
+            newRow[(int)SERVICE_RECORD_ATTRIBUTE.orderInService] = dataGridViewServicePlanner.RowCount;
+            ((DataTable)dataGridViewServicePlanner.DataSource).Rows.Add(newRow);
         }
 
         private void comboBoxServiceDate_SelectedIndexChanged(object sender, EventArgs e)
