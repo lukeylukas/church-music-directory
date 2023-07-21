@@ -280,7 +280,7 @@ namespace ChurchMusicDirectory
                     for (int columnNum = 0; columnNum < FormSongTables.serviceRecordColumns.Length; columnNum++)
                     {
                         SERVICE_RECORD_ATTRIBUTE source = (SERVICE_RECORD_ATTRIBUTE)FormSongTables.serviceRecordColumns[columnNum].id;
-                        serviceInfoTable.Columns.Add(source.ToString());
+                        serviceInfoTable.Columns.Add(source.ToString(), serviceRecordsTable.Columns[source.ToString()].DataType);
                     }
                     for (int orderInService = 1; orderInService <= serviceRecordsDictionary[date][serviceNumber].Count; orderInService++)
                     {
@@ -289,6 +289,39 @@ namespace ChurchMusicDirectory
                 }
             }
             return serviceInfoTable;
+        }
+        public bool SetServiceInfo(DataTable newServiceTable)
+        {
+            for (int rowIndex = 0; rowIndex < newServiceTable.Rows.Count; rowIndex++)
+            {
+                if (newServiceTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.date] == DBNull.Value
+                    || newServiceTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.serviceNumber] == DBNull.Value
+                    || newServiceTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.orderInService] == DBNull.Value)
+                {
+                    return false;
+                }
+                serviceRecordsDictionary[(DateTime)newServiceTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.date]][(int)newServiceTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.serviceNumber]][(int)newServiceTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.orderInService]] = newServiceTable.Rows[rowIndex];
+            }
+
+            List<DataRow> rowsToRemove = new List<DataRow>();
+            foreach (DataRow row in serviceRecordsTable.Rows)
+            {
+                if ((DateTime)row[(int)SERVICE_RECORD_ATTRIBUTE.date] == (DateTime)newServiceTable.Rows[0][(int)SERVICE_RECORD_ATTRIBUTE.date])
+                {
+                    if ((int)row[(int)SERVICE_RECORD_ATTRIBUTE.serviceNumber] == (int)newServiceTable.Rows[0][(int)SERVICE_RECORD_ATTRIBUTE.serviceNumber])
+                    {
+                        rowsToRemove.Add(row);
+                    }
+                }
+            }
+            foreach (DataRow row in rowsToRemove)
+            {
+                serviceRecordsTable.Rows.Remove(row);
+            }
+            serviceRecordsTable.Merge(newServiceTable);
+            serviceRecordsTable.AcceptChanges();
+            // save the new serviceRecordsTable to the database
+            return true;
         }
 
         public void GenerateCalculatedData()
