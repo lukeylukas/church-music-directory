@@ -276,8 +276,8 @@ namespace ChurchMusicDirectory
                 if (serviceRecordsDictionary[date].ContainsKey(serviceNumber))
                 {
                     for (SERVICE_RECORD_ATTRIBUTE columnName = 0; columnName < SERVICE_RECORD_ATTRIBUTE.COUNT; columnName++)
-                    {
-                        serviceInfoTable.Columns.Add(columnName.ToString());
+                    {;
+                        serviceInfoTable.Columns.Add(columnName.ToString(), serviceRecordsTable.Columns[columnName.ToString()].DataType);
                     }
                     for (int orderInService = 1; orderInService <= serviceRecordsDictionary[date][serviceNumber].Count; orderInService++)
                     {
