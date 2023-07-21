@@ -36,7 +36,7 @@ namespace ChurchMusicDirectory
             public int width;
             public bool isDerived;
         };
-        private static Dictionary<SONG_ATTRIBUTE, TABLE_COLUMN> songInfoColumns = new Dictionary<SONG_ATTRIBUTE, TABLE_COLUMN>()
+        public static Dictionary<SONG_ATTRIBUTE, TABLE_COLUMN> songInfoColumns = new Dictionary<SONG_ATTRIBUTE, TABLE_COLUMN>()
         {
             {
                 SONG_ATTRIBUTE.songName,
@@ -148,7 +148,7 @@ namespace ChurchMusicDirectory
         //     },
         // };
 
-        private static Dictionary<SERVICE_RECORD_ATTRIBUTE, TABLE_COLUMN> serviceRecordColumns = new Dictionary<SERVICE_RECORD_ATTRIBUTE, TABLE_COLUMN>()
+        public static Dictionary<SERVICE_RECORD_ATTRIBUTE, TABLE_COLUMN> serviceRecordColumns = new Dictionary<SERVICE_RECORD_ATTRIBUTE, TABLE_COLUMN>()
         {
             {
                 SERVICE_RECORD_ATTRIBUTE.date,
@@ -364,17 +364,17 @@ namespace ChurchMusicDirectory
                 {
                     AddTimeSpanSubmenu(dataGridView1.ContextMenuStrip);
                 }
-                if (songInfoColumns[(int)column].allowFiltering)
+                if (songInfoColumns[column].allowFiltering)
                 {
-                    SongInfoContextMenuAddFiltering(dataGridView1.ContextMenuStrip, (int)column);
+                    SongInfoContextMenuAddFiltering(dataGridView1.ContextMenuStrip, column);
                     contextMenuColumnIndex = (int)column;
                     e.Cancel = false;
                 }
             }
         }
-        private void SongInfoContextMenuAddFiltering(ContextMenuStrip contextMenu, int columnIndex)
+        private void SongInfoContextMenuAddFiltering(ContextMenuStrip contextMenu, SONG_ATTRIBUTE columnIndex)
         {
-            AddExcludeFilter(contextMenu, columnIndex);
+            AddExcludeFilter(contextMenu, (int)columnIndex);
             AddClearFilter(contextMenu);
 
             for (int filterIndex = 0; filterIndex < songInfoColumns[columnIndex].filterValues.Count; filterIndex++)
@@ -383,7 +383,7 @@ namespace ChurchMusicDirectory
                 contextMenu.Items.Add(testValue);
                 contextMenu.Items[^1].Name = testValue;
                 contextMenu.Items[^1].Click += new System.EventHandler(ContextMenuFilterItem_Click);
-                if (columnFilters[columnIndex].list.Contains(testValue))
+                if (columnFilters[(int)columnIndex].list.Contains(testValue))
                 {
                     ((ToolStripMenuItem)contextMenu.Items[^1]).Checked = true;
                     ((ToolStripMenuItem)contextMenu.Items[^1]).CheckState = CheckState.Checked;
@@ -535,12 +535,21 @@ namespace ChurchMusicDirectory
             dataGridView1.DataSource = songInfoTable;
             for (int columnIndex = 0; columnIndex < dataGridView1.Columns.Count; columnIndex++)
             {
-                dataGridView1.Columns[columnIndex].Width = songInfoColumns[columnIndex].width;
-                dataGridView1.Columns[columnIndex].HeaderText = songInfoColumns[columnIndex].name;
-                FillFilterList(songInfoColumns[columnIndex], dataGridView1, columnIndex);
+                dataGridView1.Columns[columnIndex].Width = songInfoColumns[(SONG_ATTRIBUTE)columnIndex].width;
+                dataGridView1.Columns[columnIndex].HeaderText = songInfoColumns[(SONG_ATTRIBUTE)columnIndex].name;
+                FillFilterList(songInfoColumns[(SONG_ATTRIBUTE)columnIndex], dataGridView1, columnIndex);
             }
-            dataGridView1.Columns[^1].MinimumWidth = songInfoColumns[^1].width;
-            dataGridView1.Columns[^1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
+            SONG_ATTRIBUTE lastDisplayedColumn = 0;
+            for (SONG_ATTRIBUTE columnIndex = 0; columnIndex < SONG_ATTRIBUTE.COUNT; columnIndex++)
+            {
+                if (songInfoColumns[columnIndex].displayOrder > songInfoColumns[lastDisplayedColumn].displayOrder)
+                {
+                    lastDisplayedColumn = columnIndex;
+                }
+            }
+            dataGridView1.Columns[songInfoColumns[lastDisplayedColumn].displayOrder].MinimumWidth = songInfoColumns[lastDisplayedColumn].width;
+            dataGridView1.Columns[songInfoColumns[lastDisplayedColumn].displayOrder].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             dataGridView1.Sort(dataGridView1.Columns[0], ListSortDirection.Ascending);
         }
         static private void FillFilterList(TABLE_COLUMN settings, DataGridView table, int columnIndex)
@@ -659,10 +668,17 @@ namespace ChurchMusicDirectory
                 }
                 //FillFilterList(serviceRecordColumns[columnIndex], dataGridViewServiceRecords, columnIndex);
             }
-            //column with highest display order in service record columns must be set to the following
-            dataGridViewServiceRecords.Columns[^1].MinimumWidth = serviceRecordColumns[^1].width;
-            dataGridViewServiceRecords.Columns[^1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            //DataGridViewServiceRecords.Sort(dataGridViewServiceRecords.Columns[0], ListSortDirection.Ascending);
+            SERVICE_RECORD_ATTRIBUTE lastDisplayedColumn = 0;
+            for (SERVICE_RECORD_ATTRIBUTE columnIndex = 0; columnIndex < SERVICE_RECORD_ATTRIBUTE.COUNT; columnIndex++)
+            {
+                if (serviceRecordColumns[columnIndex].displayOrder > serviceRecordColumns[lastDisplayedColumn].displayOrder)
+                {
+                    lastDisplayedColumn = columnIndex;
+                }
+            }
+            dataGridViewServiceRecords.Columns[serviceRecordColumns[lastDisplayedColumn].displayOrder].MinimumWidth = serviceRecordColumns[lastDisplayedColumn].width;
+            dataGridViewServiceRecords.Columns[serviceRecordColumns[lastDisplayedColumn].displayOrder].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dataGridViewServiceRecords.Sort(dataGridViewServiceRecords.Columns[(int)SERVICE_RECORD_ATTRIBUTE.date], ListSortDirection.Descending);
         }
     }
 }

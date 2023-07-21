@@ -118,7 +118,7 @@ namespace ChurchMusicDirectory
             bool songInfoReceived = GetTableData(out DataTable tempTable, songInfoQuery, expectedNumColumns, out string statusMessage);
             if (songInfoReceived)
             {
-                for (int columnNum = 0; columnNum < FormSongTables.songInfoColumns.Length; columnNum++)
+                for (SONG_ATTRIBUTE columnNum = 0; columnNum < SONG_ATTRIBUTE.COUNT; columnNum++)
                 {
                     if (!FormSongTables.songInfoColumns[columnNum].isDerived)
                     {
@@ -129,7 +129,7 @@ namespace ChurchMusicDirectory
                             {
                                 songInfoTable.Rows.Add();
                             }
-                            songInfoTable.Rows[rowNum][columnNum] = tempTable.Rows[rowNum][0];
+                            songInfoTable.Rows[rowNum][(int)columnNum] = tempTable.Rows[rowNum][0];
                         }
                         tempTable.Columns.RemoveAt(0);
                     }
@@ -149,12 +149,11 @@ namespace ChurchMusicDirectory
             string columns = "";
             string connectorString = ", ";
             numColumns = 0;
-            for (int columnNum = 0; columnNum < FormSongTables.songInfoColumns.Length; columnNum++)
+            for (SONG_ATTRIBUTE attribute = (SONG_ATTRIBUTE)0; attribute < SONG_ATTRIBUTE.COUNT; attribute++)
             {
-                SONG_ATTRIBUTE source = (SONG_ATTRIBUTE)FormSongTables.songInfoColumns[columnNum].id;
-                if (!FormSongTables.songInfoColumns[columnNum].isDerived)
+                if (!FormSongTables.songInfoColumns[attribute].isDerived)
                 {
-                    columns += source + connectorString;
+                    columns += attribute.ToString() + connectorString;
                     numColumns++;
                 }
             }
@@ -224,12 +223,11 @@ namespace ChurchMusicDirectory
             string columns = "";
             string connectorString = ", ";
             numColumns = 0;
-            for (int columnNum = 0; columnNum < FormSongTables.serviceRecordColumns.Length; columnNum++)
+            for (SERVICE_RECORD_ATTRIBUTE columnName = 0; columnName < SERVICE_RECORD_ATTRIBUTE.COUNT; columnName++)
             {
-                SERVICE_RECORD_ATTRIBUTE source = (SERVICE_RECORD_ATTRIBUTE)FormSongTables.serviceRecordColumns[columnNum].id;
-                if (!FormSongTables.serviceRecordColumns[columnNum].isDerived)
+                if (!FormSongTables.serviceRecordColumns[columnName].isDerived)
                 {
-                    columns += source + connectorString;
+                    columns += columnName.ToString() + connectorString;
                     numColumns++;
                 }
             }
@@ -277,10 +275,9 @@ namespace ChurchMusicDirectory
             {
                 if (serviceRecordsDictionary[date].ContainsKey(serviceNumber))
                 {
-                    for (int columnNum = 0; columnNum < FormSongTables.serviceRecordColumns.Length; columnNum++)
+                    for (SERVICE_RECORD_ATTRIBUTE columnName = 0; columnName < SERVICE_RECORD_ATTRIBUTE.COUNT; columnName++)
                     {
-                        SERVICE_RECORD_ATTRIBUTE source = (SERVICE_RECORD_ATTRIBUTE)FormSongTables.serviceRecordColumns[columnNum].id;
-                        serviceInfoTable.Columns.Add(source.ToString(), serviceRecordsTable.Columns[source.ToString()].DataType);
+                        serviceInfoTable.Columns.Add(columnName.ToString());
                     }
                     for (int orderInService = 1; orderInService <= serviceRecordsDictionary[date][serviceNumber].Count; orderInService++)
                     {
