@@ -99,54 +99,6 @@ namespace ChurchMusicDirectory
                 }
             }
         };
-        // public static TABLE_COLUMN[] songInfoColumns = new TABLE_COLUMN[(int)SONG_ATTRIBUTE.COUNT]
-        // {
-        //     new TABLE_COLUMN
-        //     {
-        //         id = (int)SONG_ATTRIBUTE.songName,
-        //         name = "Title",
-        //         allowFiltering = false,
-        //         filterValues = new List<string>(),
-        //         width = 200,
-        //         isDerived = false
-        //     },
-        //     new TABLE_COLUMN
-        //     {
-        //         id = (int)SONG_ATTRIBUTE.musicKey,
-        //         name = "Key",
-        //         allowFiltering = true,
-        //         filterValues = new List<string>(),
-        //         width = 75,
-        //         isDerived = false
-        //     },
-        //     new TABLE_COLUMN
-        //     {
-        //         id = (int)SONG_ATTRIBUTE.subject,
-        //         name = "Subject",
-        //         allowFiltering = true,
-        //         filterValues = new List<string>(),
-        //         width = 200,
-        //         isDerived = false
-        //     },
-        //     new TABLE_COLUMN
-        //     {
-        //         id = (int)SONG_ATTRIBUTE.numPlays,
-        //         name = "Plays",
-        //         allowFiltering = true,
-        //         filterValues = new List<string>(),
-        //         width = 75,
-        //         isDerived = true
-        //     },
-        //     new TABLE_COLUMN
-        //     {
-        //         id = (int)SONG_ATTRIBUTE.tag,
-        //         name = "Notes",
-        //         allowFiltering = false,
-        //         filterValues = new List<string>(),
-        //         width = 100,
-        //         isDerived = false
-        //     },
-        // };
 
         public static Dictionary<SERVICE_RECORD_ATTRIBUTE, TABLE_COLUMN> serviceRecordColumns = new Dictionary<SERVICE_RECORD_ATTRIBUTE, TABLE_COLUMN>()
         {
@@ -247,81 +199,6 @@ namespace ChurchMusicDirectory
                 }
             }
         };
-        // public static TABLE_COLUMN[] serviceRecordColumns = new TABLE_COLUMN[(int)SERVICE_RECORD_ATTRIBUTE.COUNT]
-        // {
-        //     new TABLE_COLUMN
-        //     {
-        //         id = (int)SERVICE_RECORD_ATTRIBUTE.date,
-        //         name = "Date",
-        //         allowFiltering = false,
-        //         filterValues = new List<string>(),
-        //         width = 75,
-        //         isDerived = false
-        //     },
-        //     new TABLE_COLUMN
-        //     {
-        //         id = (int)SERVICE_RECORD_ATTRIBUTE.title,
-        //         name = "Title",
-        //         allowFiltering = false,
-        //         filterValues = new List<string>(),
-        //         width = 200,
-        //         isDerived = false
-        //     },
-        //     new TABLE_COLUMN
-        //     {
-        //         id = (int)SERVICE_RECORD_ATTRIBUTE.musicKey,
-        //         name = "Key",
-        //         allowFiltering = false,
-        //         filterValues = new List<string>(),
-        //         width = 75,
-        //         isDerived = false
-        //     },
-        //     new TABLE_COLUMN
-        //     {
-        //         id = (int)SERVICE_RECORD_ATTRIBUTE.passage,
-        //         name = "Scripture Passage",
-        //         allowFiltering = false,
-        //         filterValues = new List<string>(),
-        //         width = 100,
-        //         isDerived = false
-        //     },
-        //     new TABLE_COLUMN
-        //     {
-        //         id = (int)SERVICE_RECORD_ATTRIBUTE.elementName,
-        //         name = "Type",
-        //         allowFiltering = false,
-        //         filterValues = new List<string>(),
-        //         width = 75,
-        //         isDerived = false
-        //     },
-        //     new TABLE_COLUMN
-        //     {
-        //         id = (int)SERVICE_RECORD_ATTRIBUTE.serviceNumber,
-        //         name = "Service Number",
-        //         allowFiltering = false,
-        //         filterValues = new List<string>(),
-        //         width = 50,
-        //         isDerived = false
-        //     },
-        //     new TABLE_COLUMN
-        //     {
-        //         id = (int)SERVICE_RECORD_ATTRIBUTE.orderInService,
-        //         name = "Order in Service",
-        //         allowFiltering = false,
-        //         filterValues = new List<string>(),
-        //         width = 50,
-        //         isDerived = false
-        //     },
-        //     new TABLE_COLUMN
-        //     {
-        //         id = (int)SERVICE_RECORD_ATTRIBUTE.notes,
-        //         name = "Notes",
-        //         allowFiltering = false,
-        //         filterValues = new List<string>(),
-        //         width = 100,
-        //         isDerived = false
-        //     },
-        // };
 
         public enum FILTER_TYPE
         {
