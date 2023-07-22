@@ -16,10 +16,9 @@ namespace ChurchMusicDirectory
         const string serverIpAddress = "localhost";
         const int serverPort = 1433;
 
-        public static bool QuerySqlServer(string sqlQuery, out DataTable resultTable)
+        public static DataTable QuerySqlServer(string sqlQuery)
         {
-            bool dataRetrieved = false;
-            resultTable = new DataTable();
+            DataTable resultTable = new DataTable();
             try
             {
                 SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
@@ -38,8 +37,10 @@ namespace ChurchMusicDirectory
                     {
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
-                            resultTable.Load(reader);
-                            dataRetrieved = true;
+                            if (reader != null && reader.HasRows)
+                            {
+                                resultTable.Load(reader);
+                            }
                         }
                     }
                 }
@@ -48,7 +49,7 @@ namespace ChurchMusicDirectory
             {
                 throw new Exception("Error connecting to SQL Server: " + e.Message);
             }
-            return dataRetrieved;
+            return resultTable;
         }
     }
 }
