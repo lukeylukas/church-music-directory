@@ -375,10 +375,8 @@ namespace ChurchMusicDirectory
             }
             else
             {
-                if (dataCtrlInstance.SetServiceInfo((DataTable)dataGridViewServicePlanner.DataSource))
-                {
-                    MessageBox.Show("Changes saved");
-                }
+                dataCtrlInstance.SetServiceInfo((DataTable)dataGridViewServicePlanner.DataSource);
+                MessageBox.Show("Changes saved");
             }
         }
 
