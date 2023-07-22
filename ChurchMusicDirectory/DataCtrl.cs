@@ -292,6 +292,14 @@ namespace ChurchMusicDirectory
         }
         public void SetServiceInfo(DataTable newServiceTable)
         {
+            SaveToDictionary(newServiceTable);
+            SaveToServiceRecordsTable(newServiceTable);
+            string query = BuildServicePlannerQuery(newServiceTable);
+            ServerCommunication.QuerySqlServer(query);
+        }
+
+        private void SaveToDictionary(DataTable newServiceTable)
+        {
             for (int rowIndex = 0; rowIndex < newServiceTable.Rows.Count; rowIndex++)
             {
                 if (newServiceTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.date] == DBNull.Value
@@ -302,7 +310,10 @@ namespace ChurchMusicDirectory
                 }
                 serviceRecordsDictionary[(DateTime)newServiceTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.date]][(int)newServiceTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.serviceNumber]][(int)newServiceTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.orderInService]] = newServiceTable.Rows[rowIndex];
             }
+        }
 
+        private void SaveToServiceRecordsTable(DataTable newServiceTable)
+        {
             List<DataRow> rowsToRemove = new List<DataRow>();
             foreach (DataRow row in serviceRecordsTable.Rows)
             {
@@ -320,9 +331,6 @@ namespace ChurchMusicDirectory
             }
             serviceRecordsTable.Merge(newServiceTable);
             serviceRecordsTable.AcceptChanges();
-
-            string query = BuildServicePlannerQuery(newServiceTable);
-            ServerCommunication.QuerySqlServer(query);
         }
 
         private string BuildServicePlannerQuery(DataTable newServiceTable)
