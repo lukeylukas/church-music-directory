@@ -28,8 +28,8 @@ namespace ChurchMusicDirectory
         musicKey,
         passage,
         notes,
-        serviceNumber,
         orderInService,
+        serviceNumber,
         COUNT
     }
     public class DataCtrl
@@ -294,8 +294,8 @@ namespace ChurchMusicDirectory
         {
             SaveToDictionary(newServiceTable);
             SaveToServiceRecordsTable(newServiceTable);
-            string query = BuildServicePlannerQuery(newServiceTable);
-            ServerCommunication.QuerySqlServer(query);
+            string query = BuildServicePlannerQuery(newServiceTable, out string[] values);
+            ServerCommunication.CommandSqlServer(query, values);
         }
 
         private void SaveToDictionary(DataTable newServiceTable)
@@ -333,23 +333,27 @@ namespace ChurchMusicDirectory
             serviceRecordsTable.AcceptChanges();
         }
 
-        private string BuildServicePlannerQuery(DataTable newServiceTable)
+        private string BuildServicePlannerQuery(DataTable newServiceTable, out string[] values)
         {
             string deletionQuery = "DELETE FROM " + serviceRecordsTableName + 
                                     " WHERE " + SERVICE_RECORD_ATTRIBUTE.date + " = '" + newServiceTable.Rows[0][(int)SERVICE_RECORD_ATTRIBUTE.date] + 
                                     "' AND " + SERVICE_RECORD_ATTRIBUTE.serviceNumber + " = " + newServiceTable.Rows[0][(int)SERVICE_RECORD_ATTRIBUTE.serviceNumber];
 
             string insertionQuery = "INSERT INTO " + serviceRecordsTableName + " VALUES ";
+            values = new string[newServiceTable.Rows.Count * newServiceTable.Columns.Count];
             for (int rowIndex = 0; rowIndex < newServiceTable.Rows.Count; rowIndex++)
             {
                 insertionQuery += "(";
                 for (int columnIndex = 0; columnIndex < newServiceTable.Columns.Count; columnIndex++)
                 {
-                    insertionQuery += "'" + newServiceTable.Rows[rowIndex][columnIndex] + "'";
+                    int valueIndex = rowIndex * newServiceTable.Columns.Count + columnIndex;
+                    insertionQuery += "@" + valueIndex;
                     if (columnIndex < newServiceTable.Columns.Count - 1)
                     {
                         insertionQuery += ", ";
                     }
+                    values[valueIndex] = newServiceTable.Rows[rowIndex][columnIndex].ToString();
+                    valueIndex++;
                 }
                 insertionQuery += ")";
                 if (rowIndex < newServiceTable.Rows.Count - 1)
