@@ -33,16 +33,16 @@
             this.tabPageSongInfo = new System.Windows.Forms.TabPage();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.tabPageServiceRecords = new System.Windows.Forms.TabPage();
+            this.dataGridViewServiceRecords = new System.Windows.Forms.DataGridView();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.helloToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonToggleServicePlanner = new System.Windows.Forms.Button();
-            this.dataGridViewServiceRecords = new System.Windows.Forms.DataGridView();
             this.tabControlMain.SuspendLayout();
             this.tabPageSongInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabPageServiceRecords.SuspendLayout();
-            this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewServiceRecords)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControlMain
@@ -95,6 +95,21 @@
             this.tabPageServiceRecords.Text = "Service Records";
             this.tabPageServiceRecords.UseVisualStyleBackColor = true;
             // 
+            // dataGridViewServiceRecords
+            // 
+            this.dataGridViewServiceRecords.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridViewServiceRecords.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
+            this.dataGridViewServiceRecords.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewServiceRecords.Location = new System.Drawing.Point(6, 6);
+            this.dataGridViewServiceRecords.Name = "dataGridViewServiceRecords";
+            this.dataGridViewServiceRecords.ReadOnly = true;
+            this.dataGridViewServiceRecords.RowHeadersVisible = false;
+            this.dataGridViewServiceRecords.RowTemplate.Height = 25;
+            this.dataGridViewServiceRecords.Size = new System.Drawing.Size(1003, 717);
+            this.dataGridViewServiceRecords.TabIndex = 3;
+            // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -119,20 +134,6 @@
             this.buttonToggleServicePlanner.UseVisualStyleBackColor = true;
             this.buttonToggleServicePlanner.Click += new System.EventHandler(this.buttonToggleServicePlanner_Click);
             // 
-            // dataGridViewServiceRecords
-            // 
-            this.dataGridViewServiceRecords.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dataGridViewServiceRecords.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
-            this.dataGridViewServiceRecords.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewServiceRecords.Location = new System.Drawing.Point(6, 6);
-            this.dataGridViewServiceRecords.Name = "dataGridViewServiceRecords";
-            this.dataGridViewServiceRecords.RowHeadersVisible = false;
-            this.dataGridViewServiceRecords.RowTemplate.Height = 25;
-            this.dataGridViewServiceRecords.Size = new System.Drawing.Size(1003, 717);
-            this.dataGridViewServiceRecords.TabIndex = 3;
-            // 
             // FormSongTables
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -147,8 +148,8 @@
             this.tabPageSongInfo.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tabPageServiceRecords.ResumeLayout(false);
-            this.contextMenuStrip1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewServiceRecords)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
