@@ -34,6 +34,8 @@ namespace ChurchMusicDirectory
     }
     public class DataCtrl
     {
+        private const string serviceRecordsTableName = "serviceRecords";
+        private const string songInfoTableName = "songInfo";
         public DataTable songInfoTable;
         public DataTable serviceRecordsTable;
         private Dictionary<DateTime, Dictionary<int, Dictionary<int, DataRow>>> serviceRecordsDictionary;
@@ -233,7 +235,7 @@ namespace ChurchMusicDirectory
             }
             columns = columns.Substring(0, columns.Length - connectorString.Length);
 
-            return "SELECT " + columns + " FROM serviceRecords";
+            return "SELECT " + columns + " FROM " + serviceRecordsTableName;
         }
         private void GenerateServiceRecordsDictionary()
         {
@@ -317,8 +319,37 @@ namespace ChurchMusicDirectory
             }
             serviceRecordsTable.Merge(newServiceTable);
             serviceRecordsTable.AcceptChanges();
-            // save the new serviceRecordsTable to the database
+
+            string query = BuildServicePlannerQuery(newServiceTable);
+            ServerCommunication.QuerySqlServer(query, out DataTable tempTable);
             return true;
+        }
+
+        private string BuildServicePlannerQuery(DataTable newServiceTable)
+        {
+            string deletionQuery = "DELETE FROM " + serviceRecordsTableName + 
+                                    " WHERE " + SERVICE_RECORD_ATTRIBUTE.date + " = '" + newServiceTable.Rows[0][(int)SERVICE_RECORD_ATTRIBUTE.date] + 
+                                    "' AND " + SERVICE_RECORD_ATTRIBUTE.serviceNumber + " = " + newServiceTable.Rows[0][(int)SERVICE_RECORD_ATTRIBUTE.serviceNumber];
+
+            string insertionQuery = "INSERT INTO " + serviceRecordsTableName + " VALUES ";
+            for (int rowIndex = 0; rowIndex < newServiceTable.Rows.Count; rowIndex++)
+            {
+                insertionQuery += "(";
+                for (int columnIndex = 0; columnIndex < newServiceTable.Columns.Count; columnIndex++)
+                {
+                    insertionQuery += "'" + newServiceTable.Rows[rowIndex][columnIndex] + "'";
+                    if (columnIndex < newServiceTable.Columns.Count - 1)
+                    {
+                        insertionQuery += ", ";
+                    }
+                }
+                insertionQuery += ")";
+                if (rowIndex < newServiceTable.Rows.Count - 1)
+                {
+                    insertionQuery += ", ";
+                }
+            }
+            return deletionQuery + "; " + insertionQuery;
         }
 
         public void GenerateCalculatedData()
