@@ -23,13 +23,13 @@ namespace ChurchMusicDirectory
     public enum SERVICE_RECORD_ATTRIBUTE
     {
         date,
-        serviceNumber,
-        orderInService,
-        elementName,
         title,
+        elementName,
         musicKey,
         passage,
         notes,
+        serviceNumber,
+        orderInService,
         COUNT
     }
     public class DataCtrl
@@ -172,7 +172,8 @@ namespace ChurchMusicDirectory
 
             try
             {
-                if (ServerCommunication.QuerySqlServer(query, out DataTable tempTable))
+                DataTable tempTable = ServerCommunication.QuerySqlServer(query);
+                if (tempTable != null)
                 {
                     if (tempTable.Columns.Count == expectedNumColumns)
                     {
@@ -289,7 +290,7 @@ namespace ChurchMusicDirectory
             }
             return serviceInfoTable;
         }
-        public bool SetServiceInfo(DataTable newServiceTable)
+        public void SetServiceInfo(DataTable newServiceTable)
         {
             for (int rowIndex = 0; rowIndex < newServiceTable.Rows.Count; rowIndex++)
             {
@@ -297,7 +298,7 @@ namespace ChurchMusicDirectory
                     || newServiceTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.serviceNumber] == DBNull.Value
                     || newServiceTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.orderInService] == DBNull.Value)
                 {
-                    return false;
+                    throw new Exception("Invalid service record.");
                 }
                 serviceRecordsDictionary[(DateTime)newServiceTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.date]][(int)newServiceTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.serviceNumber]][(int)newServiceTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.orderInService]] = newServiceTable.Rows[rowIndex];
             }
@@ -321,8 +322,7 @@ namespace ChurchMusicDirectory
             serviceRecordsTable.AcceptChanges();
 
             string query = BuildServicePlannerQuery(newServiceTable);
-            ServerCommunication.QuerySqlServer(query, out DataTable tempTable);
-            return true;
+            ServerCommunication.QuerySqlServer(query);
         }
 
         private string BuildServicePlannerQuery(DataTable newServiceTable)
