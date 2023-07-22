@@ -348,6 +348,10 @@ namespace ChurchMusicDirectory
         {
             if (dataGridViewServicePlanner.EditingControl.Text != null)
             {
+                if (dataGridViewServicePlanner.CurrentCell.ColumnIndex == (int)SERVICE_RECORD_ATTRIBUTE.musicKey)
+                {
+                    dataGridViewServicePlanner.EditingControl.Text = dataGridViewServicePlanner.EditingControl.Text.Replace("b", "♭");
+                }
                 tempComboBoxValue = dataGridViewServicePlanner.EditingControl.Text;
             }
             else
