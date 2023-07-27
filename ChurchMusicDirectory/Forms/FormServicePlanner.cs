@@ -207,8 +207,8 @@ namespace ChurchMusicDirectory
         {
             serviceDatesList = dataCtrlInstance.GetServiceDatesList();
             comboBoxServiceDate.DataSource = Array.ConvertAll(serviceDatesList.ToArray(), x => x.ToLongDateString());
-            DateTime defaultDate = GetDefaultServiceDate();
-            calendarDatePicker.SetSelectionRange(defaultDate, defaultDate);
+            //DateTime defaultDate = GetDefaultServiceDate();
+            //calendarDatePicker.SetSelectionRange(defaultDate, defaultDate);
         }
         private DateTime GetDefaultServiceDate()
         {
@@ -243,6 +243,17 @@ namespace ChurchMusicDirectory
         {
             dataGridViewServicePlanner.DataSource = dataCtrlInstance.GetServiceInfo(calendarDatePicker.SelectionStart, 0);
             dataGridViewServicePlanner.Sort(dataGridViewServicePlanner.Columns[(int)SERVICE_RECORD_ATTRIBUTE.orderInService], ListSortDirection.Ascending);
+        }
+
+        private void FormServicePlanner_Shown(object sender, EventArgs e)
+        {
+            SyncWithCalendar();
+        }
+
+        private void comboBoxServiceDate_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            calendarDatePicker.SetSelectionRange(DateTime.Parse(comboBoxServiceDate.Text), DateTime.Parse(comboBoxServiceDate.Text));
+            FormatDataGridView();
         }
 
         private void dataGridViewServicePlanner_EditingControlShowing(object? sender, DataGridViewEditingControlShowingEventArgs e)
@@ -384,11 +395,6 @@ namespace ChurchMusicDirectory
             }
         }
 
-        private void FormServicePlanner_Shown(object sender, EventArgs e)
-        {
-            SyncWithCalendar();
-        }
-
         private void buttonAddRow_Click(object sender, EventArgs e)
         {
             DataRow newRow = ((DataTable)dataGridViewServicePlanner.DataSource).NewRow();
@@ -396,12 +402,6 @@ namespace ChurchMusicDirectory
             newRow[(int)SERVICE_RECORD_ATTRIBUTE.serviceNumber] = dataGridViewServicePlanner.Rows[0].Cells[(int)SERVICE_RECORD_ATTRIBUTE.serviceNumber].Value;
             newRow[(int)SERVICE_RECORD_ATTRIBUTE.orderInService] = dataGridViewServicePlanner.RowCount;
             ((DataTable)dataGridViewServicePlanner.DataSource).Rows.Add(newRow);
-        }
-
-        private void comboBoxServiceDate_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            calendarDatePicker.SetSelectionRange(DateTime.Parse(comboBoxServiceDate.Text), DateTime.Parse(comboBoxServiceDate.Text));
-            FormatDataGridView();
         }
     }
 }
