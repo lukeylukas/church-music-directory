@@ -14,6 +14,7 @@ namespace ChurchMusicDirectory
     public enum SONG_ATTRIBUTE
     {
         songName,
+        hymnalNumber,
         musicKey,
         subject,
         numPlays,
