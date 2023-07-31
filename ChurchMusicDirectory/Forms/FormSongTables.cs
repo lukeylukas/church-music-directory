@@ -30,6 +30,7 @@ namespace ChurchMusicDirectory
         public struct TABLE_COLUMN
         {
             public string name;
+            public ColumnType columnType;
             public int displayOrder;
             public bool allowFiltering;
             public List<string> filterValues;
@@ -43,6 +44,7 @@ namespace ChurchMusicDirectory
                 new TABLE_COLUMN
                 {
                     name = "Title",
+                    columnType = ColumnType.String,
                     displayOrder = 0,
                     allowFiltering = false,
                     filterValues = new List<string>(),
@@ -55,6 +57,7 @@ namespace ChurchMusicDirectory
                 new TABLE_COLUMN
                 {
                     name = "Key",
+                    columnType = ColumnType.String,
                     displayOrder = 0,
                     allowFiltering = true,
                     filterValues = new List<string>(),
@@ -67,6 +70,7 @@ namespace ChurchMusicDirectory
                 new TABLE_COLUMN
                 {
                     name = "Subject",
+                    columnType = ColumnType.String,
                     displayOrder = 0,
                     allowFiltering = true,
                     filterValues = new List<string>(),
@@ -79,6 +83,7 @@ namespace ChurchMusicDirectory
                 new TABLE_COLUMN
                 {
                     name = "Plays",
+                    columnType = ColumnType.Int,
                     displayOrder = 0,
                     allowFiltering = true,
                     filterValues = new List<string>(),
@@ -91,6 +96,7 @@ namespace ChurchMusicDirectory
                 new TABLE_COLUMN
                 {
                     name = "Notes",
+                    columnType = ColumnType.String,
                     displayOrder = 0,
                     allowFiltering = false,
                     filterValues = new List<string>(),
@@ -107,6 +113,7 @@ namespace ChurchMusicDirectory
                 new TABLE_COLUMN
                 {
                     name = "Date",
+                    columnType = ColumnType.Date,
                     displayOrder = 0,
                     allowFiltering = false,
                     filterValues = new List<string>(),
@@ -119,6 +126,7 @@ namespace ChurchMusicDirectory
                 new TABLE_COLUMN
                 {
                     name = "Title",
+                    columnType = ColumnType.String,
                     displayOrder = 1,
                     allowFiltering = false,
                     filterValues = new List<string>(),
@@ -131,6 +139,7 @@ namespace ChurchMusicDirectory
                 new TABLE_COLUMN
                 {
                     name = "Key",
+                    columnType = ColumnType.String,
                     displayOrder = 2,
                     allowFiltering = false,
                     filterValues = new List<string>(),
@@ -143,6 +152,7 @@ namespace ChurchMusicDirectory
                 new TABLE_COLUMN
                 {
                     name = "Scripture Passage",
+                    columnType = ColumnType.String,
                     displayOrder = 3,
                     allowFiltering = false,
                     filterValues = new List<string>(),
@@ -155,6 +165,7 @@ namespace ChurchMusicDirectory
                 new TABLE_COLUMN
                 {
                     name = "Type",
+                    columnType = ColumnType.String,
                     displayOrder = 4,
                     allowFiltering = false,
                     filterValues = new List<string>(),
@@ -167,6 +178,7 @@ namespace ChurchMusicDirectory
                 new TABLE_COLUMN
                 {
                     name = "Service Number",
+                    columnType = ColumnType.Int,
                     displayOrder = 5,
                     allowFiltering = false,
                     filterValues = new List<string>(),
@@ -179,6 +191,7 @@ namespace ChurchMusicDirectory
                 new TABLE_COLUMN
                 {
                     name = "Order in Service",
+                    columnType = ColumnType.Int,
                     displayOrder = 6,
                     allowFiltering = false,
                     filterValues = new List<string>(),
@@ -191,6 +204,7 @@ namespace ChurchMusicDirectory
                 new TABLE_COLUMN
                 {
                     name = "Notes",
+                    columnType = ColumnType.String,
                     displayOrder = 7,
                     allowFiltering = false,
                     filterValues = new List<string>(),
@@ -417,16 +431,8 @@ namespace ChurchMusicDirectory
                 FillFilterList(songInfoColumns[(SONG_ATTRIBUTE)columnIndex], dataGridView1, columnIndex);
             }
 
-            SONG_ATTRIBUTE lastDisplayedColumn = 0;
-            for (SONG_ATTRIBUTE columnIndex = 0; columnIndex < SONG_ATTRIBUTE.COUNT; columnIndex++)
-            {
-                if (songInfoColumns[columnIndex].displayOrder > songInfoColumns[lastDisplayedColumn].displayOrder)
-                {
-                    lastDisplayedColumn = columnIndex;
-                }
-            }
-            dataGridView1.Columns[songInfoColumns[lastDisplayedColumn].displayOrder].MinimumWidth = songInfoColumns[lastDisplayedColumn].width;
-            dataGridView1.Columns[songInfoColumns[lastDisplayedColumn].displayOrder].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dataGridView1.Columns[^1].MinimumWidth = songInfoColumns[(SONG_ATTRIBUTE)((int)SONG_ATTRIBUTE.COUNT - 1)].width;
+            dataGridView1.Columns[^1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             dataGridView1.Sort(dataGridView1.Columns[0], ListSortDirection.Ascending);
         }
         static private void FillFilterList(TABLE_COLUMN settings, DataGridView table, int columnIndex)

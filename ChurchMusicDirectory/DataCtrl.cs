@@ -32,6 +32,12 @@ namespace ChurchMusicDirectory
         serviceNumber,
         COUNT
     }
+    public enum ColumnType
+    {
+        String,
+        Int,
+        Date
+    }
     public class DataCtrl
     {
         private const string serviceRecordsTableName = "serviceRecords";
@@ -122,9 +128,18 @@ namespace ChurchMusicDirectory
             {
                 for (SONG_ATTRIBUTE columnNum = 0; columnNum < SONG_ATTRIBUTE.COUNT; columnNum++)
                 {
+                    DataColumn column = new DataColumn();
+                    switch (FormSongTables.songInfoColumns[columnNum].columnType)
+                    {
+                        case ColumnType.String: column.DataType = typeof(string);    break;
+                        case ColumnType.Int:    column.DataType = typeof(int);       break;
+                        case ColumnType.Date:   column.DataType = typeof(DateTime);  break;
+                        default:                throw new InvalidEnumArgumentException();
+                    }
+                    songInfoTable.Columns.Add(column);
                     if (!FormSongTables.songInfoColumns[columnNum].isDerived)
                     {
-                        songInfoTable.Columns.Add(tempTable.Columns[0].ColumnName);
+                        songInfoTable.Columns[(int)columnNum].ColumnName = tempTable.Columns[0].ColumnName;
                         for (int rowNum = 0; rowNum < tempTable.Rows.Count; rowNum++)
                         {
                             if (songInfoTable.Rows.Count <= rowNum)
@@ -137,7 +152,7 @@ namespace ChurchMusicDirectory
                     }
                     else
                     {
-                        songInfoTable.Columns.Add();
+                        //songInfoTable.Columns.Add();
                     }
                 }
             }
