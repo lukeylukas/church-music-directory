@@ -151,10 +151,6 @@ namespace ChurchMusicDirectory
                         }
                         tempTable.Columns.RemoveAt(0);
                     }
-                    else
-                    {
-                        //songInfoTable.Columns.Add();
-                    }
                 }
             }
 
