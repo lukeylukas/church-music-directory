@@ -9,16 +9,15 @@ namespace ChurchMusicDirectory
         const int serverPort = 1433;
         const string catalog = "ProvidenceSongs";
 
-        public static DataTable QuerySqlServer(string sqlQuery)
+        public static DataTable QuerySqlServer(string sqlQuery, string userName, string password)
         {
             DataTable resultTable = new DataTable();
             try
             {
                 SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
                 builder.DataSource = serverIpAddress + "," + serverPort;
-                // TODO: doesn't work unless you select "remember me"
-                builder.UserID = Properties.Settings.Default.Username;
-                builder.Password = Properties.Settings.Default.Password;
+                builder.UserID = userName;
+                builder.Password = password;
                 builder.InitialCatalog = catalog;
                 builder.TrustServerCertificate = true;
 
@@ -45,16 +44,15 @@ namespace ChurchMusicDirectory
             return resultTable;
         }
 
-        public static DataTable CommandSqlServer(string sqlQuery, string[] values)
+        public static DataTable CommandSqlServer(string sqlQuery, string[] values, string userName, string password)
         {
             DataTable resultTable = new DataTable();
             try
             {
                 SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
                 builder.DataSource = serverIpAddress + "," + serverPort;
-                // TODO: doesn't work unless you select "remember me"
-                builder.UserID = Properties.Settings.Default.Username;
-                builder.Password = Properties.Settings.Default.Password;
+                builder.UserID = userName;
+                builder.Password = password;
                 builder.InitialCatalog = catalog;
                 builder.TrustServerCertificate = true;
 

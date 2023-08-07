@@ -46,6 +46,8 @@ namespace ChurchMusicDirectory
         private const string songInfoTableName = "songInfo";
         public DataTable songInfoTable;
         public DataTable serviceRecordsTable;
+        private string serverUserName;
+        private string serverPassword;
         private Dictionary<DateTime, Dictionary<int, Dictionary<int, DataRow>>> serviceRecordsDictionary;
         public delegate void DataCtrlResponseHandler(bool success, string message);
         
@@ -185,7 +187,7 @@ namespace ChurchMusicDirectory
 
             try
             {
-                DataTable tempTable = ServerCommunication.QuerySqlServer(query);
+                DataTable tempTable = ServerCommunication.QuerySqlServer(query, serverUserName, serverPassword);
                 if (tempTable != null)
                 {
                     if (tempTable.Columns.Count == expectedNumColumns)
@@ -308,7 +310,7 @@ namespace ChurchMusicDirectory
             SaveToDictionary(newServiceTable);
             SaveToServiceRecordsTable(newServiceTable);
             string query = BuildServicePlannerQuery(newServiceTable, out string[] values);
-            ServerCommunication.CommandSqlServer(query, values);
+            ServerCommunication.CommandSqlServer(query, values, serverUserName, serverPassword);
         }
 
         private void SaveToDictionary(DataTable newServiceTable)
@@ -431,6 +433,11 @@ namespace ChurchMusicDirectory
                     }
                 }
             }
+        }
+        public void SetUserNameAndPassword(string userName, string password)
+        {
+            serverUserName = userName;
+            serverPassword = password;
         }
     }
 }

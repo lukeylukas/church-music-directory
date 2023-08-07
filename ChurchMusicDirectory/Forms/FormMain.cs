@@ -37,7 +37,7 @@ namespace ChurchMusicDirectory
             Setup();
             if (Properties.Settings.Default.RememberLogin)
             {
-                DataCtrlInit();
+                DataCtrlInit(Properties.Settings.Default.Username, Properties.Settings.Default.Password);
             }
             else
             {
@@ -79,11 +79,11 @@ namespace ChurchMusicDirectory
             panelMain.Controls.Add(servicePlannerForm);
         }
 
-        public static void LoginToApplication()
+        public static void LoginToApplication(string userName, string password)
         {
             FormMain.getInstance().Invoke((MethodInvoker)delegate
             {
-                FormMain.getInstance().DataCtrlInit();
+                FormMain.getInstance().DataCtrlInit(userName, password);
             });
         }
 
@@ -135,10 +135,11 @@ namespace ChurchMusicDirectory
         /************************************************************************************************************************
         ****************************************        DataCtrl        *********************************************************
         *************************************************************************************************************************/
-        private void DataCtrlInit()
+        private void DataCtrlInit(string userName, string password)
         {
             Thread initDataCtrlThread = new Thread(() =>
             {
+                dataCtrl.SetUserNameAndPassword(userName, password);
                 if(dataCtrl.GetSongInfo(SongInfoCallback))
                 {
                     dataCtrl.GetServiceRecords(ServiceRecordsCallback);

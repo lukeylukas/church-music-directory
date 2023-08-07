@@ -38,7 +38,7 @@ namespace ChurchMusicDirectory
                 Properties.Settings.Default.Username = "";
                 Properties.Settings.Default.Password = "";
             }
-            FormMain.LoginToApplication();
+            FormMain.LoginToApplication(richTextBoxUsername.Text, richTextBoxPassword.Text);
         }
 
         private void checkBoxRememberLogin_Click(object sender, EventArgs e)
