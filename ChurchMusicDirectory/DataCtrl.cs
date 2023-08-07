@@ -16,6 +16,7 @@ namespace ChurchMusicDirectory
         songName,
         hymnalNumber,
         musicKey,
+        hymnalKey,
         subject,
         numPlays,
         tag,

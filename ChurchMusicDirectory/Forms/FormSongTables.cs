@@ -79,6 +79,19 @@ namespace ChurchMusicDirectory
                 }
             },
             {
+                SONG_ATTRIBUTE.hymnalKey,
+                new TABLE_COLUMN
+                {
+                    name = "Hymnal Key",
+                    columnType = ColumnType.String,
+                    displayOrder = 0,
+                    allowFiltering = true,
+                    filterValues = new List<string>(),
+                    width = 30,
+                    isDerived = false
+                }
+            },
+            {
                 SONG_ATTRIBUTE.subject,
                 new TABLE_COLUMN
                 {
