@@ -242,7 +242,10 @@ namespace ChurchMusicDirectory
         private void FormatDataGridView()
         {
             dataGridViewServicePlanner.DataSource = dataCtrlInstance.GetServiceInfo(calendarDatePicker.SelectionStart, 0);
-            dataGridViewServicePlanner.Sort(dataGridViewServicePlanner.Columns[(int)SERVICE_RECORD_ATTRIBUTE.orderInService], ListSortDirection.Ascending);
+            if (dataGridViewServicePlanner.SelectedRows.Count > 0)
+            {
+                dataGridViewServicePlanner.Sort(dataGridViewServicePlanner.Columns[(int)SERVICE_RECORD_ATTRIBUTE.orderInService], ListSortDirection.Ascending);
+            }
         }
 
         private void FormServicePlanner_Shown(object sender, EventArgs e)
