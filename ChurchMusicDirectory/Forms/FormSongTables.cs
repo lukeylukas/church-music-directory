@@ -589,5 +589,20 @@ namespace ChurchMusicDirectory
             dataGridViewServiceRecords.Columns[serviceRecordColumns[lastDisplayedColumn].displayOrder].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             dataGridViewServiceRecords.Sort(dataGridViewServiceRecords.Columns[(int)SERVICE_RECORD_ATTRIBUTE.date], ListSortDirection.Descending);
         }
+
+        private void buttonSaveSong_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonClearSongChange_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonRemoveSong_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

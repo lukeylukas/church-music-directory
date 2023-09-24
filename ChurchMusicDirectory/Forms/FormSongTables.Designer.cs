@@ -34,6 +34,20 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.tabPageServiceRecords = new System.Windows.Forms.TabPage();
             this.dataGridViewServiceRecords = new System.Windows.Forms.DataGridView();
+            this.tabEditSong = new System.Windows.Forms.TabPage();
+            this.textBoxSongKeys = new System.Windows.Forms.TextBox();
+            this.textBoxHymnalKey = new System.Windows.Forms.TextBox();
+            this.textBoxSongNotes = new System.Windows.Forms.TextBox();
+            this.textBoxHymnalNumber = new System.Windows.Forms.TextBox();
+            this.textBoxSongName = new System.Windows.Forms.TextBox();
+            this.labelSongNotes = new System.Windows.Forms.Label();
+            this.labelSongHymnalNumber = new System.Windows.Forms.Label();
+            this.labelHymnalKey = new System.Windows.Forms.Label();
+            this.labelSongKeys = new System.Windows.Forms.Label();
+            this.labelSongName = new System.Windows.Forms.Label();
+            this.buttonRemoveSong = new System.Windows.Forms.Button();
+            this.buttonClearSongChange = new System.Windows.Forms.Button();
+            this.buttonSaveSong = new System.Windows.Forms.Button();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.helloToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonToggleServicePlanner = new System.Windows.Forms.Button();
@@ -42,6 +56,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabPageServiceRecords.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewServiceRecords)).BeginInit();
+            this.tabEditSong.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -52,6 +67,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControlMain.Controls.Add(this.tabPageSongInfo);
             this.tabControlMain.Controls.Add(this.tabPageServiceRecords);
+            this.tabControlMain.Controls.Add(this.tabEditSong);
             this.tabControlMain.Location = new System.Drawing.Point(12, 12);
             this.tabControlMain.Name = "tabControlMain";
             this.tabControlMain.SelectedIndex = 0;
@@ -113,6 +129,139 @@
             this.dataGridViewServiceRecords.Size = new System.Drawing.Size(1003, 717);
             this.dataGridViewServiceRecords.TabIndex = 3;
             // 
+            // tabEditSong
+            // 
+            this.tabEditSong.Controls.Add(this.textBoxSongKeys);
+            this.tabEditSong.Controls.Add(this.textBoxHymnalKey);
+            this.tabEditSong.Controls.Add(this.textBoxSongNotes);
+            this.tabEditSong.Controls.Add(this.textBoxHymnalNumber);
+            this.tabEditSong.Controls.Add(this.textBoxSongName);
+            this.tabEditSong.Controls.Add(this.labelSongNotes);
+            this.tabEditSong.Controls.Add(this.labelSongHymnalNumber);
+            this.tabEditSong.Controls.Add(this.labelHymnalKey);
+            this.tabEditSong.Controls.Add(this.labelSongKeys);
+            this.tabEditSong.Controls.Add(this.labelSongName);
+            this.tabEditSong.Controls.Add(this.buttonRemoveSong);
+            this.tabEditSong.Controls.Add(this.buttonClearSongChange);
+            this.tabEditSong.Controls.Add(this.buttonSaveSong);
+            this.tabEditSong.Location = new System.Drawing.Point(4, 24);
+            this.tabEditSong.Name = "tabEditSong";
+            this.tabEditSong.Padding = new System.Windows.Forms.Padding(3);
+            this.tabEditSong.Size = new System.Drawing.Size(1015, 729);
+            this.tabEditSong.TabIndex = 2;
+            this.tabEditSong.Text = "Song Edit";
+            this.tabEditSong.UseVisualStyleBackColor = true;
+            // 
+            // textBoxSongKeys
+            // 
+            this.textBoxSongKeys.Location = new System.Drawing.Point(174, 101);
+            this.textBoxSongKeys.Name = "textBoxSongKeys";
+            this.textBoxSongKeys.Size = new System.Drawing.Size(100, 23);
+            this.textBoxSongKeys.TabIndex = 12;
+            // 
+            // textBoxHymnalKey
+            // 
+            this.textBoxHymnalKey.Location = new System.Drawing.Point(174, 71);
+            this.textBoxHymnalKey.Name = "textBoxHymnalKey";
+            this.textBoxHymnalKey.Size = new System.Drawing.Size(100, 23);
+            this.textBoxHymnalKey.TabIndex = 11;
+            // 
+            // textBoxSongNotes
+            // 
+            this.textBoxSongNotes.Location = new System.Drawing.Point(174, 131);
+            this.textBoxSongNotes.Name = "textBoxSongNotes";
+            this.textBoxSongNotes.Size = new System.Drawing.Size(100, 23);
+            this.textBoxSongNotes.TabIndex = 10;
+            // 
+            // textBoxHymnalNumber
+            // 
+            this.textBoxHymnalNumber.Location = new System.Drawing.Point(174, 39);
+            this.textBoxHymnalNumber.Name = "textBoxHymnalNumber";
+            this.textBoxHymnalNumber.Size = new System.Drawing.Size(100, 23);
+            this.textBoxHymnalNumber.TabIndex = 9;
+            // 
+            // textBoxSongName
+            // 
+            this.textBoxSongName.Location = new System.Drawing.Point(174, 10);
+            this.textBoxSongName.Name = "textBoxSongName";
+            this.textBoxSongName.Size = new System.Drawing.Size(100, 23);
+            this.textBoxSongName.TabIndex = 8;
+            // 
+            // labelSongNotes
+            // 
+            this.labelSongNotes.AutoSize = true;
+            this.labelSongNotes.Location = new System.Drawing.Point(130, 134);
+            this.labelSongNotes.Name = "labelSongNotes";
+            this.labelSongNotes.Size = new System.Drawing.Size(38, 15);
+            this.labelSongNotes.TabIndex = 7;
+            this.labelSongNotes.Text = "Notes";
+            // 
+            // labelSongHymnalNumber
+            // 
+            this.labelSongHymnalNumber.AutoSize = true;
+            this.labelSongHymnalNumber.Location = new System.Drawing.Point(72, 42);
+            this.labelSongHymnalNumber.Name = "labelSongHymnalNumber";
+            this.labelSongHymnalNumber.Size = new System.Drawing.Size(96, 15);
+            this.labelSongHymnalNumber.TabIndex = 6;
+            this.labelSongHymnalNumber.Text = "Hymnal Number";
+            // 
+            // labelHymnalKey
+            // 
+            this.labelHymnalKey.AutoSize = true;
+            this.labelHymnalKey.Location = new System.Drawing.Point(97, 74);
+            this.labelHymnalKey.Name = "labelHymnalKey";
+            this.labelHymnalKey.Size = new System.Drawing.Size(71, 15);
+            this.labelHymnalKey.TabIndex = 5;
+            this.labelHymnalKey.Text = "Hymnal Key";
+            // 
+            // labelSongKeys
+            // 
+            this.labelSongKeys.AutoSize = true;
+            this.labelSongKeys.Location = new System.Drawing.Point(137, 104);
+            this.labelSongKeys.Name = "labelSongKeys";
+            this.labelSongKeys.Size = new System.Drawing.Size(31, 15);
+            this.labelSongKeys.TabIndex = 4;
+            this.labelSongKeys.Text = "Keys";
+            // 
+            // labelSongName
+            // 
+            this.labelSongName.AutoSize = true;
+            this.labelSongName.Location = new System.Drawing.Point(129, 13);
+            this.labelSongName.Name = "labelSongName";
+            this.labelSongName.Size = new System.Drawing.Size(39, 15);
+            this.labelSongName.TabIndex = 3;
+            this.labelSongName.Text = "Name";
+            // 
+            // buttonRemoveSong
+            // 
+            this.buttonRemoveSong.Location = new System.Drawing.Point(173, 171);
+            this.buttonRemoveSong.Name = "buttonRemoveSong";
+            this.buttonRemoveSong.Size = new System.Drawing.Size(101, 23);
+            this.buttonRemoveSong.TabIndex = 2;
+            this.buttonRemoveSong.Text = "Remove Song";
+            this.buttonRemoveSong.UseVisualStyleBackColor = true;
+            this.buttonRemoveSong.Click += new System.EventHandler(this.buttonRemoveSong_Click);
+            // 
+            // buttonClearSongChange
+            // 
+            this.buttonClearSongChange.Location = new System.Drawing.Point(92, 171);
+            this.buttonClearSongChange.Name = "buttonClearSongChange";
+            this.buttonClearSongChange.Size = new System.Drawing.Size(75, 23);
+            this.buttonClearSongChange.TabIndex = 1;
+            this.buttonClearSongChange.Text = "Clear";
+            this.buttonClearSongChange.UseVisualStyleBackColor = true;
+            this.buttonClearSongChange.Click += new System.EventHandler(this.buttonClearSongChange_Click);
+            // 
+            // buttonSaveSong
+            // 
+            this.buttonSaveSong.Location = new System.Drawing.Point(11, 171);
+            this.buttonSaveSong.Name = "buttonSaveSong";
+            this.buttonSaveSong.Size = new System.Drawing.Size(75, 23);
+            this.buttonSaveSong.TabIndex = 0;
+            this.buttonSaveSong.Text = "Save";
+            this.buttonSaveSong.UseVisualStyleBackColor = true;
+            this.buttonSaveSong.Click += new System.EventHandler(this.buttonSaveSong_Click);
+            // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -152,6 +301,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tabPageServiceRecords.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewServiceRecords)).EndInit();
+            this.tabEditSong.ResumeLayout(false);
+            this.tabEditSong.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -167,5 +318,19 @@
         private ToolStripMenuItem helloToolStripMenuItem;
         private Button buttonToggleServicePlanner;
         private DataGridView dataGridViewServiceRecords;
+        private TabPage tabEditSong;
+        private Button buttonRemoveSong;
+        private Button buttonClearSongChange;
+        private Button buttonSaveSong;
+        private Label labelSongNotes;
+        private Label labelSongHymnalNumber;
+        private Label labelHymnalKey;
+        private Label labelSongKeys;
+        private Label labelSongName;
+        private TextBox textBoxSongKeys;
+        private TextBox textBoxHymnalKey;
+        private TextBox textBoxSongNotes;
+        private TextBox textBoxHymnalNumber;
+        private TextBox textBoxSongName;
     }
 }
