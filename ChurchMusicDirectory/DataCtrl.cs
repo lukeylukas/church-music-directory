@@ -303,6 +303,17 @@ namespace ChurchMusicDirectory
                     }
                 }
             }
+            else
+            {
+                DateTime sampleDate = serviceRecordsDictionary.Keys.First();
+                int sampleService = serviceRecordsDictionary[sampleDate].Keys.First();
+                serviceInfoTable = GetServiceInfo(sampleDate, sampleService);
+                serviceInfoTable = serviceInfoTable.AsEnumerable().Take(1).CopyToDataTable();
+                for (int columnIndex = 0; columnIndex < serviceInfoTable.Columns.Count; columnIndex++)
+                {
+                    serviceInfoTable.Rows[0][columnIndex] = DBNull.Value;
+                }
+            }
             return serviceInfoTable;
         }
         public void SetServiceInfo(DataTable newServiceTable)
