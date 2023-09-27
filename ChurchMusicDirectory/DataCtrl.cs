@@ -288,10 +288,40 @@ namespace ChurchMusicDirectory
         }
         public void SetServiceInfo(DataTable newServiceTable)
         {
-            SaveToDictionary(newServiceTable);
-            SaveToServiceRecordsTable(newServiceTable);
-            string query = BuildServicePlannerQuery(newServiceTable, out string[] values);
-            ServerCommunication.CommandSqlServer(query, values, serverUserName, serverPassword);
+            newServiceTable = TrimTable(newServiceTable);
+            if (newServiceTable.Rows.Count > 0)
+            {
+                SaveToDictionary(newServiceTable);
+                SaveToServiceRecordsTable(newServiceTable);
+                string query = BuildServicePlannerQuery(newServiceTable, out string[] values);
+                ServerCommunication.CommandSqlServer(query, values, serverUserName, serverPassword);
+            }
+        }
+
+        private DataTable TrimTable(DataTable newServiceTable)
+        {
+            //make list for rows to remove
+            List<int> rowsToRemove = new List<int>();
+            for (int rowIndex = 0; rowIndex < newServiceTable.Rows.Count; rowIndex++)
+            {
+                if (newServiceTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.title].ToString() == "")
+                {
+                    rowsToRemove.Add(rowIndex);
+                }
+            }
+            //remove rows
+            for (int rowIndex = rowsToRemove.Count - 1; rowIndex >= 0; rowIndex--)
+            {
+                newServiceTable.Rows.RemoveAt(rowsToRemove[rowIndex]);
+            }
+            // sort the rows by orderInService
+            newServiceTable.DefaultView.Sort = SERVICE_RECORD_ATTRIBUTE.orderInService.ToString() + " ASC";
+            // re-number orderInService
+            for (int rowIndex = 0; rowIndex < newServiceTable.Rows.Count; rowIndex++)
+            {
+                newServiceTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.orderInService] = rowIndex + 1;
+            }
+            return newServiceTable;
         }
 
         private void SaveToDictionary(DataTable newServiceTable)
