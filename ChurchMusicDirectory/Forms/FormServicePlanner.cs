@@ -167,6 +167,7 @@ namespace ChurchMusicDirectory
         private void InitializeServiceDates()
         {
             serviceDatesList = dataCtrlInstance.GetServiceDatesList();
+        }
 
         private void buttonCalendar_Click(object sender, EventArgs e)
         {
