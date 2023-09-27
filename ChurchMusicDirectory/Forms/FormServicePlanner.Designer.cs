@@ -37,6 +37,7 @@
             this.buttonDiscardChanges = new System.Windows.Forms.Button();
             this.buttonSaveChanges = new System.Windows.Forms.Button();
             this.buttonAddRow = new System.Windows.Forms.Button();
+            this.labelServiceDate = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewServicePlanner)).BeginInit();
             this.SuspendLayout();
             // 
@@ -140,6 +141,15 @@
             this.buttonAddRow.UseVisualStyleBackColor = true;
             this.buttonAddRow.Click += new System.EventHandler(this.buttonAddRow_Click);
             // 
+            // labelServiceDate
+            // 
+            this.labelServiceDate.AutoSize = true;
+            this.labelServiceDate.Location = new System.Drawing.Point(222, 23);
+            this.labelServiceDate.Name = "labelServiceDate";
+            this.labelServiceDate.Size = new System.Drawing.Size(97, 15);
+            this.labelServiceDate.TabIndex = 12;
+            this.labelServiceDate.Text = "No Date Selected";
+            // 
             // FormServicePlanner
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -147,6 +157,7 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(680, 479);
+            this.Controls.Add(this.labelServiceDate);
             this.Controls.Add(this.buttonAddRow);
             this.Controls.Add(this.buttonSaveChanges);
             this.Controls.Add(this.buttonDiscardChanges);
@@ -171,5 +182,6 @@
         private Button buttonDiscardChanges;
         private Button buttonSaveChanges;
         private Button buttonAddRow;
+        private Label labelServiceDate;
     }
 }

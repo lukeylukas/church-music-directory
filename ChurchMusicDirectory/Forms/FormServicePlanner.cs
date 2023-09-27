@@ -135,6 +135,7 @@ namespace ChurchMusicDirectory
             dataGridViewServicePlanner.CellEndEdit += new DataGridViewCellEventHandler(dataGridViewServicePlanner_CellEndEdit);
             calendarDatePicker.SetSelectionRange(dataCtrlInstance.GetMostRecentServiceDate(), dataCtrlInstance.GetMostRecentServiceDate());
             FormatDataGridView();
+            labelServiceDate.Text = calendarDatePicker.SelectionStart.ToString("dddd, MMMM d, yyyy");
         }
         private void InitializeServicePlannerColumn(SERVICE_PLANNER_COLUMN columnInfo)
         {
@@ -178,6 +179,8 @@ namespace ChurchMusicDirectory
         {
             calendarDatePicker.Visible = false;
             FormatDataGridView();
+            // change the date in labelServiceDate
+            labelServiceDate.Text = calendarDatePicker.SelectionStart.ToString("dddd, MMMM d, yyyy");
         }
         private void FormatDataGridView()
         {
