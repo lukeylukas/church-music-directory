@@ -167,20 +167,6 @@ namespace ChurchMusicDirectory
         private void InitializeServiceDates()
         {
             serviceDatesList = dataCtrlInstance.GetServiceDatesList();
-            //DateTime defaultDate = GetDefaultServiceDate();
-            //calendarDatePicker.SetSelectionRange(defaultDate, defaultDate);
-        }
-        private DateTime GetDefaultServiceDate()
-        {
-            int addWeeks = 0;
-            double days = (DayOfWeek.Sunday - DateTime.Now.DayOfWeek) % 7;
-            if (days < 0)
-            {
-                days += 7;
-            }
-            DateTime defaultDate = DateTime.Now.AddDays(days + addWeeks * 7);
-            return defaultDate;
-        }
 
         private void buttonCalendar_Click(object sender, EventArgs e)
         {
