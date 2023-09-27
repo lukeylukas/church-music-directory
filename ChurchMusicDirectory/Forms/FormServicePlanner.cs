@@ -14,7 +14,6 @@ namespace ChurchMusicDirectory
     public partial class FormServicePlanner : Form
     {
         private string tempComboBoxValue = "";
-        string[]? worshipElements;
         string[]? songTitles;
         string[]? musicKeys;
         List<DateTime> serviceDatesList;
@@ -39,10 +38,6 @@ namespace ChurchMusicDirectory
         }
         private void Setup()
         {
-            worshipElements = new string[dataCtrlInstance.worshipElements.Count + 1];
-            worshipElements[0] = "";
-            dataCtrlInstance.worshipElements.ToArray().CopyTo(worshipElements, 1);
-
             songTitles = new string[dataCtrlInstance.titlesList.Count + 1];
             songTitles[0] = "";
             dataCtrlInstance.titlesList.ToArray().CopyTo(songTitles, 1);
@@ -62,27 +57,15 @@ namespace ChurchMusicDirectory
             plannerColumns = new Dictionary<SERVICE_RECORD_ATTRIBUTE, SERVICE_PLANNER_COLUMN>()
         {
             {
-                SERVICE_RECORD_ATTRIBUTE.elementName,
-                new SERVICE_PLANNER_COLUMN
-                {
-                    name="Element",
-                    visible=true,
-                    displayOrder=1,
-                    type=(new DataGridViewComboBoxColumn()).GetType(),
-                    width=100,
-                        dataSource = worshipElements
-                }
-            },
-            {
                 SERVICE_RECORD_ATTRIBUTE.title,
                 new SERVICE_PLANNER_COLUMN
                 {
                     name="Title",
                     visible=true,
-                    displayOrder=2,
+                    displayOrder=1,
                     type=(new DataGridViewComboBoxColumn()).GetType(),
                     width=200,
-                        dataSource = songTitles
+                    dataSource = songTitles
                 }
             },
             {
@@ -91,22 +74,10 @@ namespace ChurchMusicDirectory
                 {
                     name="Key",
                     visible=true,
-                    displayOrder=3,
+                    displayOrder=2,
                     type=(new DataGridViewComboBoxColumn()).GetType(),
                     width=75,
-                        dataSource = musicKeys
-                }
-            },
-            {
-                SERVICE_RECORD_ATTRIBUTE.passage,
-                new SERVICE_PLANNER_COLUMN
-                {
-                    name="Passage",
-                    visible=true,
-                    displayOrder=4,
-                    type=(new DataGridViewTextBoxColumn()).GetType(),
-                    width=150,
-                    dataSource = null
+                    dataSource = musicKeys
                 }
             },
             {
@@ -115,7 +86,7 @@ namespace ChurchMusicDirectory
                 {
                     name="Notes",
                     visible=true,
-                    displayOrder=5,
+                    displayOrder=3,
                     type=(new DataGridViewTextBoxColumn()).GetType(),
                     width=100,
                     dataSource = null
@@ -134,24 +105,12 @@ namespace ChurchMusicDirectory
                 }
             },
             {
-                SERVICE_RECORD_ATTRIBUTE.serviceNumber,
-                new SERVICE_PLANNER_COLUMN
-                {
-                    name="ServiceNumber",
-                    visible=false,
-                    displayOrder=6,
-                    type=(new DataGridViewComboBoxColumn()).GetType(),
-                    width=100,
-                    dataSource = null
-                }
-            },
-            {
                 SERVICE_RECORD_ATTRIBUTE.orderInService,
                 new SERVICE_PLANNER_COLUMN
                 {
                     name="Order",
                     visible=false,
-                    displayOrder=7,
+                    displayOrder=4,
                     type=(new DataGridViewComboBoxColumn()).GetType(),
                     width=100,
                     dataSource = null
@@ -174,6 +133,8 @@ namespace ChurchMusicDirectory
             dataGridViewServicePlanner.EditMode = DataGridViewEditMode.EditOnEnter;
             dataGridViewServicePlanner.DataError += new DataGridViewDataErrorEventHandler(dataGridViewServicePlanner_DataError);
             dataGridViewServicePlanner.CellEndEdit += new DataGridViewCellEventHandler(dataGridViewServicePlanner_CellEndEdit);
+            calendarDatePicker.SetSelectionRange(dataCtrlInstance.GetMostRecentServiceDate(), dataCtrlInstance.GetMostRecentServiceDate());
+            FormatDataGridView();
         }
         private void InitializeServicePlannerColumn(SERVICE_PLANNER_COLUMN columnInfo)
         {
@@ -206,7 +167,6 @@ namespace ChurchMusicDirectory
         private void InitializeServiceDates()
         {
             serviceDatesList = dataCtrlInstance.GetServiceDatesList();
-            comboBoxServiceDate.DataSource = Array.ConvertAll(serviceDatesList.ToArray(), x => x.ToLongDateString());
             //DateTime defaultDate = GetDefaultServiceDate();
             //calendarDatePicker.SetSelectionRange(defaultDate, defaultDate);
         }
@@ -229,34 +189,24 @@ namespace ChurchMusicDirectory
 
         private void calendarDatePicker_DateSelected(object sender, DateRangeEventArgs e)
         {
-            SyncWithCalendar();
             calendarDatePicker.Visible = false;
             FormatDataGridView();
         }
-        private void SyncWithCalendar()
-        {
-            comboBoxServiceDate.Text = calendarDatePicker.SelectionStart.ToLongDateString();
-            // every time, add date to combobox, refresh the combobox data, select the date in combobox
-            // figure out how to ensure only populated dates stay in combobox
-        }
         private void FormatDataGridView()
         {
-            dataGridViewServicePlanner.DataSource = dataCtrlInstance.GetServiceInfo(calendarDatePicker.SelectionStart, 0);
+            dataGridViewServicePlanner.DataSource = dataCtrlInstance.GetServiceInfo(calendarDatePicker.SelectionStart);
             if (dataGridViewServicePlanner.SelectedRows.Count > 0)
             {
                 dataGridViewServicePlanner.Sort(dataGridViewServicePlanner.Columns[(int)SERVICE_RECORD_ATTRIBUTE.orderInService], ListSortDirection.Ascending);
             }
+            // make datasource for the title column the list of song titles
+            int titleColumnIndex = (int)SERVICE_RECORD_ATTRIBUTE.title;
+            DataGridViewComboBoxColumn titleColumn = (DataGridViewComboBoxColumn)dataGridViewServicePlanner.Columns[titleColumnIndex];
+            titleColumn.DataSource = songTitles;
         }
 
         private void FormServicePlanner_Shown(object sender, EventArgs e)
         {
-            SyncWithCalendar();
-        }
-
-        private void comboBoxServiceDate_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            calendarDatePicker.SetSelectionRange(DateTime.Parse(comboBoxServiceDate.Text), DateTime.Parse(comboBoxServiceDate.Text));
-            FormatDataGridView();
         }
 
         private void dataGridViewServicePlanner_EditingControlShowing(object? sender, DataGridViewEditingControlShowingEventArgs e)
@@ -264,21 +214,11 @@ namespace ChurchMusicDirectory
             var comboEditor = e.Control as DataGridViewComboBoxEditingControl;
             if (comboEditor != null)
             {
-                if (ElementIsMusical(dataGridViewServicePlanner.CurrentCell.RowIndex)
-                    || (dataGridViewServicePlanner.CurrentCell.ColumnIndex == (int)SERVICE_RECORD_ATTRIBUTE.elementName))
-                {
-                    comboEditor.DropDownStyle = ComboBoxStyle.DropDown;
-                    comboEditor.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-                    comboEditor.AutoCompleteSource = AutoCompleteSource.CustomSource;
-                    comboEditor.AutoCompleteCustomSource = GetDataCollection();
-                }
-                else
-                {
-                    comboEditor.DropDownStyle = ComboBoxStyle.Simple;
-                    comboEditor.AutoCompleteMode = AutoCompleteMode.None;
-                }
-                comboEditor.Leave += new EventHandler(ComboBoxEditingControl_Leave); 
-
+                comboEditor.DropDownStyle = ComboBoxStyle.DropDown;
+                comboEditor.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                comboEditor.AutoCompleteSource = AutoCompleteSource.CustomSource;
+                comboEditor.AutoCompleteCustomSource = GetDataCollection();
+                comboEditor.Leave += new EventHandler(ComboBoxEditingControl_Leave);
             }
             e.CellStyle.BackColor = dataGridViewServicePlanner.DefaultCellStyle.BackColor;
         }
@@ -292,30 +232,6 @@ namespace ChurchMusicDirectory
             }
             return DataCollection;
         }
-        private bool ElementIsMusical(int rowIndex)
-        {
-            bool isMusical = false;
-            if (rowIndex <= dataGridViewServicePlanner.RowCount)
-            {
-                if (dataGridViewServicePlanner.Rows[dataGridViewServicePlanner.CurrentCell.RowIndex].Cells[0].Value != null)
-                {
-                    int elementColumnIndex = (int)SERVICE_RECORD_ATTRIBUTE.elementName;
-                    string element = dataGridViewServicePlanner.Rows[rowIndex].Cells[elementColumnIndex].Value.ToString();
-                    if (element == "Song" 
-                        || element == "Offering" 
-                        || element == "Communion")
-                    {
-                        isMusical = true;
-                    }
-                }
-            }
-            else
-            {
-                MessageBox.Show("Row index invalid");
-                //TODO: throw error
-            }
-            return isMusical;
-        }
 
         private void dataGridViewServicePlanner_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
@@ -323,38 +239,14 @@ namespace ChurchMusicDirectory
             if (cell != null)
             {
                 cell.Value = tempComboBoxValue;
-
-                if (cell.OwningColumn.Name == SERVICE_RECORD_ATTRIBUTE.elementName.ToString())
-                {
-                    SetupRowBasedOnWorshipElement(cell.RowIndex);
-                }
-                else if (!ElementIsMusical(cell.RowIndex))
-                {
-                    cell.DataSource = new string[] { tempComboBoxValue };
-                }
             }
         }
-        private void SetupRowBasedOnWorshipElement(int rowIndex)
-        {
-            bool elementIsMusical = ElementIsMusical(rowIndex);
-            int titleColumnIndex = (int)SERVICE_RECORD_ATTRIBUTE.title;
-            SetTitleComboBoxDataSource(dataGridViewServicePlanner.Rows[rowIndex].Cells[titleColumnIndex], elementIsMusical);
-            int musicKeyColumnIndex = (int)SERVICE_RECORD_ATTRIBUTE.musicKey;
-            dataGridViewServicePlanner.Rows[rowIndex].Cells[musicKeyColumnIndex].ReadOnly = !elementIsMusical;
-        }
-        private void SetTitleComboBoxDataSource(DataGridViewCell titleCell, bool elementIsMusical)
+        private void SetTitleComboBoxDataSource(DataGridViewCell titleCell)
         {
             DataGridViewComboBoxCell cell = titleCell as DataGridViewComboBoxCell;
             if (cell != null)
             {
-                if (elementIsMusical)
-                {
-                    cell.DataSource = songTitles;
-                }
-                else
-                {
-                    cell.DataSource = new string[] { "" };
-                }
+                cell.DataSource = songTitles;
             }
         }
 
@@ -387,7 +279,7 @@ namespace ChurchMusicDirectory
         private void buttonSaveChanges_Click(object sender, EventArgs e)
         {
             //save dataGridView state to table for that day
-            if (dataGridViewServicePlanner.DataSource == dataCtrlInstance.GetServiceInfo(calendarDatePicker.SelectionStart, 0))
+            if (dataGridViewServicePlanner.DataSource == dataCtrlInstance.GetServiceInfo(calendarDatePicker.SelectionStart))
             {
                 MessageBox.Show("No changes to save");
             }
@@ -402,8 +294,7 @@ namespace ChurchMusicDirectory
         {
             DataRow newRow = ((DataTable)dataGridViewServicePlanner.DataSource).NewRow();
             newRow[(int)SERVICE_RECORD_ATTRIBUTE.date] = dataGridViewServicePlanner.Rows[0].Cells[(int)SERVICE_RECORD_ATTRIBUTE.date].Value;
-            newRow[(int)SERVICE_RECORD_ATTRIBUTE.serviceNumber] = dataGridViewServicePlanner.Rows[0].Cells[(int)SERVICE_RECORD_ATTRIBUTE.serviceNumber].Value;
-            newRow[(int)SERVICE_RECORD_ATTRIBUTE.orderInService] = dataGridViewServicePlanner.RowCount;
+            newRow[(int)SERVICE_RECORD_ATTRIBUTE.orderInService] = dataGridViewServicePlanner.RowCount + 1;
             ((DataTable)dataGridViewServicePlanner.DataSource).Rows.Add(newRow);
         }
     }

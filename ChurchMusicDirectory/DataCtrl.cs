@@ -26,12 +26,9 @@ namespace ChurchMusicDirectory
     {
         date,
         title,
-        elementName,
         musicKey,
-        passage,
         notes,
         orderInService,
-        serviceNumber,
         COUNT
     }
     public enum ColumnType
@@ -48,7 +45,7 @@ namespace ChurchMusicDirectory
         public DataTable serviceRecordsTable;
         private string serverUserName;
         private string serverPassword;
-        private Dictionary<DateTime, Dictionary<int, Dictionary<int, DataRow>>> serviceRecordsDictionary;
+        private Dictionary<DateTime, Dictionary<int, DataRow>> serviceRecordsDictionary;
         public delegate void DataCtrlResponseHandler(bool success, string message);
         
         static List<char> flatsList = new List<char>
@@ -60,8 +57,6 @@ namespace ChurchMusicDirectory
             'G'
         };
 
-        public List<string> worshipElements;
-
         public List<string> musicKeys;
 
         public List<string> titlesList;
@@ -70,21 +65,6 @@ namespace ChurchMusicDirectory
         {
             songInfoTable = new DataTable();
             serviceRecordsTable = new DataTable();
-            worshipElements = new List<string>
-            {
-                "Song",
-                "Sermon",
-                "Offering",
-                "Prayer",
-                "Pastoral Prayer",
-                "Communion",
-                "Invocation",
-                "Benediction",
-                "Responsive Reading",
-                "Scripture Reading",
-                "Announcements",
-                "Greeting",
-            };
             GenerateMusicKeysList();
             titlesList = new List<string>();
         }
@@ -255,7 +235,7 @@ namespace ChurchMusicDirectory
         }
         private void GenerateServiceRecordsDictionary()
         {
-            serviceRecordsDictionary = new Dictionary<DateTime, Dictionary<int, Dictionary<int, DataRow>>>();
+            serviceRecordsDictionary = new Dictionary<DateTime, Dictionary<int, DataRow>>();
 
             for (int rowIndex = 0; rowIndex < serviceRecordsTable.Rows.Count; rowIndex++)
             {
@@ -264,55 +244,45 @@ namespace ChurchMusicDirectory
                 {
                     if (!serviceRecordsDictionary.ContainsKey((DateTime)serviceDate))
                     {
-                        serviceRecordsDictionary.Add((DateTime)serviceDate, new Dictionary<int, Dictionary<int, DataRow>>());
+                        serviceRecordsDictionary.Add((DateTime)serviceDate, new Dictionary<int, DataRow>());
                     }
-                    object serviceNumber = serviceRecordsTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.serviceNumber];
-                    if (serviceNumber != null)
+                    object orderInService = serviceRecordsTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.orderInService];
+                    if (orderInService != null)
                     {
-                        if (!serviceRecordsDictionary[(DateTime)serviceDate].ContainsKey((int)serviceNumber))
+                        if (!serviceRecordsDictionary[(DateTime)serviceDate].ContainsKey((int)orderInService))
                         {
-                            serviceRecordsDictionary[(DateTime)serviceDate].Add((int)serviceNumber, new Dictionary<int, DataRow>());
-                        }
-                        object orderInService = serviceRecordsTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.orderInService];
-                        if (orderInService != null)
-                        {
-                            if (!serviceRecordsDictionary[(DateTime)serviceDate][(int)serviceNumber].ContainsKey((int)orderInService))
-                            {
-                                serviceRecordsDictionary[(DateTime)serviceDate][(int)serviceNumber].Add((int)orderInService, serviceRecordsTable.Rows[rowIndex]);
-                            }
+                            serviceRecordsDictionary[(DateTime)serviceDate].Add((int)orderInService, serviceRecordsTable.Rows[rowIndex]);
                         }
                     }
                 }
             }
         }
 
-        public DataTable GetServiceInfo(DateTime date, int serviceNumber)
+        public DataTable GetServiceInfo(DateTime date)
         {
             DataTable serviceInfoTable = new DataTable();
             if (serviceRecordsDictionary.ContainsKey(date))
             {
-                if (serviceRecordsDictionary[date].ContainsKey(serviceNumber))
+                for (SERVICE_RECORD_ATTRIBUTE columnName = 0; columnName < SERVICE_RECORD_ATTRIBUTE.COUNT; columnName++)
+                {;
+                    serviceInfoTable.Columns.Add(columnName.ToString(), serviceRecordsTable.Columns[columnName.ToString()].DataType);
+                }
+                for (int orderInService = 1; orderInService <= serviceRecordsDictionary[date].Count; orderInService++)
                 {
-                    for (SERVICE_RECORD_ATTRIBUTE columnName = 0; columnName < SERVICE_RECORD_ATTRIBUTE.COUNT; columnName++)
-                    {;
-                        serviceInfoTable.Columns.Add(columnName.ToString(), serviceRecordsTable.Columns[columnName.ToString()].DataType);
-                    }
-                    for (int orderInService = 1; orderInService <= serviceRecordsDictionary[date][serviceNumber].Count; orderInService++)
-                    {
-                        serviceInfoTable.Rows.Add(serviceRecordsDictionary[date][serviceNumber][orderInService].ItemArray);
-                    }
+                    serviceInfoTable.Rows.Add(serviceRecordsDictionary[date][orderInService].ItemArray);
                 }
             }
             else
             {
                 DateTime sampleDate = serviceRecordsDictionary.Keys.First();
-                int sampleService = serviceRecordsDictionary[sampleDate].Keys.First();
-                serviceInfoTable = GetServiceInfo(sampleDate, sampleService);
+                serviceInfoTable = GetServiceInfo(sampleDate);
                 serviceInfoTable = serviceInfoTable.AsEnumerable().Take(1).CopyToDataTable();
                 for (int columnIndex = 0; columnIndex < serviceInfoTable.Columns.Count; columnIndex++)
                 {
                     serviceInfoTable.Rows[0][columnIndex] = DBNull.Value;
                 }
+                serviceInfoTable.Rows[0][(int)SERVICE_RECORD_ATTRIBUTE.date] = date;
+                serviceInfoTable.Rows[0][(int)SERVICE_RECORD_ATTRIBUTE.orderInService] = 1;
             }
             return serviceInfoTable;
         }
@@ -326,15 +296,19 @@ namespace ChurchMusicDirectory
 
         private void SaveToDictionary(DataTable newServiceTable)
         {
+            // add new date to dict if not present
+            if (!serviceRecordsDictionary.ContainsKey((DateTime)newServiceTable.Rows[0][(int)SERVICE_RECORD_ATTRIBUTE.date]))
+            {
+                serviceRecordsDictionary.Add((DateTime)newServiceTable.Rows[0][(int)SERVICE_RECORD_ATTRIBUTE.date], new Dictionary<int, DataRow>());
+            }
             for (int rowIndex = 0; rowIndex < newServiceTable.Rows.Count; rowIndex++)
             {
                 if (newServiceTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.date] == DBNull.Value
-                    || newServiceTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.serviceNumber] == DBNull.Value
                     || newServiceTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.orderInService] == DBNull.Value)
                 {
                     throw new Exception("Invalid service record.");
                 }
-                serviceRecordsDictionary[(DateTime)newServiceTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.date]][(int)newServiceTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.serviceNumber]][(int)newServiceTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.orderInService]] = newServiceTable.Rows[rowIndex];
+                serviceRecordsDictionary[(DateTime)newServiceTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.date]][(int)newServiceTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.orderInService]] = newServiceTable.Rows[rowIndex];
             }
         }
 
@@ -345,10 +319,7 @@ namespace ChurchMusicDirectory
             {
                 if ((DateTime)row[(int)SERVICE_RECORD_ATTRIBUTE.date] == (DateTime)newServiceTable.Rows[0][(int)SERVICE_RECORD_ATTRIBUTE.date])
                 {
-                    if ((int)row[(int)SERVICE_RECORD_ATTRIBUTE.serviceNumber] == (int)newServiceTable.Rows[0][(int)SERVICE_RECORD_ATTRIBUTE.serviceNumber])
-                    {
-                        rowsToRemove.Add(row);
-                    }
+                    rowsToRemove.Add(row);
                 }
             }
             foreach (DataRow row in rowsToRemove)
@@ -362,8 +333,7 @@ namespace ChurchMusicDirectory
         private string BuildServicePlannerQuery(DataTable newServiceTable, out string[] values)
         {
             string deletionQuery = "DELETE FROM " + serviceRecordsTableName + 
-                                    " WHERE " + SERVICE_RECORD_ATTRIBUTE.date + " = '" + newServiceTable.Rows[0][(int)SERVICE_RECORD_ATTRIBUTE.date] + 
-                                    "' AND " + SERVICE_RECORD_ATTRIBUTE.serviceNumber + " = " + newServiceTable.Rows[0][(int)SERVICE_RECORD_ATTRIBUTE.serviceNumber];
+                                    " WHERE " + SERVICE_RECORD_ATTRIBUTE.date + " = '" + newServiceTable.Rows[0][(int)SERVICE_RECORD_ATTRIBUTE.date] + "'";
 
             string insertionQuery = "INSERT INTO " + serviceRecordsTableName + " VALUES ";
             values = new string[newServiceTable.Rows.Count * newServiceTable.Columns.Count];
@@ -449,6 +419,18 @@ namespace ChurchMusicDirectory
         {
             serverUserName = userName;
             serverPassword = password;
+        }
+        public DateTime GetMostRecentServiceDate()
+        {
+            DateTime mostRecentDate = DateTime.MinValue;
+            foreach (DateTime key in serviceRecordsDictionary.Keys)
+            {
+                if (key > mostRecentDate)
+                {
+                    mostRecentDate = key;
+                }
+            }
+            return mostRecentDate;
         }
     }
 }

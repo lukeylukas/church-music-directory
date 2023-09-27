@@ -34,9 +34,6 @@
             this.dataGridViewServicePlanner = new System.Windows.Forms.DataGridView();
             this.buttonCalendar = new System.Windows.Forms.Button();
             this.calendarDatePicker = new System.Windows.Forms.MonthCalendar();
-            this.comboBoxServiceDate = new System.Windows.Forms.ComboBox();
-            this.comboBoxServiceNumber = new System.Windows.Forms.ComboBox();
-            this.labelServiceNumber = new System.Windows.Forms.Label();
             this.buttonDiscardChanges = new System.Windows.Forms.Button();
             this.buttonSaveChanges = new System.Windows.Forms.Button();
             this.buttonAddRow = new System.Windows.Forms.Button();
@@ -113,36 +110,6 @@
             this.calendarDatePicker.Visible = false;
             this.calendarDatePicker.DateSelected += new System.Windows.Forms.DateRangeEventHandler(this.calendarDatePicker_DateSelected);
             // 
-            // comboBoxServiceDate
-            // 
-            this.comboBoxServiceDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBoxServiceDate.FormattingEnabled = true;
-            this.comboBoxServiceDate.Location = new System.Drawing.Point(485, 9);
-            this.comboBoxServiceDate.Name = "comboBoxServiceDate";
-            this.comboBoxServiceDate.Size = new System.Drawing.Size(96, 23);
-            this.comboBoxServiceDate.TabIndex = 6;
-            this.comboBoxServiceDate.SelectedIndexChanged += new System.EventHandler(this.comboBoxServiceDate_SelectedIndexChanged);
-            // 
-            // comboBoxServiceNumber
-            // 
-            this.comboBoxServiceNumber.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBoxServiceNumber.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxServiceNumber.FormattingEnabled = true;
-            this.comboBoxServiceNumber.Location = new System.Drawing.Point(495, 38);
-            this.comboBoxServiceNumber.Name = "comboBoxServiceNumber";
-            this.comboBoxServiceNumber.Size = new System.Drawing.Size(49, 23);
-            this.comboBoxServiceNumber.TabIndex = 7;
-            // 
-            // labelServiceNumber
-            // 
-            this.labelServiceNumber.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelServiceNumber.AutoSize = true;
-            this.labelServiceNumber.Location = new System.Drawing.Point(435, 41);
-            this.labelServiceNumber.Name = "labelServiceNumber";
-            this.labelServiceNumber.Size = new System.Drawing.Size(54, 15);
-            this.labelServiceNumber.TabIndex = 8;
-            this.labelServiceNumber.Text = "Service #";
-            // 
             // buttonDiscardChanges
             // 
             this.buttonDiscardChanges.Location = new System.Drawing.Point(171, 49);
@@ -183,9 +150,6 @@
             this.Controls.Add(this.buttonAddRow);
             this.Controls.Add(this.buttonSaveChanges);
             this.Controls.Add(this.buttonDiscardChanges);
-            this.Controls.Add(this.labelServiceNumber);
-            this.Controls.Add(this.comboBoxServiceNumber);
-            this.Controls.Add(this.comboBoxServiceDate);
             this.Controls.Add(this.calendarDatePicker);
             this.Controls.Add(this.buttonCalendar);
             this.Controls.Add(this.dataGridViewServicePlanner);
@@ -204,9 +168,6 @@
         private DataGridView dataGridViewServicePlanner;
         private Button buttonCalendar;
         private MonthCalendar calendarDatePicker;
-        private ComboBox comboBoxServiceDate;
-        private ComboBox comboBoxServiceNumber;
-        private Label labelServiceNumber;
         private Button buttonDiscardChanges;
         private Button buttonSaveChanges;
         private Button buttonAddRow;

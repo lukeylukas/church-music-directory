@@ -174,51 +174,12 @@ namespace ChurchMusicDirectory
                 }
             },
             {
-                SERVICE_RECORD_ATTRIBUTE.passage,
-                new TABLE_COLUMN
-                {
-                    name = "Scripture Passage",
-                    columnType = ColumnType.String,
-                    displayOrder = 3,
-                    allowFiltering = false,
-                    filterValues = new List<string>(),
-                    width = 100,
-                    isDerived = false
-                }
-            },
-            {
-                SERVICE_RECORD_ATTRIBUTE.elementName,
-                new TABLE_COLUMN
-                {
-                    name = "Type",
-                    columnType = ColumnType.String,
-                    displayOrder = 4,
-                    allowFiltering = false,
-                    filterValues = new List<string>(),
-                    width = 75,
-                    isDerived = false
-                }
-            },
-            {
-                SERVICE_RECORD_ATTRIBUTE.serviceNumber,
-                new TABLE_COLUMN
-                {
-                    name = "Service Number",
-                    columnType = ColumnType.Int,
-                    displayOrder = 5,
-                    allowFiltering = false,
-                    filterValues = new List<string>(),
-                    width = 50,
-                    isDerived = false
-                }
-            },
-            {
                 SERVICE_RECORD_ATTRIBUTE.orderInService,
                 new TABLE_COLUMN
                 {
                     name = "Order in Service",
                     columnType = ColumnType.Int,
-                    displayOrder = 6,
+                    displayOrder = 4,
                     allowFiltering = false,
                     filterValues = new List<string>(),
                     width = 50,
@@ -231,7 +192,7 @@ namespace ChurchMusicDirectory
                 {
                     name = "Notes",
                     columnType = ColumnType.String,
-                    displayOrder = 7,
+                    displayOrder = 3,
                     allowFiltering = false,
                     filterValues = new List<string>(),
                     width = 100,
