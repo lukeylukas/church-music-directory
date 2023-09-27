@@ -214,9 +214,9 @@ namespace ChurchMusicDirectory
             var comboEditor = e.Control as DataGridViewComboBoxEditingControl;
             if (comboEditor != null)
             {
-                comboEditor.DropDownStyle = ComboBoxStyle.DropDown;
-                comboEditor.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-                comboEditor.AutoCompleteSource = AutoCompleteSource.CustomSource;
+                comboEditor.DropDownStyle = ComboBoxStyle.DropDownList;
+                comboEditor.AutoCompleteMode = AutoCompleteMode.Suggest;
+                comboEditor.AutoCompleteSource = AutoCompleteSource.ListItems;
                 comboEditor.AutoCompleteCustomSource = GetDataCollection();
                 comboEditor.Leave += new EventHandler(ComboBoxEditingControl_Leave);
             }
