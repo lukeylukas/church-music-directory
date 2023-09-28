@@ -74,13 +74,13 @@ namespace ChurchMusicDirectory
             musicKeys = new List<string>();
             for (char seedChar = 'A'; seedChar <= 'G'; seedChar++)
             {
+                musicKeys.Add(seedChar.ToString());
+                musicKeys.Add(seedChar.ToString() + "min");
                 if (flatsList.Contains(seedChar))
                 {
                     musicKeys.Add(seedChar.ToString() + Convert.ToChar(0x266D)); //musical flat
                     musicKeys.Add(seedChar.ToString() + Convert.ToChar(0x266D) + "min");
                 }
-                musicKeys.Add(seedChar.ToString());
-                musicKeys.Add(seedChar.ToString() + "min");
             }
         }
         public List<DateTime> GetServiceDatesList()
