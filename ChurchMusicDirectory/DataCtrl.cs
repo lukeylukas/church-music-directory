@@ -214,6 +214,8 @@ namespace ChurchMusicDirectory
 
             callback(serviceRecordsReceived, statusMessage);
 
+            AddServiceRecordKeysToSongInfo();
+
             return serviceRecordsReceived;
         }
         private string BuildServiceRecordsQuery(out int numColumns)
@@ -252,6 +254,53 @@ namespace ChurchMusicDirectory
                         if (!serviceRecordsDictionary[(DateTime)serviceDate].ContainsKey((int)orderInService))
                         {
                             serviceRecordsDictionary[(DateTime)serviceDate].Add((int)orderInService, serviceRecordsTable.Rows[rowIndex]);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void AddServiceRecordKeysToSongInfo()
+        {
+            //also for every song in songInfo
+            for (int rowIndex = 0; rowIndex < songInfoTable.Rows.Count; rowIndex++)
+            {
+                //if any record in serviceRecords has a key not in the songInfo table, add it to the songInfo table
+                string songName = (string)songInfoTable.Rows[rowIndex][(int)SONG_ATTRIBUTE.songName];
+                if (songName != null)
+                {
+                    //create empty list of musicKeys
+                    List<string> musicKeys = new List<string>();
+                    for (int serviceRowIndex = 0; serviceRowIndex < serviceRecordsTable.Rows.Count; serviceRowIndex++)
+                    {
+                        //if songName matches the songName in the serviceRecords table
+                        if (songName == (string)serviceRecordsTable.Rows[serviceRowIndex][(int)SERVICE_RECORD_ATTRIBUTE.title])
+                        {
+                            // check whether the musicKey is represented in the songInfo table
+                            object musicKey = serviceRecordsTable.Rows[serviceRowIndex][(int)SERVICE_RECORD_ATTRIBUTE.musicKey];
+                            //check if musicKey is empty
+                            if (musicKey != DBNull.Value)
+                            {
+                                //check if musicKey is in the songInfo table
+                                if (!musicKeys.Contains((string)musicKey))
+                                {
+                                    //add musicKey to list of musicKeys
+                                    musicKeys.Add((string)musicKey);
+                                }
+                            }
+                        }
+                    }
+                    // if any of musicKeys is not in the songInfo table, add it
+                    foreach (string musicKey in musicKeys)
+                    {
+                        object songInfoKeys = songInfoTable.Rows[rowIndex][(int)SONG_ATTRIBUTE.musicKey];
+                        if (songInfoKeys == DBNull.Value)
+                        {
+                            songInfoTable.Rows[rowIndex][(int)SONG_ATTRIBUTE.musicKey] = musicKey;
+                        }
+                        else if (!((string)songInfoKeys).Contains(musicKey))
+                        {
+                            songInfoTable.Rows[rowIndex][(int)SONG_ATTRIBUTE.musicKey] += ", " + musicKey;
                         }
                     }
                 }
