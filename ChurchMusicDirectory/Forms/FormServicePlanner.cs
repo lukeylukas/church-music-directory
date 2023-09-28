@@ -16,6 +16,7 @@ namespace ChurchMusicDirectory
         private string tempComboBoxValue = "";
         string[]? songTitles;
         string[]? musicKeys;
+        private int contextMenuRowIndex;
         List<DateTime> serviceDatesList;
         Dictionary<SERVICE_RECORD_ATTRIBUTE, SERVICE_PLANNER_COLUMN> plannerColumns;
         static private DataCtrl dataCtrlInstance = new DataCtrl();
@@ -286,6 +287,31 @@ namespace ChurchMusicDirectory
             newRow[(int)SERVICE_RECORD_ATTRIBUTE.date] = dataGridViewServicePlanner.Rows[0].Cells[(int)SERVICE_RECORD_ATTRIBUTE.date].Value;
             newRow[(int)SERVICE_RECORD_ATTRIBUTE.orderInService] = dataGridViewServicePlanner.RowCount + 1;
             ((DataTable)dataGridViewServicePlanner.DataSource).Rows.Add(newRow);
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            dataGridViewServicePlanner.Rows.RemoveAt(contextMenuRowIndex);
+        }
+
+        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        {
+            e.Cancel = true;
+            DataGridView.HitTestInfo menuLocation = Utils.MousePositionInTable(dataGridViewServicePlanner, MousePosition);
+            contextMenuRowIndex = menuLocation.RowIndex;
+            e.Cancel = false;
+        }
+
+        private void buttonInsert_Click(object sender, EventArgs e)
+        {
+            int selectedRowIndex = dataGridViewServicePlanner.CurrentCell.RowIndex;
+            DataRow newRow = ((DataTable)dataGridViewServicePlanner.DataSource).NewRow();
+            newRow[(int)SERVICE_RECORD_ATTRIBUTE.date] = dataGridViewServicePlanner.Rows[0].Cells[(int)SERVICE_RECORD_ATTRIBUTE.date].Value;
+            ((DataTable)dataGridViewServicePlanner.DataSource).Rows.InsertAt(newRow, selectedRowIndex);
+            for (int i = selectedRowIndex; i < dataGridViewServicePlanner.RowCount; i++)
+            {
+                dataGridViewServicePlanner.Rows[i].Cells[(int)SERVICE_RECORD_ATTRIBUTE.orderInService].Value = i + 1;
+            }
         }
     }
 }

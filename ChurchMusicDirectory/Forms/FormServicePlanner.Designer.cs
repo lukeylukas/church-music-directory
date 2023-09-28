@@ -28,17 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.labelServicePlanner = new System.Windows.Forms.Label();
             this.dataGridViewServicePlanner = new System.Windows.Forms.DataGridView();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonCalendar = new System.Windows.Forms.Button();
             this.calendarDatePicker = new System.Windows.Forms.MonthCalendar();
             this.buttonDiscardChanges = new System.Windows.Forms.Button();
             this.buttonSaveChanges = new System.Windows.Forms.Button();
             this.buttonAddRow = new System.Windows.Forms.Button();
             this.labelServiceDate = new System.Windows.Forms.Label();
+            this.buttonInsert = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewServicePlanner)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelServicePlanner
@@ -73,6 +78,7 @@
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridViewServicePlanner.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridViewServicePlanner.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewServicePlanner.ContextMenuStrip = this.contextMenuStrip1;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -89,6 +95,21 @@
             this.dataGridViewServicePlanner.Size = new System.Drawing.Size(678, 400);
             this.dataGridViewServicePlanner.TabIndex = 2;
             this.dataGridViewServicePlanner.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridViewServicePlanner_EditingControlShowing);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.deleteToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(108, 26);
+            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.deleteToolStripMenuItem.Text = "Delete";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
             // buttonCalendar
             // 
@@ -113,7 +134,7 @@
             // 
             // buttonDiscardChanges
             // 
-            this.buttonDiscardChanges.Location = new System.Drawing.Point(171, 49);
+            this.buttonDiscardChanges.Location = new System.Drawing.Point(120, 49);
             this.buttonDiscardChanges.Name = "buttonDiscardChanges";
             this.buttonDiscardChanges.Size = new System.Drawing.Size(124, 23);
             this.buttonDiscardChanges.TabIndex = 9;
@@ -123,7 +144,7 @@
             // 
             // buttonSaveChanges
             // 
-            this.buttonSaveChanges.Location = new System.Drawing.Point(63, 49);
+            this.buttonSaveChanges.Location = new System.Drawing.Point(12, 49);
             this.buttonSaveChanges.Name = "buttonSaveChanges";
             this.buttonSaveChanges.Size = new System.Drawing.Size(102, 23);
             this.buttonSaveChanges.TabIndex = 10;
@@ -133,7 +154,7 @@
             // 
             // buttonAddRow
             // 
-            this.buttonAddRow.Location = new System.Drawing.Point(12, 49);
+            this.buttonAddRow.Location = new System.Drawing.Point(291, 49);
             this.buttonAddRow.Name = "buttonAddRow";
             this.buttonAddRow.Size = new System.Drawing.Size(45, 23);
             this.buttonAddRow.TabIndex = 11;
@@ -150,6 +171,16 @@
             this.labelServiceDate.TabIndex = 12;
             this.labelServiceDate.Text = "No Date Selected";
             // 
+            // buttonInsert
+            // 
+            this.buttonInsert.Location = new System.Drawing.Point(342, 49);
+            this.buttonInsert.Name = "buttonInsert";
+            this.buttonInsert.Size = new System.Drawing.Size(45, 23);
+            this.buttonInsert.TabIndex = 13;
+            this.buttonInsert.Text = "Insert";
+            this.buttonInsert.UseVisualStyleBackColor = true;
+            this.buttonInsert.Click += new System.EventHandler(this.buttonInsert_Click);
+            // 
             // FormServicePlanner
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -157,6 +188,7 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(680, 479);
+            this.Controls.Add(this.buttonInsert);
             this.Controls.Add(this.labelServiceDate);
             this.Controls.Add(this.buttonAddRow);
             this.Controls.Add(this.buttonSaveChanges);
@@ -169,6 +201,7 @@
             this.Text = "FormServicePlanner";
             this.Shown += new System.EventHandler(this.FormServicePlanner_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewServicePlanner)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -183,5 +216,8 @@
         private Button buttonSaveChanges;
         private Button buttonAddRow;
         private Label labelServiceDate;
+        private ContextMenuStrip contextMenuStrip1;
+        private ToolStripMenuItem deleteToolStripMenuItem;
+        private Button buttonInsert;
     }
 }
