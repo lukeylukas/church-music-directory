@@ -51,7 +51,7 @@ namespace ChurchMusicDirectory
         }
         private void SetupSongTableForm()
         {
-            songTableForm = new FormSongTables(this);
+            songTableForm = new FormSongTables(this, dataCtrl);
             songTableForm.TopLevel = false;
             songTableForm.AutoScroll = true;
             songTableForm.FormBorderStyle = FormBorderStyle.None;

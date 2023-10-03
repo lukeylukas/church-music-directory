@@ -446,23 +446,25 @@ namespace ChurchMusicDirectory
 
         private void GenerateCalculatedSongInfo()
         {
-            GenerateNumPlays();
+            GenerateNumPlays( DateTime.MinValue, DateTime.Now );
         }
-        private void GenerateNumPlays()
+
+        public void GenerateNumPlays(DateTime earliestDate, DateTime latestDate)
         {
-            Dictionary<string, int> songNameNumPlaysDict = GetNumPlaysFromServiceRecords();
+            Dictionary<string, int> songNameNumPlaysDict = GetNumPlaysFromServiceRecords(earliestDate, latestDate);
 
             SaveNumPlaysToSongInfo(songNameNumPlaysDict);
         }
 
-        private Dictionary<string, int> GetNumPlaysFromServiceRecords()
+        private Dictionary<string, int> GetNumPlaysFromServiceRecords(DateTime earliestDate, DateTime latestDate)
         {
             Dictionary<string, int> numPlaysDict = new Dictionary<string, int>();
 
             for (int rowIndex = 0; rowIndex < serviceRecordsTable.Rows.Count; rowIndex++)
             {
                 string songName = (string)serviceRecordsTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.title];
-                if (songName != null)
+                DateTime serviceDate = (DateTime)serviceRecordsTable.Rows[rowIndex][(int)SERVICE_RECORD_ATTRIBUTE.date];
+                if (songName != null && serviceDate >= earliestDate && serviceDate <= latestDate)
                 {
                     if (!numPlaysDict.ContainsKey(songName))
                     {

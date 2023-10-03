@@ -17,14 +17,15 @@ namespace ChurchMusicDirectory
     public partial class FormSongTables : Form
     {
         private FormMain formPassedFromAbove;
+        private DataTable songInfoTable;
+        private DataTable serviceRecordsTable;
+        private int contextMenuColumnIndex;
+        static private DataCtrl dataCtrlInstance = new DataCtrl();
         const string serverName = "ChurchMusicServer1";
         const string serverIpAddress = "localhost";
         const int serverPort = 1433;
-        private int contextMenuColumnIndex;
         const string contextMenuExclude = "Exclude";
         const string contextMenuClear = "Clear";
-        private DataTable songInfoTable;
-        private DataTable serviceRecordsTable;
         private const string cellNullString = "";
 
         public struct TABLE_COLUMN
@@ -213,8 +214,9 @@ namespace ChurchMusicDirectory
         };
         private FILTER_INFO[] columnFilters = new FILTER_INFO[(int)SONG_ATTRIBUTE.COUNT];
 
-        public FormSongTables(FormMain parentForm)
+        public FormSongTables(FormMain parentForm, DataCtrl dataCtrlPassedIn)
         {
+            dataCtrlInstance = dataCtrlPassedIn;
             InitializeComponent();
             InitializeDataGridView1ContextMenu();
             InitializeColumnFilters();
@@ -272,6 +274,7 @@ namespace ChurchMusicDirectory
         {
             ToolStripItem[] timespanSubMenuItems = new ToolStripItem[] 
             {
+                new ToolStripMenuItem ("All Time"),
                 new ToolStripMenuItem ("This Year"),
                 new ToolStripMenuItem ("Last Year"),
                 new ToolStripMenuItem ("2 Years Ago"),
@@ -285,7 +288,44 @@ namespace ChurchMusicDirectory
         }
         private void ContextMenuTimespanSubMenu_Click(object? sender, EventArgs e)
         {
-            MessageBox.Show("you did it!");
+            ToolStripDropDownMenu senderItem = (ToolStripDropDownMenu)sender;
+            // get which one was clicked from e
+            int clickedIndex = ((ToolStripDropDownMenu)sender).Items.IndexOf(((ToolStripDropDownMenu)sender).GetItemAt(((MouseEventArgs)e).Location));
+            DateTime oldestServiceDate = DateTime.MinValue;
+            DateTime newestServiceDate = DateTime.Now;
+            switch(senderItem.Items[clickedIndex].Text)
+            {
+                case "All Time": 
+                    break;
+                case "This Year": 
+                    oldestServiceDate = new DateTime(DateTime.Now.Year, 1, 1); 
+                    break;
+                case "Last Year": 
+                    oldestServiceDate = new DateTime(DateTime.Now.Year - 1, 1, 1); 
+                    newestServiceDate = new DateTime(DateTime.Now.Year, 1, 1);
+                    break;
+                case "2 Years Ago":
+                    oldestServiceDate = new DateTime(DateTime.Now.Year - 2, 1, 1); 
+                    newestServiceDate = new DateTime(DateTime.Now.Year - 1, 1, 1);
+                    break;
+                case "Last 12 months": 
+                    oldestServiceDate = DateTime.Now.AddMonths(-12); 
+                    break;
+                case "Last 24 months": 
+                    oldestServiceDate = DateTime.Now.AddMonths(-24); 
+                    break;
+                case "Last 36 months": 
+                    oldestServiceDate = DateTime.Now.AddMonths(-36); 
+                    break;
+            }
+            dataCtrlInstance.GenerateNumPlays(oldestServiceDate, newestServiceDate);
+            // highlight clicked item
+            for (int menuItemIndex = 0; menuItemIndex < senderItem.Items.Count; menuItemIndex++)
+            {
+                ((ToolStripMenuItem)senderItem.Items[menuItemIndex]).Checked = false;
+                ((ToolStripMenuItem)senderItem.Items[menuItemIndex]).CheckState = CheckState.Unchecked;
+            }
+            ((ToolStripMenuItem) senderItem.Items[clickedIndex]).Checked = true;
         }
 
         private void AddExcludeFilter(ContextMenuStrip contextMenu, int columnIndex)
