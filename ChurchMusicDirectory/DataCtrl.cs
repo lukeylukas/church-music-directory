@@ -446,7 +446,7 @@ namespace ChurchMusicDirectory
 
         private void GenerateCalculatedSongInfo()
         {
-            GenerateNumPlays( DateTime.MinValue, DateTime.Now );
+            GenerateNumPlays( DateTime.Now.AddMonths(-24), DateTime.Now );
         }
 
         public void GenerateNumPlays(DateTime earliestDate, DateTime latestDate)
