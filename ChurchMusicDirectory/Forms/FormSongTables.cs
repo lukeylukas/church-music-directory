@@ -593,7 +593,16 @@ namespace ChurchMusicDirectory
 
         private void buttonSaveSong_Click(object sender, EventArgs e)
         {
-
+            // hymnal number, keys, hymnal key, subject and notes not required
+            if (textBoxSongName.Text != "")
+            {
+                dataCtrlInstance.AddSong(textBoxSongName.Text, 
+                                         textBoxHymnalNumber.Text,
+                                         textBoxHymnalKey.Text,
+                                         textBoxSongKeys.Text,
+                                         textBoxSubject.Text,
+                                         textBoxSongNotes.Text);
+            }
         }
 
         private void buttonClearSongChange_Click(object sender, EventArgs e)

@@ -51,6 +51,8 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.helloToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonToggleServicePlanner = new System.Windows.Forms.Button();
+            this.textBoxSubject = new System.Windows.Forms.TextBox();
+            this.labelSubject = new System.Windows.Forms.Label();
             this.tabControlMain.SuspendLayout();
             this.tabPageSongInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -131,6 +133,8 @@
             // 
             // tabEditSong
             // 
+            this.tabEditSong.Controls.Add(this.textBoxSubject);
+            this.tabEditSong.Controls.Add(this.labelSubject);
             this.tabEditSong.Controls.Add(this.textBoxSongKeys);
             this.tabEditSong.Controls.Add(this.textBoxHymnalKey);
             this.tabEditSong.Controls.Add(this.textBoxSongNotes);
@@ -168,7 +172,7 @@
             // 
             // textBoxSongNotes
             // 
-            this.textBoxSongNotes.Location = new System.Drawing.Point(174, 131);
+            this.textBoxSongNotes.Location = new System.Drawing.Point(174, 161);
             this.textBoxSongNotes.Name = "textBoxSongNotes";
             this.textBoxSongNotes.Size = new System.Drawing.Size(100, 23);
             this.textBoxSongNotes.TabIndex = 10;
@@ -190,7 +194,7 @@
             // labelSongNotes
             // 
             this.labelSongNotes.AutoSize = true;
-            this.labelSongNotes.Location = new System.Drawing.Point(130, 134);
+            this.labelSongNotes.Location = new System.Drawing.Point(130, 164);
             this.labelSongNotes.Name = "labelSongNotes";
             this.labelSongNotes.Size = new System.Drawing.Size(38, 15);
             this.labelSongNotes.TabIndex = 7;
@@ -234,7 +238,7 @@
             // 
             // buttonRemoveSong
             // 
-            this.buttonRemoveSong.Location = new System.Drawing.Point(173, 171);
+            this.buttonRemoveSong.Location = new System.Drawing.Point(173, 201);
             this.buttonRemoveSong.Name = "buttonRemoveSong";
             this.buttonRemoveSong.Size = new System.Drawing.Size(101, 23);
             this.buttonRemoveSong.TabIndex = 2;
@@ -244,7 +248,7 @@
             // 
             // buttonClearSongChange
             // 
-            this.buttonClearSongChange.Location = new System.Drawing.Point(92, 171);
+            this.buttonClearSongChange.Location = new System.Drawing.Point(92, 201);
             this.buttonClearSongChange.Name = "buttonClearSongChange";
             this.buttonClearSongChange.Size = new System.Drawing.Size(75, 23);
             this.buttonClearSongChange.TabIndex = 1;
@@ -254,7 +258,7 @@
             // 
             // buttonSaveSong
             // 
-            this.buttonSaveSong.Location = new System.Drawing.Point(11, 171);
+            this.buttonSaveSong.Location = new System.Drawing.Point(11, 201);
             this.buttonSaveSong.Name = "buttonSaveSong";
             this.buttonSaveSong.Size = new System.Drawing.Size(75, 23);
             this.buttonSaveSong.TabIndex = 0;
@@ -285,6 +289,22 @@
             this.buttonToggleServicePlanner.Text = "Service Planner";
             this.buttonToggleServicePlanner.UseVisualStyleBackColor = true;
             this.buttonToggleServicePlanner.Click += new System.EventHandler(this.buttonToggleServicePlanner_Click);
+            // 
+            // textBoxSubject
+            // 
+            this.textBoxSubject.Location = new System.Drawing.Point(174, 131);
+            this.textBoxSubject.Name = "textBoxSubject";
+            this.textBoxSubject.Size = new System.Drawing.Size(100, 23);
+            this.textBoxSubject.TabIndex = 14;
+            // 
+            // labelSubject
+            // 
+            this.labelSubject.AutoSize = true;
+            this.labelSubject.Location = new System.Drawing.Point(122, 134);
+            this.labelSubject.Name = "labelSubject";
+            this.labelSubject.Size = new System.Drawing.Size(46, 15);
+            this.labelSubject.TabIndex = 13;
+            this.labelSubject.Text = "Subject";
             // 
             // FormSongTables
             // 
@@ -332,5 +352,7 @@
         private TextBox textBoxSongNotes;
         private TextBox textBoxHymnalNumber;
         private TextBox textBoxSongName;
+        private TextBox textBoxSubject;
+        private Label labelSubject;
     }
 }

@@ -442,7 +442,6 @@ namespace ChurchMusicDirectory
                         insertionQuery += ", ";
                     }
                     values[valueIndex] = newServiceTable.Rows[rowIndex][columnIndex].ToString();
-                    valueIndex++;
                 }
                 insertionQuery += ")";
                 if (rowIndex < newServiceTable.Rows.Count - 1)
@@ -526,6 +525,46 @@ namespace ChurchMusicDirectory
                 }
             }
             return mostRecentDate.AddDays(7);
+        }
+
+        public void AddSong(string name, string hymnalNum, string hymnalKey, string key, string subject, string notes)
+        {
+            if (name is not null && name != "" && !titlesList.Contains(name))
+            {
+                string query = BuildSongAddQuery(out string[] values, name, hymnalNum, hymnalKey, key, subject, notes);
+                ServerCommunication.CommandSqlServer(query, values, serverUserName, serverPassword);
+                // refresh entire app basically
+            }
+        }
+        private string BuildSongAddQuery(out string[] values, string name, string hymnalNum, string hymnalKey, string key, string subject, string notes)
+        {
+                var elements = new Dictionary<SONG_ATTRIBUTE, string>()
+                {
+                    {SONG_ATTRIBUTE.hymnalNumber, hymnalNum},
+                    {SONG_ATTRIBUTE.hymnalKey, hymnalKey},
+                    {SONG_ATTRIBUTE.musicKey, key},
+                    {SONG_ATTRIBUTE.subject, subject},
+                    {SONG_ATTRIBUTE.tag, notes}
+                };
+                values = new string[6];
+                int valueCount = 0;
+                string columnsString = "INSERT INTO " + songInfoTableName + " (" + SONG_ATTRIBUTE.songName;
+                string valuesString = "VALUES (@" + valueCount;
+                values[valueCount] = name;
+                for (SONG_ATTRIBUTE i = (SONG_ATTRIBUTE)0; i < SONG_ATTRIBUTE.COUNT; i++)
+                {
+                    if (elements.ContainsKey(i) && elements[i] != "")
+                    {
+                        columnsString += ", " + i;
+                        valueCount++;
+                        valuesString += ", @" + valueCount;
+                        values[valueCount] = elements[i];
+                    }
+                }
+                values = values[..(valueCount + 1)];
+                columnsString += ")";
+                valuesString += ")";
+                return columnsString + "\n" + valuesString;
         }
     }
 }
