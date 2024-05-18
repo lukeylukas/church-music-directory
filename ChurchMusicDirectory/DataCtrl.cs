@@ -203,6 +203,20 @@ namespace ChurchMusicDirectory
                 }
             }
         }
+        public int GetHymnalNumber(string title)
+        {
+            foreach (DataRow item in this.songInfoTable.Rows)
+            {
+                if (item.ItemArray[(int)SONG_ATTRIBUTE.songName] is not DBNull && item.ItemArray[(int)SONG_ATTRIBUTE.hymnalNumber] is not DBNull)
+                {
+                    if (item.ItemArray[(int)SONG_ATTRIBUTE.songName].ToString() == title)
+                    {
+                        return (int)item.ItemArray[(int)SONG_ATTRIBUTE.hymnalNumber];
+                    }
+                }
+            }
+            return -1;
+        }
 
         public bool GetServiceRecords(DataCtrlResponseHandler callback)
         {
@@ -501,7 +515,7 @@ namespace ChurchMusicDirectory
             serverUserName = userName;
             serverPassword = password;
         }
-        public DateTime GetMostRecentServiceDate()
+        public DateTime GetNextServiceDate()
         {
             DateTime mostRecentDate = DateTime.MinValue;
             foreach (DateTime key in serviceRecordsDictionary.Keys)
@@ -511,7 +525,7 @@ namespace ChurchMusicDirectory
                     mostRecentDate = key;
                 }
             }
-            return mostRecentDate;
+            return mostRecentDate.AddDays(7);
         }
     }
 }

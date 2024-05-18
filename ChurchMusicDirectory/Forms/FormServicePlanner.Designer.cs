@@ -42,6 +42,8 @@
             this.buttonAddRow = new System.Windows.Forms.Button();
             this.labelServiceDate = new System.Windows.Forms.Label();
             this.buttonInsert = new System.Windows.Forms.Button();
+            this.richTextBoxOrderOfService = new System.Windows.Forms.RichTextBox();
+            this.buttonCopyOrderOfService = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewServicePlanner)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -53,7 +55,7 @@
             this.labelServicePlanner.Location = new System.Drawing.Point(12, 9);
             this.labelServicePlanner.Name = "labelServicePlanner";
             this.labelServicePlanner.Size = new System.Drawing.Size(196, 37);
-            this.labelServicePlanner.TabIndex = 1;
+            this.labelServicePlanner.TabIndex = 0;
             this.labelServicePlanner.Text = "Service Planner";
             // 
             // dataGridViewServicePlanner
@@ -92,7 +94,7 @@
             this.dataGridViewServicePlanner.Name = "dataGridViewServicePlanner";
             this.dataGridViewServicePlanner.RowHeadersVisible = false;
             this.dataGridViewServicePlanner.RowTemplate.Height = 25;
-            this.dataGridViewServicePlanner.Size = new System.Drawing.Size(678, 400);
+            this.dataGridViewServicePlanner.Size = new System.Drawing.Size(491, 400);
             this.dataGridViewServicePlanner.TabIndex = 2;
             this.dataGridViewServicePlanner.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridViewServicePlanner_EditingControlShowing);
             // 
@@ -114,10 +116,10 @@
             // buttonCalendar
             // 
             this.buttonCalendar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCalendar.Location = new System.Drawing.Point(587, 9);
+            this.buttonCalendar.Location = new System.Drawing.Point(400, 9);
             this.buttonCalendar.Name = "buttonCalendar";
             this.buttonCalendar.Size = new System.Drawing.Size(75, 31);
-            this.buttonCalendar.TabIndex = 4;
+            this.buttonCalendar.TabIndex = 1;
             this.buttonCalendar.Text = "Calendar";
             this.buttonCalendar.UseVisualStyleBackColor = true;
             this.buttonCalendar.Click += new System.EventHandler(this.buttonCalendar_Click);
@@ -125,10 +127,10 @@
             // calendarDatePicker
             // 
             this.calendarDatePicker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.calendarDatePicker.Location = new System.Drawing.Point(435, 38);
+            this.calendarDatePicker.Location = new System.Drawing.Point(248, 38);
             this.calendarDatePicker.MaxSelectionCount = 1;
             this.calendarDatePicker.Name = "calendarDatePicker";
-            this.calendarDatePicker.TabIndex = 5;
+            this.calendarDatePicker.TabIndex = 10;
             this.calendarDatePicker.Visible = false;
             this.calendarDatePicker.DateSelected += new System.Windows.Forms.DateRangeEventHandler(this.calendarDatePicker_DateSelected);
             // 
@@ -137,7 +139,7 @@
             this.buttonDiscardChanges.Location = new System.Drawing.Point(120, 49);
             this.buttonDiscardChanges.Name = "buttonDiscardChanges";
             this.buttonDiscardChanges.Size = new System.Drawing.Size(124, 23);
-            this.buttonDiscardChanges.TabIndex = 9;
+            this.buttonDiscardChanges.TabIndex = 5;
             this.buttonDiscardChanges.Text = "Discard Changes";
             this.buttonDiscardChanges.UseVisualStyleBackColor = true;
             this.buttonDiscardChanges.Click += new System.EventHandler(this.buttonDiscardChanges_Click);
@@ -147,7 +149,7 @@
             this.buttonSaveChanges.Location = new System.Drawing.Point(12, 49);
             this.buttonSaveChanges.Name = "buttonSaveChanges";
             this.buttonSaveChanges.Size = new System.Drawing.Size(102, 23);
-            this.buttonSaveChanges.TabIndex = 10;
+            this.buttonSaveChanges.TabIndex = 4;
             this.buttonSaveChanges.Text = "Save Changes";
             this.buttonSaveChanges.UseVisualStyleBackColor = true;
             this.buttonSaveChanges.Click += new System.EventHandler(this.buttonSaveChanges_Click);
@@ -157,7 +159,7 @@
             this.buttonAddRow.Location = new System.Drawing.Point(291, 49);
             this.buttonAddRow.Name = "buttonAddRow";
             this.buttonAddRow.Size = new System.Drawing.Size(45, 23);
-            this.buttonAddRow.TabIndex = 11;
+            this.buttonAddRow.TabIndex = 6;
             this.buttonAddRow.Text = "Add";
             this.buttonAddRow.UseVisualStyleBackColor = true;
             this.buttonAddRow.Click += new System.EventHandler(this.buttonAddRow_Click);
@@ -168,7 +170,7 @@
             this.labelServiceDate.Location = new System.Drawing.Point(222, 23);
             this.labelServiceDate.Name = "labelServiceDate";
             this.labelServiceDate.Size = new System.Drawing.Size(97, 15);
-            this.labelServiceDate.TabIndex = 12;
+            this.labelServiceDate.TabIndex = 0;
             this.labelServiceDate.Text = "No Date Selected";
             // 
             // buttonInsert
@@ -176,10 +178,28 @@
             this.buttonInsert.Location = new System.Drawing.Point(342, 49);
             this.buttonInsert.Name = "buttonInsert";
             this.buttonInsert.Size = new System.Drawing.Size(45, 23);
-            this.buttonInsert.TabIndex = 13;
+            this.buttonInsert.TabIndex = 7;
             this.buttonInsert.Text = "Insert";
             this.buttonInsert.UseVisualStyleBackColor = true;
             this.buttonInsert.Click += new System.EventHandler(this.buttonInsert_Click);
+            // 
+            // richTextBoxOrderOfService
+            // 
+            this.richTextBoxOrderOfService.Location = new System.Drawing.Point(12, 312);
+            this.richTextBoxOrderOfService.Name = "richTextBoxOrderOfService";
+            this.richTextBoxOrderOfService.Size = new System.Drawing.Size(380, 155);
+            this.richTextBoxOrderOfService.TabIndex = 0;
+            this.richTextBoxOrderOfService.Text = "";
+            // 
+            // buttonCopyOrderOfService
+            // 
+            this.buttonCopyOrderOfService.Location = new System.Drawing.Point(400, 312);
+            this.buttonCopyOrderOfService.Name = "buttonCopyOrderOfService";
+            this.buttonCopyOrderOfService.Size = new System.Drawing.Size(75, 23);
+            this.buttonCopyOrderOfService.TabIndex = 3;
+            this.buttonCopyOrderOfService.Text = "Copy Text";
+            this.buttonCopyOrderOfService.UseVisualStyleBackColor = true;
+            this.buttonCopyOrderOfService.Click += new System.EventHandler(this.buttonCopyOrderOfService_Click);
             // 
             // FormServicePlanner
             // 
@@ -187,7 +207,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(680, 479);
+            this.ClientSize = new System.Drawing.Size(493, 479);
+            this.Controls.Add(this.buttonCopyOrderOfService);
+            this.Controls.Add(this.richTextBoxOrderOfService);
             this.Controls.Add(this.buttonInsert);
             this.Controls.Add(this.labelServiceDate);
             this.Controls.Add(this.buttonAddRow);
@@ -219,5 +241,7 @@
         private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem deleteToolStripMenuItem;
         private Button buttonInsert;
+        private RichTextBox richTextBoxOrderOfService;
+        private Button buttonCopyOrderOfService;
     }
 }
