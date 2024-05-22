@@ -527,14 +527,48 @@ namespace ChurchMusicDirectory
             return mostRecentDate.AddDays(7);
         }
 
-        public void AddSong(string name, string hymnalNum, string hymnalKey, string key, string subject, string notes)
+        public void EditSong(string name, string hymnalNum, string hymnalKey, string key, string subject, string notes)
         {
-            if (name is not null && name != "" && !titlesList.Contains(name))
+            if (name is not null && name != "")
             {
-                string query = BuildSongAddQuery(out string[] values, name, hymnalNum, hymnalKey, key, subject, notes);
-                ServerCommunication.CommandSqlServer(query, values, serverUserName, serverPassword);
-                // refresh entire app basically
+                DeleteSong(name);
+                AddSong(name, hymnalNum, hymnalKey, key, subject, notes);
             }
+            else
+            {
+                MessageBox.Show("Can't save song with no name");
+            }
+        }
+
+        public void DeleteSong(string name)
+        {
+            if (name is not null && name != "")
+            {
+                if (titlesList.Contains(name))
+                {
+                    string delete_query = BuildSongDeleteQuery(out string[] delete_values, name);
+                    ServerCommunication.CommandSqlServer(delete_query, delete_values, serverUserName, serverPassword);
+                }
+                else
+                {
+                    MessageBox.Show("Can't delete song. Song name '" + name + "' not found.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Can't delete song with no name");
+            }
+        }
+        private string BuildSongDeleteQuery(out string[] values, string name)
+        {
+            values = new string[] {name};
+            return "DELETE FROM " + songInfoTableName + " WHERE " + SONG_ATTRIBUTE.songName + " = '@0'";
+        }
+
+        private void AddSong(string name, string hymnalNum, string hymnalKey, string key, string subject, string notes)
+        {
+            string add_query = BuildSongAddQuery(out string[] add_values, name, hymnalNum, hymnalKey, key, subject, notes);
+            ServerCommunication.CommandSqlServer(add_query, add_values, serverUserName, serverPassword);
         }
         private string BuildSongAddQuery(out string[] values, string name, string hymnalNum, string hymnalKey, string key, string subject, string notes)
         {
@@ -551,7 +585,7 @@ namespace ChurchMusicDirectory
                 string columnsString = "INSERT INTO " + songInfoTableName + " (" + SONG_ATTRIBUTE.songName;
                 string valuesString = "VALUES (@" + valueCount;
                 values[valueCount] = name;
-                for (SONG_ATTRIBUTE i = (SONG_ATTRIBUTE)0; i < SONG_ATTRIBUTE.COUNT; i++)
+                for (SONG_ATTRIBUTE i = 0; i < SONG_ATTRIBUTE.COUNT; i++)
                 {
                     if (elements.ContainsKey(i) && elements[i] != "")
                     {

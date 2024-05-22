@@ -591,28 +591,50 @@ namespace ChurchMusicDirectory
             dataGridViewServiceRecords.Sort(dataGridViewServiceRecords.Columns[(int)SERVICE_RECORD_ATTRIBUTE.date], ListSortDirection.Descending);
         }
 
+        /**********************************************************************************************************************
+         * ***************************************          Song Edit Tab       ***********************************************
+         * *******************************************************************************************************************/
+
         private void buttonSaveSong_Click(object sender, EventArgs e)
         {
-            // hymnal number, keys, hymnal key, subject and notes not required
-            if (textBoxSongName.Text != "")
+            var confirmResult = MessageBox.Show("Are you sure the new information is correct? Saving the song will erase any other unsaved information in the app (eg. any unsaved service plan)", "Confirm Save", MessageBoxButtons.YesNo);
+            if (confirmResult == DialogResult.Yes)
             {
-                dataCtrlInstance.AddSong(textBoxSongName.Text, 
-                                         textBoxHymnalNumber.Text,
-                                         textBoxHymnalKey.Text,
-                                         textBoxSongKeys.Text,
-                                         textBoxSubject.Text,
-                                         textBoxSongNotes.Text);
+                // hymnal number, keys, hymnal key, subject and notes not required
+                if (textBoxSongName.Text != "")
+                {
+                    dataCtrlInstance.EditSong(textBoxSongName.Text, 
+                                            textBoxHymnalNumber.Text,
+                                            textBoxHymnalKey.Text,
+                                            textBoxSongKeys.Text,
+                                            textBoxSubject.Text,
+                                            textBoxSongNotes.Text);
+                    dataCtrlInstance.RefreshAllData(null, null);
+                }
             }
         }
 
         private void buttonClearSongChange_Click(object sender, EventArgs e)
         {
-
+            textBoxSongName.Clear(); 
+            textBoxHymnalNumber.Clear();
+            textBoxHymnalKey.Clear();
+            textBoxSongKeys.Clear();
+            textBoxSubject.Clear();
+            textBoxSongNotes.Clear();
         }
 
         private void buttonRemoveSong_Click(object sender, EventArgs e)
         {
-
+            var confirmResult = MessageBox.Show("Are you sure you want to delete this song? Deleting the song will erase any other unsaved information in the app (eg. any unsaved service plan)", "Confirm Deletion", MessageBoxButtons.YesNo);
+            if (confirmResult == DialogResult.Yes)
+            {
+                if (textBoxSongName.Text != "")
+                {
+                    dataCtrlInstance.DeleteSong(textBoxSongName.Text);
+                    dataCtrlInstance.RefreshAllData(null, null);
+                }
+            }
         }
     }
 }
