@@ -45,7 +45,7 @@ namespace ChurchMusicDirectory
         public DataTable serviceRecordsTable;
         private string serverUserName;
         private string serverPassword;
-        private Dictionary<DateTime, Dictionary<int, DataRow>> serviceRecordsDictionary;
+        private Dictionary<DateTime, Dictionary<int, DataRow>> serviceRecordsDictionary = new Dictionary<DateTime, Dictionary<int, DataRow>>();
         public delegate void DataCtrlResponseHandler(bool success, string message);
         
         static List<char> flatsList = new List<char>
@@ -83,6 +83,21 @@ namespace ChurchMusicDirectory
                 }
             }
         }
+
+        public void Refresh()
+        {
+            if (GetSongInfo(HandleDataCtrlResponse))
+            {
+                GetServiceRecords(HandleDataCtrlResponse);
+            }
+        }
+        private void HandleDataCtrlResponse(bool success, string message)
+        {
+            if (!success)
+            {
+                MessageBox.Show(message);
+            }
+        }
         public List<DateTime> GetServiceDatesList()
         {
             List < DateTime > serviceDatesList = new List < DateTime >();
@@ -110,6 +125,7 @@ namespace ChurchMusicDirectory
             bool songInfoReceived = GetTableData(out DataTable tempTable, songInfoQuery, expectedNumColumns, out string statusMessage);
             if (songInfoReceived)
             {
+                songInfoTable.Reset();
                 for (SONG_ATTRIBUTE columnNum = 0; columnNum < SONG_ATTRIBUTE.COUNT; columnNum++)
                 {
                     DataColumn column = new DataColumn();
@@ -195,6 +211,7 @@ namespace ChurchMusicDirectory
         private void GenerateTitlesList()
         {
             int columnIndex = (int)SONG_ATTRIBUTE.songName;
+            titlesList.Clear();
             foreach (DataRow item in this.songInfoTable.Rows)
             {
                 if (item.ItemArray[columnIndex] != null)
@@ -221,7 +238,7 @@ namespace ChurchMusicDirectory
         public bool GetServiceRecords(DataCtrlResponseHandler callback)
         {
             string serviceRecordsQuery = BuildServiceRecordsQuery(out int expectedNumColumns);
-
+            serviceRecordsTable.Reset();
             bool serviceRecordsReceived = GetTableData(out serviceRecordsTable, serviceRecordsQuery, expectedNumColumns, out string statusMessage);
 
             GenerateServiceRecordsDictionary();
@@ -251,7 +268,7 @@ namespace ChurchMusicDirectory
         }
         private void GenerateServiceRecordsDictionary()
         {
-            serviceRecordsDictionary = new Dictionary<DateTime, Dictionary<int, DataRow>>();
+            serviceRecordsDictionary.Clear();
 
             for (int rowIndex = 0; rowIndex < serviceRecordsTable.Rows.Count; rowIndex++)
             {
@@ -527,12 +544,16 @@ namespace ChurchMusicDirectory
             return mostRecentDate.AddDays(7);
         }
 
-        public void EditSong(string name, string hymnalNum, string hymnalKey, string key, string subject, string notes)
+        public void EditSong(string name, string hymnalNum, string hymnalKey, string key, string subject, string notes, bool withRefresh)
         {
             if (name is not null && name != "")
             {
-                DeleteSong(name);
+                DeleteSong(name, false);
                 AddSong(name, hymnalNum, hymnalKey, key, subject, notes);
+                if (withRefresh)
+                {
+                    Refresh();
+                }
             }
             else
             {
@@ -540,7 +561,7 @@ namespace ChurchMusicDirectory
             }
         }
 
-        public void DeleteSong(string name)
+        public void DeleteSong(string name, bool withRefresh)
         {
             if (name is not null && name != "")
             {
@@ -548,6 +569,10 @@ namespace ChurchMusicDirectory
                 {
                     string delete_query = BuildSongDeleteQuery(out string[] delete_values, name);
                     ServerCommunication.CommandSqlServer(delete_query, delete_values, serverUserName, serverPassword);
+                    if (withRefresh)
+                    {
+                        Refresh();
+                    }
                 }
                 else
                 {

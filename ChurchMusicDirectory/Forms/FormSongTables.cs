@@ -608,8 +608,8 @@ namespace ChurchMusicDirectory
                                             textBoxHymnalKey.Text,
                                             textBoxSongKeys.Text,
                                             textBoxSubject.Text,
-                                            textBoxSongNotes.Text);
-                    dataCtrlInstance.RefreshAllData(null, null);
+                                            textBoxSongNotes.Text,
+                                            true);
                 }
             }
         }
@@ -631,8 +631,7 @@ namespace ChurchMusicDirectory
             {
                 if (textBoxSongName.Text != "")
                 {
-                    dataCtrlInstance.DeleteSong(textBoxSongName.Text);
-                    dataCtrlInstance.RefreshAllData(null, null);
+                    dataCtrlInstance.DeleteSong(textBoxSongName.Text, true);
                 }
             }
         }
