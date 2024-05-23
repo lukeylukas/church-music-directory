@@ -513,12 +513,13 @@ namespace ChurchMusicDirectory
                     }
                     query += "(";
 
+                    string columnName = dataCtrlInstance.SongInfoTable().Columns[columnIndex].ColumnName;
                     for (int filterIndex = 0; filterIndex <= columnFilters[columnIndex].list.Count - 2; filterIndex++)
                     {
-                        query += dataCtrlInstance.SongInfoTable().Columns[columnIndex].ColumnName + excludeString + " LIKE \'%";
+                        query += columnName + excludeString + " LIKE \'%";
                         query += Utils.EscapeSpecialCharacters(columnFilters[columnIndex].list[filterIndex]) + "%\'" + joinString;
                     }
-                    query += dataCtrlInstance.SongInfoTable().Columns[columnIndex].ColumnName + excludeString + " LIKE \'%";
+                    query += columnName + excludeString + " LIKE \'%";
                     query += Utils.EscapeSpecialCharacters(columnFilters[columnIndex].list[^1]) + "%\'";
                     query += ")";
                 }
@@ -530,10 +531,10 @@ namespace ChurchMusicDirectory
                 }
             }
 
-            if (!query.Equals(dataCtrlInstance.SongInfoTable().DefaultView.RowFilter))
-            {
-                dataCtrlInstance.SongInfoTable().DefaultView.RowFilter = query;
-            }
+            // if (!query.Equals(dataCtrlInstance.SongInfoTable().DefaultView.RowFilter))
+            // {
+            //     dataCtrlInstance.SongInfoTable().DefaultView.RowFilter = query;
+            // }
         }
 
         private void buttonToggleServicePlanner_Click(object sender, EventArgs e)

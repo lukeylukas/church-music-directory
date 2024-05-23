@@ -206,7 +206,7 @@ namespace ChurchMusicDirectory
         {
             int columnIndex = (int)SONG_ATTRIBUTE.songName;
             titlesList.Clear();
-            foreach (DataRow item in this.songInfoTable.Rows)
+            foreach (DataRow item in songInfoTable.Rows)
             {
                 if (item.ItemArray[columnIndex] != null)
                 {
@@ -216,7 +216,7 @@ namespace ChurchMusicDirectory
         }
         public int GetHymnalNumber(string title)
         {
-            foreach (DataRow item in this.songInfoTable.Rows)
+            foreach (DataRow item in songInfoTable.Rows)
             {
                 if (item.ItemArray[(int)SONG_ATTRIBUTE.songName] is not DBNull && item.ItemArray[(int)SONG_ATTRIBUTE.hymnalNumber] is not DBNull)
                 {
@@ -458,16 +458,17 @@ namespace ChurchMusicDirectory
         {
             for (int rowIndex = 0; rowIndex < songInfoTable.Rows.Count; rowIndex++)
             {
-                if (songInfoTable.Rows[rowIndex][(int)SONG_ATTRIBUTE.songName] != DBNull.Value)
+                DataRow row = songInfoTable.Rows[rowIndex];
+                if (row[(int)SONG_ATTRIBUTE.songName] != DBNull.Value)
                 {
-                    string songName = (string)songInfoTable.Rows[rowIndex][(int)SONG_ATTRIBUTE.songName];
+                    string songName = (string)row[(int)SONG_ATTRIBUTE.songName];
                     if (numPlaysDict.ContainsKey(songName))
                     {
-                        songInfoTable.Rows[rowIndex][(int)SONG_ATTRIBUTE.numPlays] = numPlaysDict[songName];
+                        row[(int)SONG_ATTRIBUTE.numPlays] = numPlaysDict[songName];
                     }
                     else
                     {
-                        songInfoTable.Rows[rowIndex][(int)SONG_ATTRIBUTE.numPlays] = 0;
+                        row[(int)SONG_ATTRIBUTE.numPlays] = 0;
                     }
                 }
             }
