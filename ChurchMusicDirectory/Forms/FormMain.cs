@@ -125,8 +125,7 @@ namespace ChurchMusicDirectory
         private void UseFilledDataCtrlObject()
         {
             SetupSongTableForm();
-            songTableForm.ImportSongInfoTable(dataCtrl.songInfoTable);
-            songTableForm.ImportServiceRecordsTable(dataCtrl.serviceRecordsTable);
+            songTableForm.RefreshForm();
             songTableForm.Show();
 
             SetupServicePlannerForm();
@@ -140,11 +139,7 @@ namespace ChurchMusicDirectory
             Thread initDataCtrlThread = new Thread(() =>
             {
                 dataCtrl.SetUserNameAndPassword(userName, password);
-                if(dataCtrl.GetSongInfo(SongInfoCallback))
-                {
-                    dataCtrl.GetServiceRecords(ServiceRecordsCallback);
-                    dataCtrl.GenerateCalculatedData();
-                }
+                dataCtrl.Refresh(SongInfoCallback, ServiceRecordsCallback);
             });
             initDataCtrlThread.Start();
         }

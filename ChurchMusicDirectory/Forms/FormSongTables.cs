@@ -17,8 +17,6 @@ namespace ChurchMusicDirectory
     public partial class FormSongTables : Form
     {
         private FormMain formPassedFromAbove;
-        private DataTable songInfoTable;
-        private DataTable serviceRecordsTable;
         private int contextMenuColumnIndex;
         static private DataCtrl dataCtrlInstance = new DataCtrl();
         const string serverName = "ChurchMusicServer1";
@@ -202,12 +200,12 @@ namespace ChurchMusicDirectory
             }
         };
 
-        public enum FILTER_TYPE
+        private enum FILTER_TYPE
         {
             INCLUDE,
             EXCLUDE
         }
-        public struct FILTER_INFO
+        private struct FILTER_INFO
         {
             public FILTER_TYPE type;
             public List<string> list;
@@ -220,8 +218,6 @@ namespace ChurchMusicDirectory
             InitializeComponent();
             InitializeDataGridView1ContextMenu();
             InitializeColumnFilters();
-            songInfoTable = new DataTable();
-            serviceRecordsTable = new DataTable();
             contextMenuColumnIndex = 0;
             formPassedFromAbove = parentForm;
         }
@@ -443,36 +439,40 @@ namespace ChurchMusicDirectory
             }
         }
 
-        public void ImportSongInfoTable(DataTable table)
+        public void RefreshForm()
         {
-            songInfoTable = table;
-            DisplaySongInfo();
+            ImportSongInfoTable(dataCtrlInstance.SongInfoTable());
+            ImportServiceRecordsTable(dataCtrlInstance.ServiceRecordsTable());
         }
-        private void DisplaySongInfo()
+        private void ImportSongInfoTable(DataTable table)
         {
-            dataGridView1.DataSource = songInfoTable;
+            DisplaySongInfo(table);
+        }
+        private void DisplaySongInfo(DataTable table)
+        {
+            dataGridView1.DataSource = table;
             for (int columnIndex = 0; columnIndex < dataGridView1.Columns.Count; columnIndex++)
             {
                 dataGridView1.Columns[columnIndex].Width = songInfoColumns[(SONG_ATTRIBUTE)columnIndex].width;
                 dataGridView1.Columns[columnIndex].HeaderText = songInfoColumns[(SONG_ATTRIBUTE)columnIndex].name;
-                FillFilterList(songInfoColumns[(SONG_ATTRIBUTE)columnIndex], dataGridView1, columnIndex);
+                FillFilterList(songInfoColumns[(SONG_ATTRIBUTE)columnIndex], table, columnIndex);
             }
 
             dataGridView1.Columns[^1].MinimumWidth = songInfoColumns[(SONG_ATTRIBUTE)((int)SONG_ATTRIBUTE.COUNT - 1)].width;
             dataGridView1.Columns[^1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             dataGridView1.Sort(dataGridView1.Columns[0], ListSortDirection.Ascending);
         }
-        static private void FillFilterList(TABLE_COLUMN settings, DataGridView table, int columnIndex)
+        static private void FillFilterList(TABLE_COLUMN settings, DataTable table, int columnIndex)
         {
             if (settings.allowFiltering)
             {
                 List<string> columnEntries = new List<string>();
                 
-                for (int rowIndex = 0; rowIndex < table.RowCount; rowIndex++)
+                for (int rowIndex = 0; rowIndex < table.Rows.Count; rowIndex++)
                 {
-                    if (table.Rows[rowIndex].Cells[columnIndex].Value != null)
+                    if (table.Rows[rowIndex][columnIndex] != null)
                     {
-                        string cellValue = table.Rows[rowIndex].Cells[columnIndex].Value.ToString();
+                        string cellValue = table.Rows[rowIndex][columnIndex].ToString();
                         switch (columnIndex)
                         {
                             case (int)SONG_ATTRIBUTE.musicKey: columnEntries.AddRange(cellValue.Split(",", StringSplitOptions.TrimEntries)); break;
@@ -518,10 +518,10 @@ namespace ChurchMusicDirectory
 
                     for (int filterIndex = 0; filterIndex <= columnFilters[columnIndex].list.Count - 2; filterIndex++)
                     {
-                        query += songInfoTable.Columns[columnIndex].ColumnName + excludeString + " LIKE \'%";
+                        query += dataCtrlInstance.SongInfoTable().Columns[columnIndex].ColumnName + excludeString + " LIKE \'%";
                         query += Utils.EscapeSpecialCharacters(columnFilters[columnIndex].list[filterIndex]) + "%\'" + joinString;
                     }
-                    query += songInfoTable.Columns[columnIndex].ColumnName + excludeString + " LIKE \'%";
+                    query += dataCtrlInstance.SongInfoTable().Columns[columnIndex].ColumnName + excludeString + " LIKE \'%";
                     query += Utils.EscapeSpecialCharacters(columnFilters[columnIndex].list[^1]) + "%\'";
                     query += ")";
                 }
@@ -533,9 +533,9 @@ namespace ChurchMusicDirectory
                 }
             }
 
-            if (!query.Equals(songInfoTable.DefaultView.RowFilter))
+            if (!query.Equals(dataCtrlInstance.SongInfoTable().DefaultView.RowFilter))
             {
-                songInfoTable.DefaultView.RowFilter = query;
+                dataCtrlInstance.SongInfoTable().DefaultView.RowFilter = query;
             }
         }
 
@@ -547,14 +547,13 @@ namespace ChurchMusicDirectory
         /**********************************************************************************************************************
          * ***************************************      Service Records Tab     ***********************************************
          * *******************************************************************************************************************/
-        public void ImportServiceRecordsTable(DataTable table)
+        private void ImportServiceRecordsTable(DataTable table)
         {
-            serviceRecordsTable = table;
-            DisplayServiceRecords();
+            DisplayServiceRecords(table);
         }
-        private void DisplayServiceRecords()
+        private void DisplayServiceRecords(DataTable table)
         {
-            dataGridViewServiceRecords.DataSource = serviceRecordsTable;
+            dataGridViewServiceRecords.DataSource = table;
             
             int lastDisplayedColumnIndex = 0;
             for (int columnIndex = 0; columnIndex < dataGridViewServiceRecords.Columns.Count; columnIndex++)
@@ -610,6 +609,7 @@ namespace ChurchMusicDirectory
                                             textBoxSubject.Text,
                                             textBoxSongNotes.Text,
                                             true);
+                    RefreshForm();
                 }
             }
         }
@@ -632,6 +632,7 @@ namespace ChurchMusicDirectory
                 if (textBoxSongName.Text != "")
                 {
                     dataCtrlInstance.DeleteSong(textBoxSongName.Text, true);
+                    RefreshForm();
                 }
             }
         }
