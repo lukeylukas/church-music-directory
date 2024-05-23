@@ -19,9 +19,6 @@ namespace ChurchMusicDirectory
         private FormMain formPassedFromAbove;
         private int contextMenuColumnIndex;
         static private DataCtrl dataCtrlInstance = new DataCtrl();
-        const string serverName = "ChurchMusicServer1";
-        const string serverIpAddress = "localhost";
-        const int serverPort = 1433;
         const string contextMenuExclude = "Exclude";
         const string contextMenuClear = "Clear";
         private const string cellNullString = "";
