@@ -594,7 +594,7 @@ namespace ChurchMusicDirectory
         private string BuildSongDeleteQuery(out string[] values, string name)
         {
             values = new string[] {name};
-            return "DELETE FROM " + songInfoTableName + " WHERE " + SONG_ATTRIBUTE.songName + " = '@0'";
+            return "DELETE FROM " + songInfoTableName + " WHERE " + SONG_ATTRIBUTE.songName + " = @0";
         }
 
         private void AddSong(string name, string hymnalNum, string hymnalKey, string key, string subject, string notes)
