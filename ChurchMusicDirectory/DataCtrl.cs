@@ -120,6 +120,7 @@ namespace ChurchMusicDirectory
             if (songInfoReceived)
             {
                 songInfoTable.Reset();
+                int tempIndex = 0;
                 for (SONG_ATTRIBUTE columnNum = 0; columnNum < SONG_ATTRIBUTE.COUNT; columnNum++)
                 {
                     DataColumn column = new DataColumn();
@@ -133,16 +134,16 @@ namespace ChurchMusicDirectory
                     songInfoTable.Columns.Add(column);
                     if (!FormSongTables.songInfoColumns[columnNum].isDerived)
                     {
-                        songInfoTable.Columns[(int)columnNum].ColumnName = tempTable.Columns[0].ColumnName;
+                        songInfoTable.Columns[(int)columnNum].ColumnName = tempTable.Columns[tempIndex].ColumnName;
                         for (int rowNum = 0; rowNum < tempTable.Rows.Count; rowNum++)
                         {
                             if (songInfoTable.Rows.Count <= rowNum)
                             {
                                 songInfoTable.Rows.Add();
                             }
-                            songInfoTable.Rows[rowNum][(int)columnNum] = tempTable.Rows[rowNum][0];
+                            songInfoTable.Rows[rowNum][(int)columnNum] = tempTable.Rows[rowNum][tempIndex];
                         }
-                        tempTable.Columns.RemoveAt(0);
+                        tempIndex++;
                     }
                 }
             }
