@@ -531,10 +531,10 @@ namespace ChurchMusicDirectory
                 }
             }
 
-            // if (!query.Equals(dataCtrlInstance.SongInfoTable().DefaultView.RowFilter))
-            // {
-            //     dataCtrlInstance.SongInfoTable().DefaultView.RowFilter = query;
-            // }
+            if (!query.Equals(dataCtrlInstance.SongInfoTable().DefaultView.RowFilter))
+            {
+                dataCtrlInstance.SongInfoTable().DefaultView.RowFilter = query;
+            }
         }
 
         private void buttonToggleServicePlanner_Click(object sender, EventArgs e)
